@@ -16,7 +16,7 @@ async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.get("/benchmarking", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def price_benchmarking_dashboard() -> str:
     dashboard_path = Path(__file__).resolve().parent / "dashboard" / "price_benchmarking.html"
     return dashboard_path.read_text(encoding="utf-8")
