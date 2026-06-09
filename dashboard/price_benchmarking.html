@@ -1,0 +1,3254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SADDL | Price Benchmarking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        :root {
+            --bg: #090b10;
+            --surface: rgba(22, 25, 35, 0.7);
+            --surface-solid: #161923;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f0f2f5;
+            --text-dim: #949eb5;
+            --accent: #5b8af0;
+            --accent-glow: rgba(91, 138, 240, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 16px;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --glass: blur(12px) saturate(180%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(91, 138, 240, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+            color: var(--text);
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar & Navigation */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--surface-solid);
+            border-right: 1px solid var(--border);
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .header-title h1 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header-title p {
+            color: var(--text-dim);
+            font-size: 15px;
+        }
+
+        .client-selector {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            padding: 0;
+            border-radius: 12px;
+            color: var(--text);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .client-selector:hover {
+            border-color: var(--accent);
+            background: rgba(91, 138, 240, 0.05);
+            box-shadow: 0 0 20px rgba(91, 138, 240, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .client-selector:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        #account-selector {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 12px 16px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23949eb5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+        }
+
+        #account-selector option {
+            background-color: #1a1d29;
+            color: var(--text);
+            padding: 12px;
+            font-weight: 500;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* KPI Cards */
+        .kpi-row {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .kpi-trend {
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* Position Map */
+        .position-map {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .zone-bar {
+            height: 48px;
+            width: 100%;
+            background: linear-gradient(to right,
+                    #ef4444 0%, #f59e0b 20%, #10b981 40%, #10b981 60%, #3b82f6 80%, #6366f1 100%);
+            border-radius: 24px;
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .zone-marker {
+            position: absolute;
+            top: -12px;
+            width: 4px;
+            height: 72px;
+            background: white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 5;
+        }
+
+        .zone-marker-original {
+            position: absolute;
+            top: -6px;
+            width: 2px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.4);
+            border-left: 2px dotted rgba(255, 255, 255, 0.6);
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateX(-50%);
+            z-index: 6;
+        }
+
+        .zone-marker-adjusted {
+            position: absolute;
+            top: -6px;
+            width: 4px;
+            height: 60px;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            border-radius: 2px;
+            border: 1px dashed white;
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+
+        .zone-marker-current {
+            position: absolute;
+            top: -6px;
+            width: 4px;
+            height: 60px;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transform: translateX(-50%);
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 15;
+        }
+
+        .zone-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Miniature Market Position Bar */
+        .mini-zone-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 140px;
+        }
+
+        .mini-zone-bar {
+            height: 8px;
+            width: 100%;
+            background: linear-gradient(to right,
+                    #ef4444 0%, /* Red: Below */
+                    #f59e0b 20%, /* Orange: Budget */
+                    #10b981 40%, /* Green: Value */
+                    #10b981 60%, /* Green: Mid */
+                    #3b82f6 80%, /* Blue: Premium */
+                    #6366f1 100% /* Indigo: Above */
+            );
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .mini-zone-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0,0,0,0.5);
+            transform: translateX(-50%); /* Centered exactly on the percentage line */
+            border: 1.5px solid var(--background);
+            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+        }
+
+        .mini-zone-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dim);
+        }
+
+        .zone-text-below_market { color: #ef4444 !important; }
+        .zone-text-budget       { color: #f59e0b !important; }
+        .zone-text-value        { color: #10b981 !important; }
+        .zone-text-mid_market   { color: #10b981 !important; }
+        .zone-text-premium      { color: #3b82f6 !important; }
+        .zone-text-above_market { color: #6366f1 !important; }
+
+        /* Recommendations Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .price-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .action-chip {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .action-increase {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .action-decrease {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .action-hold {
+            background: rgba(148, 158, 181, 0.15);
+            color: var(--text-dim);
+        }
+
+        /* Alerts Feed */
+        .alert-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-high {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .alert-medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .alert-content h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        .alert-time {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn-upload {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-solid);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+
+        .product-details-container {
+            display: none;
+            margin-top: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .product-details-container.visible {
+            display: block;
+        }
+
+        .btn-toggle-details {
+            background: rgba(91, 138, 240, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent-glow);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            width: fit-content;
+        }
+
+        .btn-toggle-details:hover {
+            background: var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-toggle-details svg {
+            transition: transform 0.3s;
+        }
+
+        .btn-toggle-details.active svg {
+            transform: rotate(180deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Styling overrides for ApexCharts Tooltips */
+        .apexcharts-tooltip {
+            background: var(--surface-solid) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+            border-radius: 8px !important;
+            color: var(--text) !important;
+            font-family: var(--font-main) !important;
+        }
+        .apexcharts-tooltip-title {
+            background: rgba(255,255,255,0.03) !important;
+            border-bottom: 1px solid var(--border) !important;
+            font-weight: 700 !important;
+            color: var(--text) !important;
+        }
+        .apexcharts-xcrosshairs, .apexcharts-ycrosshairs {
+            stroke: var(--border) !important;
+        }
+
+        /* Custom Premium scrollbar for alerts feed */
+        #alerts-feed::-webkit-scrollbar {
+            width: 6px;
+        }
+        #alerts-feed::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #alerts-feed::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        #alerts-feed::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Repricing Table Interactivity styles */
+        #recs-body tr {
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        #recs-body tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        #recs-body tr.selected-row {
+            background: rgba(91, 138, 240, 0.15) !important;
+            border-left: 3px solid var(--accent) !important;
+            box-shadow: inset 0 0 12px rgba(91, 138, 240, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18" />
+                    <path d="m19 9-5 5-4-4-3 3" />
+                </svg>
+                SADDL<span>.</span>
+            </div>
+
+            <nav class="nav-list">
+                <a href="#" class="nav-item active" data-tab="benchmarking">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="7" height="9" x="3" y="3" rx="1" />
+                        <rect width="7" height="5" x="14" y="3" rx="1" />
+                        <rect width="7" height="9" x="14" y="12" rx="1" />
+                        <rect width="7" height="5" x="3" y="16" rx="1" />
+                    </svg>
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-item" data-tab="categories">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                        <path d="M8 7h6" />
+                        <path d="M8 11h8" />
+                    </svg>
+                    Categories
+                </a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header>
+                <div class="header-title">
+                    <h1>Price Benchmarking</h1>
+                    <p id="sub-title">Real-time market positioning & repricing intelligence</p>
+                </div>
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div class="client-selector">
+                        <select id="account-selector">
+                            <option value="" disabled selected>Select Account</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <!-- View: BENCHMARKING (Consolidated Dashboard) -->
+            <div id="view-benchmarking">
+                <div class="dashboard-grid">
+                    <div class="kpi-row">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Avg. Market Index</div>
+                            <div class="kpi-value" id="kpi-index">--</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Tracked Parent ASINs</div>
+                            <div class="kpi-value" id="kpi-skus">--</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Health Score</div>
+                            <div class="kpi-value" id="kpi-health" style="color: var(--success)">--</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Pending Recs</div>
+                            <div class="kpi-value" id="kpi-recs" style="color: var(--warning)">--</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-left"
+                        style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
+                        
+                        <!-- Competitor Price Distribution & Positioning Card -->
+                        <div class="card">
+                            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                                <div>
+                                    <h3 class="card-title">Market Price Landscape & Our Position</h3>
+                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">See where competitors are pricing their items. The taller the blue bars, the more competitors are pricing at that amount.</p>
+                                </div>
+                                <div class="client-selector" style="min-width: min(560px, 100%); flex: 1 1 420px;">
+                                    <select id="overview-product-selector" style="
+                                        width: 100%;
+                                        background: var(--surface-solid);
+                                        border: 1px solid var(--border);
+                                        color: var(--text);
+                                        padding: 10px 16px;
+                                        border-radius: 10px;
+                                        font-family: inherit;
+                                        font-size: 13px;
+                                        outline: none;
+                                        cursor: pointer;
+                                    ">
+                                        <option value="" disabled selected>Select Product to Analyze...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body" style="padding: 20px; position: relative;">
+                                <!-- Product-specific Metrics Panel (Break-even Price - COGS Refactoring) -->
+                                <div id="product-metrics-panel" style="display: none; margin-bottom: 20px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; gap: 24px; display: flex; flex-wrap: wrap; backdrop-filter: var(--glass); align-items: center;">
+                                    <div style="flex: 1.2; min-width: 180px;">
+                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">COGS Input (AED)</div>
+                                        <input type="number" id="product-cogs-input" step="0.01" min="0" placeholder="Enter product COGS" style="
+                                            background: rgba(255, 255, 255, 0.05);
+                                            border: 1px solid var(--border);
+                                            color: var(--text);
+                                            padding: 8px 12px;
+                                            border-radius: 8px;
+                                            font-family: inherit;
+                                            font-size: 14px;
+                                            width: 100%;
+                                            outline: none;
+                                            transition: border-color 0.2s;
+                                        " oninput="this.style.borderColor = 'var(--accent)'" onblur="this.style.borderColor = 'var(--border)'">
+                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Enter operational cost basis</div>
+                                    </div>
+                                    <div style="flex: 1; min-width: 180px; border-left: 1px solid var(--border); padding-left: 20px; position: relative;">
+                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                            Break-even Price
+                                            <span id="product-profitability-badge" style="padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; display: inline-block;"></span>
+                                        </div>
+                                        <div id="product-breakeven-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px;">--</div>
+                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Calculated automatically as COGS ÷ 0.3</div>
+                                    </div>
+                                    <div style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
+                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">Current Selling Price</div>
+                                        <div id="product-current-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text); margin-top: 4px;">--</div>
+                                    </div>
+                                    <div style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
+                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">ADJ.MEDIAN</div>
+                                        <div id="product-target-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--warning); margin-top: 4px;">--</div>
+                                    </div>
+                                </div>
+
+                                <!-- Loading overlay -->
+                                <div id="overview-chart-loading" style="
+                                    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                                    background: var(--surface-solid); opacity: 0.9;
+                                    display: flex; align-items: center; justify-content: center;
+                                    border-radius: var(--radius); z-index: 10;
+                                ">
+                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating Price Distribution Graph...</span>
+                                </div>
+                                
+                                <!-- Empty State overlay -->
+                                <div id="overview-chart-empty" style="
+                                    display: none; height: 350px; align-items: center; justify-content: center;
+                                    flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
+                                ">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="9" y1="17" x2="9" y2="12"/>
+                                        <line x1="15" y1="17" x2="15" y2="10"/>
+                                        <line x1="12" y1="17" x2="12" y2="7"/>
+                                    </svg>
+                                    <span style="font-weight: 600;">No Competitor Data Available</span>
+                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active competitor offers to construct a pricing distribution for this parent ASIN.</span>
+                                </div>
+
+                                <!-- Chart Container -->
+                                <div id="overview-histogram-chart" style="height: 350px;"></div>
+
+                                <!-- Beginner-Friendly Visual Legend & Guide -->
+                                <div style="
+                                    display: flex;
+                                    justify-content: space-around;
+                                    align-items: flex-start;
+                                    margin-top: 20px;
+                                    padding: 16px;
+                                    background: rgba(255, 255, 255, 0.015);
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    flex-wrap: wrap;
+                                    gap: 16px;
+                                ">
+                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
+                                        <div style="width: 14px; height: 14px; background: #10b981; border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Our Price (Green Line)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Your current selling price. See if you are sitting inside the crowded peaks or open valleys.</div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
+                                        <div style="width: 14px; height: 14px; border: 2px dashed #f59e0b; border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Adjusted Median (Gold Line)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">The competitor median price adjusted using the Average Market Index.</div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
+                                        <div style="width: 14px; height: 14px; background: rgba(91, 138, 240, 0.3); border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Blue Columns (Competitors)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Taller bars represent popular price points with high competition. Flat areas represent open, low-competition ranges.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rating vs Competitor Price Analytics Card -->
+                        <div class="card" style="margin-top: 24px;">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Rating vs. Competitor Price Position Map</h3>
+                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Analyze quality vs. pricing. Bubbles show competitors; size indicates review volume (popularity). Quadrants separate value from vulnerability.</p>
+                                </div>
+                            </div>
+                            <div class="card-body" style="padding: 20px; position: relative;">
+                                <!-- Loading overlay -->
+                                <div id="overview-bubble-loading" style="
+                                    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                                    background: var(--surface-solid); opacity: 0.9;
+                                    display: flex; align-items: center; justify-content: center;
+                                    border-radius: var(--radius); z-index: 10;
+                                ">
+                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating Rating vs. Price Position Map...</span>
+                                </div>
+                                
+                                <!-- Empty State overlay -->
+                                <div id="overview-bubble-empty" style="
+                                    display: none; height: 380px; align-items: center; justify-content: center;
+                                    flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
+                                ">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    </svg>
+                                    <span style="font-weight: 600;">No Rating vs Price Data Available</span>
+                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active competitor rating data to construct this visual map.</span>
+                                </div>
+
+                                <!-- Bubble Chart Container -->
+                                <div id="overview-bubble-chart" style="height: 380px;"></div>
+
+                                <!-- Custom Quadrant Legend -->
+                                <div id="bubble-custom-legend" style="
+                                    display: grid;
+                                    grid-template-columns: repeat(4, 1fr);
+                                    gap: 12px;
+                                    margin-top: 15px;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.015);
+                                    border: 1px solid var(--border);
+                                    border-radius: 12px;
+                                    font-size: 11px;
+                                    color: var(--text-dim);
+                                ">
+                                    <div style="border-left: 3px solid var(--success); padding-left: 8px;">
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value Leaders</strong>
+                                        Low Price / High Rating (Top-Left)
+                                    </div>
+                                    <div style="border-left: 3px solid var(--accent); padding-left: 8px;">
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium Segment</strong>
+                                        High Price / High Rating (Top-Right)
+                                    </div>
+                                    <div style="border-left: 3px solid var(--warning); padding-left: 8px;">
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget Brands</strong>
+                                        Low Price / Low Rating (Bottom-Left)
+                                    </div>
+                                    <div style="border-left: 3px solid var(--danger); padding-left: 8px;">
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced / Vulnerable</strong>
+                                        High Price / Low Rating (Bottom-Right)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="dashboard-right"
+                        style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
+                        
+                        <!-- Portfolio Position Map -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Portfolio Position Map</h3>
+                            </div>
+                            <div class="position-map" style="height: auto; padding: 20px 0; position: relative;">
+                                <div class="zone-bar" style="margin-bottom: 24px;">
+                                    <div class="zone-marker-original" id="portfolio-marker-original" style="display: none;" title="Original Median"></div>
+                                    <div class="zone-marker-adjusted" id="portfolio-marker-adjusted" style="display: none;" title="Adjusted Median"></div>
+                                    <div class="zone-marker-current" id="portfolio-marker-current" style="display: none;" title="Current Product Position"></div>
+                                </div>
+                                <div id="portfolio-map-legend" style="display: none; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);">
+                                    <div style="display: flex; align-items: center; gap: 4px;"><div style="width: 8px; height: 8px; background: var(--accent); border: 1px dashed white; border-radius: 2px;"></div> Adjusted Median</div>
+                                    <div style="display: flex; align-items: center; gap: 4px;"><div style="width: 8px; height: 8px; background: white; border-radius: 2px;"></div> Current Position</div>
+                                </div>
+                                <div class="zone-labels" style="margin-top: 8px;">
+                                    <span>Below</span><span>Budget</span><span>Value</span><span>Mid</span><span>Premium</span><span>Above</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Portfolio Alerts Card -->
+                        <div class="card" style="display: flex; flex-direction: column; max-height: 380px;">
+                            <div class="card-header" style="flex-shrink: 0; margin-bottom: 12px;">
+                                <h3 class="card-title">Recent Portfolio Alerts</h3>
+                            </div>
+                            <div id="alerts-feed" style="overflow-y: auto; flex-grow: 1; padding-right: 4px;"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="card" style="grid-column: span 2;">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+                            <h3 class="card-title">Repricing Recommendations</h3>
+                            <div class="table-controls" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" id="recs-search" placeholder="Search ASIN, Title, Reasoning..." style="
+                                    background: rgba(255,255,255,0.05);
+                                    border: 1px solid var(--border);
+                                    padding: 8px 16px;
+                                    border-radius: 10px;
+                                    color: var(--text);
+                                    font-size: 13px;
+                                    width: 220px;
+                                    outline: none;
+                                    font-family: inherit;
+                                ">
+                                <select id="recs-action-filter" style="
+                                    background: var(--surface-solid);
+                                    border: 1px solid var(--border);
+                                    color: var(--text);
+                                    padding: 8px 16px;
+                                    border-radius: 10px;
+                                    font-family: inherit;
+                                    font-size: 13px;
+                                    outline: none;
+                                    cursor: pointer;
+                                ">
+                                    <option value="all">All Actions</option>
+                                    <option value="increase">Action: Increase</option>
+                                    <option value="decrease">Action: Decrease</option>
+                                    <option value="hold">Action: Hold</option>
+                                </select>
+                                <select id="recs-sort-by" style="
+                                    background: var(--surface-solid);
+                                    border: 1px solid var(--border);
+                                    color: var(--text);
+                                    padding: 8px 16px;
+                                    border-radius: 10px;
+                                    font-family: inherit;
+                                    font-size: 13px;
+                                    outline: none;
+                                    cursor: pointer;
+                                ">
+                                    <option value="default">Default Sort (Action & ASIN)</option>
+                                    <option value="asin-asc">ASIN (A-Z)</option>
+                                    <option value="asin-desc">ASIN (Z-A)</option>
+                                    <option value="title-asc">Title (A-Z)</option>
+                                    <option value="title-desc">Title (Z-A)</option>
+                                    <option value="current-desc">Current Price (High to Low)</option>
+                                    <option value="current-asc">Current Price (Low to High)</option>
+                                    <option value="target-desc">Adj. Median Price (High to Low)</option>
+                                    <option value="target-asc">Adj. Median Price (Low to High)</option>
+                                    <option value="competitors-desc">Competitors (High to Low)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>SKU / ASIN</th>
+                                        <th>Competitors</th>
+                                        <th>Current</th>
+                                        <th>Median</th>
+                                        <th title="Median price adjusted using Avg. Market Index.">Adj. Median <span style="cursor:help; font-size:10px;">ⓘ</span></th>
+                                        <th>Action</th>
+                                        <th>Reasoning</th>
+                                        <th>Market Position</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recs-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- View: CATEGORIES (My Product Rankings) -->
+            <div id="view-categories" style="display: none;">
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 700; color: var(--text);">My Product Rankings</h2>
+                            <p style="font-size: 13px; color: var(--text-dim);">Live BSR monitoring for your product portfolio.</p>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <input type="text" id="category-search" placeholder="Search products or categories..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; color: var(--text); font-size: 13px; width: 250px;">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>CATEGORY</th>
+                                    <th>PRODUCT DETAILS</th>
+                                    <th>ASIN</th>
+                                    <th>BSR RANK</th>
+                                    <th>COMPETITOR FILTERING (KEYWORDS)</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-body">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1/benchmarking';
+        let currentClientId = 's2c-uae';
+        let activeTab = 'benchmarking';
+        let testCatalog = [];
+        let simulationActive = false;
+        let simulationResults = null;
+        let overviewSnapshots = [];
+        let globalRecommendations = [];
+        let currentOverviewChartInstance = null;
+        let currentBubbleChartInstance = null;
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function findRecommendationForProduct(row) {
+            const parentAsin = row?.parent_asin || row?.asin;
+            const asin = row?.asin;
+            const matches = globalRecommendations.filter(rec => {
+                const recParentAsin = rec.parent_asin || rec.asin;
+                return recParentAsin === parentAsin ||
+                    recParentAsin === asin ||
+                    rec.asin === asin ||
+                    rec.asin === parentAsin;
+            });
+            return matches.find(rec => rec.title && rec.asin === rec.parent_asin) ||
+                matches.find(rec => rec.title) ||
+                matches.find(rec => rec.asin === rec.parent_asin) ||
+                matches[0];
+        }
+
+        // Draft Persistence Utilities
+        const DRAFT_KEY_PREFIX = 'saddl_drafts_';
+        function getDraftsKey(clientId) { return `${DRAFT_KEY_PREFIX}${clientId || currentClientId}`; }
+        function getDrafts(clientId) {
+            try { const stored = localStorage.getItem(getDraftsKey(clientId)); return stored ? JSON.parse(stored) : {}; }
+            catch (e) { console.error('Failed to read drafts:', e); return {}; }
+        }
+        function findOriginalProduct(asin) {
+            if (!window.allCategories) return null;
+            for (const cat of window.allCategories) {
+                if (cat.products) {
+                    const prod = cat.products.find(p => p.asin === asin);
+                    if (prod) return prod;
+                }
+            }
+            return null;
+        }
+        function saveDraft(clientId, asin, refName, excludeKws, excludeBrands) {
+            try {
+                const key = getDraftsKey(clientId);
+                const drafts = getDrafts(clientId);
+                const origProd = findOriginalProduct(asin);
+                let isDifferent = false;
+                if (origProd) {
+                    const parts = (origProd.exclude_keywords || '').split('|brand_exclude:');
+                    if ((refName || '') !== (origProd.reference_name || '') || (excludeKws || '') !== (parts[0] || '').trim() || (excludeBrands || '') !== (parts[1] || '').trim()) isDifferent = true;
+                } else if (refName || excludeKws || excludeBrands) { isDifferent = true; }
+                if (isDifferent) drafts[asin] = { reference_name: refName, exclude_keywords: excludeKws, exclude_brands: excludeBrands, updatedAt: Date.now() };
+                else delete drafts[asin];
+                localStorage.setItem(key, JSON.stringify(drafts));
+            } catch (e) { console.error('Failed to save draft:', e); }
+        }
+        function clearDraft(clientId, asin) {
+            try {
+                const key = getDraftsKey(clientId);
+                const drafts = getDrafts(clientId);
+                delete drafts[asin];
+                localStorage.setItem(key, JSON.stringify(drafts));
+            } catch (e) { console.error('Failed to clear draft:', e); }
+        }
+        const draftSaveTimeouts = {};
+        function handleCategoryInput(asin) {
+            if (draftSaveTimeouts[asin]) clearTimeout(draftSaveTimeouts[asin]);
+            draftSaveTimeouts[asin] = setTimeout(() => {
+                const refName = (document.getElementById(`ref-name-${asin}`) || {}).value || '';
+                const excludeKws = (document.getElementById(`exclude-keywords-${asin}`) || {}).value || '';
+                const excludeBrands = (document.getElementById(`exclude-brands-${asin}`) || {}).value || '';
+                saveDraft(currentClientId, asin, refName, excludeKws, excludeBrands);
+            }, 500);
+        }
+
+        function getParentAsinTitle(row) {
+            const matchedRec = findRecommendationForProduct(row);
+            return matchedRec?.title || row?.title || row?.reference_name || 'Parent ASIN Group';
+        }
+
+        // Tab Switching Logic
+        let tabDataLoaded = {
+            benchmarking: false,
+            categories: false
+        };
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = item.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tab, forceRefresh = false) {
+            activeTab = tab;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+
+            // Hide all sections
+            document.getElementById('view-benchmarking').style.display = 'none';
+            document.getElementById('view-categories').style.display = 'none';
+
+            // Show active section
+            const targetEl = document.getElementById(`view-${tab}`);
+            if (targetEl) targetEl.style.display = 'block';
+
+            if (forceRefresh || !tabDataLoaded[tab]) {
+                refreshData();
+            }
+        }
+
+        // Account Selection Logic
+        const accountSelector = document.getElementById('account-selector');
+        accountSelector.addEventListener('change', (e) => {
+            currentClientId = e.target.value;
+            simulationActive = false;
+            simulationResults = null;
+            testCatalog = [];
+            tabDataLoaded = { benchmarking: false, categories: false };
+            refreshData();
+        });
+
+        async function fetchAccounts() {
+            try {
+                const resp = await fetch(`${API_BASE}/accounts`, {
+                    headers: { 'X-Internal-Token': 'saddl_secret_token_123' }
+                });
+                const data = await resp.json();
+                
+                if (data.accounts && data.accounts.length > 0) {
+                    accountSelector.innerHTML = data.accounts.map(acc => 
+                        `<option value="${acc.client_id}" ${acc.client_id === currentClientId ? 'selected' : ''}>
+                            ${acc.client_name || acc.client_id} [${acc.client_id}]
+                        </option>`
+                    ).join('');
+                    
+                    if (!currentClientId || !data.accounts.find(a => a.client_id === currentClientId)) {
+                        currentClientId = data.accounts[0].client_id;
+                    }
+                    accountSelector.value = currentClientId; 
+                    refreshData();
+                } else {
+                    accountSelector.innerHTML = '<option value="" disabled selected>No accounts found</option>';
+                }
+            } catch (err) {
+                console.error('Failed to fetch accounts:', err);
+                accountSelector.innerHTML = '<option value="" disabled selected>Error loading accounts</option>';
+            }
+        }
+
+
+        // Common File Processor
+        async function processFileContent(file, text) {
+            let records = [];
+            if (file.name.endsWith('.json')) {
+                const raw = JSON.parse(text);
+                records = Array.isArray(raw) ? raw : (raw.records || []);
+                // Map flexible prices and nested objects
+                records.forEach(r => {
+                    let rawPrice = r.floor_price || r.price || r.selling_price || r.buy_box_price || r.amount || r.listing_price;
+                    if (rawPrice && typeof rawPrice === 'object') {
+                        rawPrice = rawPrice.value || rawPrice.amount || rawPrice.price;
+                    }
+                    r.floor_price = parseFloat(rawPrice);
+                    r.price = r.floor_price; // Consistency
+                    r.asin = r.asin || r.ASIN;
+                    r.sku = r.sku || r.sku_id || r.SKU;
+                    r.marketplace = r.marketplace || 'UAE';
+                });
+            } else if (file.name.endsWith('.csv')) {
+                records = parseCSV(text);
+            }
+            return records;
+        }
+
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            if (lines.length < 2) return [];
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            return lines.slice(1).filter(l => l.trim()).map(line => {
+                const values = line.split(',').map(v => v.trim());
+                const obj = {};
+                headers.forEach((h, i) => {
+                    let val = values[i];
+                    if (['floor_price', 'buy_box_price', 'shipping_price', 'price', 'selling price', 'selling_price', 'amount'].includes(h)) {
+                        val = parseFloat(val);
+                    } else if (h === 'is_buy_box_winner') {
+                        val = val.toLowerCase() === 'true';
+                    }
+                    obj[h] = val;
+                });
+                
+                // Map common price columns to floor_price if missing
+                if (!obj.floor_price) {
+                    obj.floor_price = obj.price || obj['selling price'] || obj.selling_price || obj.amount || obj.buy_box_price;
+                }
+                obj.marketplace = obj.marketplace || 'UAE';
+                return obj;
+            });
+        }
+
+        function resetKPIs() {
+            const kpis = ['kpi-health', 'kpi-index', 'kpi-skus', 'kpi-recs'];
+            kpis.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '--';
+            });
+
+            const panel = document.getElementById('product-metrics-panel');
+            if (panel) panel.style.display = 'none';
+        }
+
+        async function refreshData() {
+            try {
+                const headers = { 
+                    'X-Client-Id': currentClientId,
+                    'X-Internal-Token': 'saddl_secret_token_123'
+                };
+                
+                const promises = [];
+
+                if (activeTab === 'benchmarking') {
+                    const fetchBenchmarking = async () => {
+                        const [recsResp, overviewResp, alertsResp] = await Promise.all([
+                            fetch(`${API_BASE}/recommendations?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch recommendations:', e); return null; }),
+                            fetch(`${API_BASE}/overview?client_id=${currentClientId}`, { headers }),
+                            fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch alerts:', e); return null; })
+                        ]);
+
+                        if (recsResp && recsResp.ok) {
+                            const recsData = await recsResp.json();
+                            globalRecommendations = recsData.recommendations || [];
+                        }
+
+                        if (!overviewResp.ok) throw new Error(`HTTP ${overviewResp.status}`);
+                        const overviewData = await overviewResp.json();
+                        
+                        renderOverview(overviewData.rows, overviewData);
+                        renderRecommendations(globalRecommendations);
+
+                        if (alertsResp && alertsResp.ok) {
+                            const alertsData = await alertsResp.json();
+                            renderAlerts(alertsData.alerts);
+                        }
+                    };
+                    promises.push(fetchBenchmarking());
+                }
+
+                if (activeTab === 'categories') {
+                    const fetchCategories = async () => {
+                        const catsResp = await fetch(`${API_BASE}/account-bsr-categories?account_id=${currentClientId}`, { headers });
+                        if (catsResp.ok) {
+                            const catsData = await catsResp.json();
+                            window.allCategories = catsData.categories; // Store for searching
+                            renderCategories(catsData.categories);
+                        }
+                    };
+                    promises.push(fetchCategories());
+                }
+
+                await Promise.all(promises);
+                tabDataLoaded[activeTab] = true;
+
+            } catch (err) {
+                console.error('Data refresh failed:', err);
+                resetKPIs();
+                // Optionally show a small error toast or update sub-title
+                const subTitle = document.getElementById('sub-title');
+                if (subTitle) {
+                    subTitle.innerHTML = `<span style="color: var(--danger)">⚠️ Connection Lost: ${err.message}. Database may be disconnected.</span> <a href="#" onclick="refreshData()" style="color: var(--accent); margin-left: 10px; text-decoration: underline; font-size: 11px;">Retry</a>`;
+                }
+            }
+        }
+
+
+
+        // Category Search Event
+        document.getElementById('category-search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            if (!window.allCategories) return;
+
+            if (!term) {
+                renderCategories(window.allCategories);
+                return;
+            }
+
+            // Split commas into alternative phrases. Words inside a phrase must all match.
+            const keywordGroups = term
+                .split(',')
+                .map(phrase => phrase.trim().split(/\s+/).filter(k => k))
+                .filter(group => group.length > 0);
+            
+            if (keywordGroups.length === 0) {
+                renderCategories(window.allCategories);
+                return;
+            }
+
+            // For each category, we check if any of its products match any keyword group.
+            const filtered = window.allCategories.map(c => {
+                // Filter the products in this category.
+                // A product matches if, for every keyword in any group, the keyword matches
+                // either the product title, the product ASIN, or the product reference name.
+                const matchingProducts = (c.products || []).filter(p => {
+                    const titleLower = (p.title || '').toLowerCase();
+                    const asinLower = (p.asin || '').toLowerCase();
+                    const refLower = (p.reference_name || '').toLowerCase();
+                    
+                    return keywordGroups.some(group =>
+                        group.every(kw =>
+                            titleLower.includes(kw) ||
+                            asinLower.includes(kw) ||
+                            refLower.includes(kw)
+                        )
+                    );
+                });
+                
+                // If there are matching products, we return this category with the matching products list
+                if (matchingProducts.length > 0) {
+                    return {
+                        ...c,
+                        products: matchingProducts
+                    };
+                }
+                return null;
+            }).filter(Boolean);
+
+            renderCategories(filtered);
+        });
+
+        function generatePricingDistribution(row, rawCompetitors = [], sampleSize = 200, binCount = 10) {
+            const rawMin = parseFloat(row.floor_price);
+            const p25 = parseFloat(row.p25_price);
+            const median = parseFloat(row.median_price);
+            const p75 = parseFloat(row.p75_price);
+            const rawMax = parseFloat(row.ceiling_price);
+            const count = parseInt(row.n_competitors) || 0;
+
+            if (isNaN(rawMin) || isNaN(rawMax) || count === 0) return null;
+
+            // Handle edge case: zero price spread
+            if (rawMax <= rawMin) {
+                return {
+                    bins: [{
+                        label: `${rawMin.toFixed(1)}`,
+                        mid: rawMin,
+                        start: rawMin,
+                        end: rawMin,
+                        count: count,
+                        competitors: rawCompetitors,
+                        brands: [],
+                        actualAvg: rawMin,
+                        actualMedian: rawMin
+                    }],
+                    min: rawMin, max: rawMax, p25, median, p75
+                };
+            }
+
+            // Find matching recommendation to get Our Price and Adjusted Median Price
+            let yourPrice = parseFloat(row.your_price);
+            if (isNaN(yourPrice)) yourPrice = parseFloat(row.current_price);
+            
+            const matchedRec = globalRecommendations.find(rec => {
+                const recKey = rec.parent_asin || rec.asin;
+                const rowKey = row.parent_asin || row.asin;
+                return recKey === rowKey || rec.asin === row.asin || rec.parent_asin === row.parent_asin;
+            });
+            if (matchedRec) {
+                if (isNaN(yourPrice) || yourPrice <= 0) {
+                    yourPrice = parseFloat(matchedRec.calculatedCurrentPrice) || parseFloat(matchedRec.current_price) || parseFloat(matchedRec.your_price) || 0;
+                }
+            }
+            if (isNaN(yourPrice)) yourPrice = 0;
+
+            const marketIndex = window.currentAvgMarketIndex || 100;
+            let rawMedianVal = parseFloat(row.median_price) || parseFloat(row.recommended_price) || 0;
+            if (matchedRec && rawMedianVal === 0) {
+                rawMedianVal = parseFloat(matchedRec.metadata?.median_price) || parseFloat(matchedRec.recommended_price) || 0;
+            }
+            const adjMedian = rawMedianVal * (marketIndex / 100);
+
+            // Expand bounds to cover competitor range, our selling price, and Adjusted Median Price
+            let finalMin = rawMin;
+            let finalMax = rawMax;
+            if (yourPrice > 0) {
+                finalMin = Math.min(finalMin, yourPrice);
+                finalMax = Math.max(finalMax, yourPrice);
+            }
+            if (adjMedian > 0) {
+                finalMin = Math.min(finalMin, adjMedian);
+                finalMax = Math.max(finalMax, adjMedian);
+            }
+
+            // Buffer padding to ensure lines are not right on the edge of the graph
+            const spread = finalMax - finalMin;
+            const minBound = Math.max(0, finalMin - (spread * 0.08));
+            const maxBound = finalMax + (spread * 0.08);
+
+            // 1. Resolve Competitor Prices (Real or Quartile-based)
+            let prices = [];
+            let competitorSource = [];
+
+            if (count <= 5) {
+                if (rawCompetitors && rawCompetitors.length > 0) {
+                    rawCompetitors.forEach(c => {
+                        const p = parseFloat(c.price);
+                        if (!isNaN(p) && p > 0) {
+                            prices.push(p);
+                            competitorSource.push(c);
+                        }
+                    });
+                }
+                
+                if (prices.length < count) {
+                    const missingCount = count - prices.length;
+                    const quartiles = [];
+                    if (count === 1) {
+                        quartiles.push(median);
+                    } else if (count === 2) {
+                        quartiles.push(rawMin, rawMax);
+                    } else if (count === 3) {
+                        quartiles.push(rawMin, median, rawMax);
+                    } else if (count === 4) {
+                        quartiles.push(rawMin, p25, p75, rawMax);
+                    } else {
+                        quartiles.push(rawMin, p25, median, p75, rawMax);
+                    }
+                    
+                    for (let i = 0; i < missingCount; i++) {
+                        const priceVal = quartiles[i % quartiles.length] || median;
+                        prices.push(priceVal);
+                        competitorSource.push({
+                            price: priceVal,
+                            brand: 'Competitor'
+                        });
+                    }
+                }
+            } else {
+                // High competitors (count > 5): Synthetic Population Interpolation
+                for (let i = 0; i <= sampleSize; i++) {
+                    const q = i / sampleSize;
+                    let p = 0;
+                    if (q <= 0.25) {
+                        p = rawMin + (q / 0.25) * (p25 - rawMin);
+                    } else if (q <= 0.50) {
+                        p = p25 + ((q - 0.25) / 0.25) * (median - p25);
+                    } else if (q <= 0.75) {
+                        p = median + ((q - 0.50) / 0.25) * (p75 - median);
+                    } else {
+                        p = p75 + ((q - 0.75) / 0.25) * (rawMax - p75);
+                    }
+                    
+                    const jitter = (Math.random() - 0.5) * 0.015 * (rawMax - rawMin);
+                    prices.push(Math.max(rawMin, Math.min(rawMax, p + jitter)));
+                }
+
+                // Resolve competitor source for high competitor count
+                competitorSource = rawCompetitors || [];
+                if (competitorSource.length === 0) {
+                    const step = prices.length / count;
+                    competitorSource = [];
+                    for (let i = 0; i < count; i++) {
+                        const priceIndex = Math.min(prices.length - 1, Math.floor(i * step));
+                        competitorSource.push({
+                            price: prices[priceIndex],
+                            brand: 'Competitor'
+                        });
+                    }
+                }
+            }
+
+            // 2. Frequency Binning across the expanded bounds
+            const binWidth = (maxBound - minBound) / binCount;
+            if (binWidth <= 0) return null;
+            const bins = [];
+            for (let i = 0; i < binCount; i++) {
+                const binStart = minBound + i * binWidth;
+                const binEnd = binStart + binWidth;
+                bins.push({
+                    label: `${binStart.toFixed(1)} - ${binEnd.toFixed(1)}`,
+                    mid: binStart + binWidth / 2,
+                    start: binStart,
+                    end: binEnd,
+                    count: 0,
+                    competitors: [],
+                    brands: [],
+                    actualAvg: 0,
+                    actualMedian: 0
+                });
+            }
+
+            prices.forEach(price => {
+                for (let i = 0; i < binCount; i++) {
+                    if (price >= bins[i].start && (i === binCount - 1 ? price <= bins[i].end : price < bins[i].end)) {
+                        bins[i].count++;
+                        break;
+                    }
+                }
+            });
+
+            // Map actual or simulated competitors into the bins based on their price securely
+            competitorSource.forEach(comp => {
+                const p = parseFloat(comp.price);
+                if (isNaN(p)) return;
+                
+                // Clamp to prevent dropping items due to database floor_price rounding
+                const clampedP = Math.max(minBound, Math.min(maxBound, p));
+                const epsilon = 0.0001; // Absorb floating point JS drift
+                let assigned = false;
+                
+                for (let i = 0; i < binCount; i++) {
+                    const isLast = (i === binCount - 1);
+                    if (clampedP >= (bins[i].start - epsilon) && (isLast ? clampedP <= (bins[i].end + epsilon) : clampedP < bins[i].end)) {
+                        bins[i].competitors.push(comp);
+                        assigned = true;
+                        break;
+                    }
+                }
+                
+                // Absolute safety net guarantees no dropped competitors
+                if (!assigned && binCount > 0) {
+                    if (clampedP < bins[0].start) bins[0].competitors.push(comp);
+                    else bins[binCount - 1].competitors.push(comp);
+                }
+            });
+
+            // Aggregate brand counts and actual prices per bin
+            bins.forEach(b => {
+                if (b.competitors.length > 0) {
+                    const brandCounts = {};
+                    let sum = 0;
+                    const compPrices = [];
+                    
+                    b.competitors.forEach(c => {
+                        let brandRaw = c.brand || '';
+                        if (brandRaw === 'None' || brandRaw === 'null') {
+                            brandRaw = '';
+                        }
+                        if (!brandRaw || brandRaw.trim() === '') {
+                            const titleWords = (c.title || 'Unknown Brand').split(' ').filter(w => w.trim() !== '');
+                            // Extract first two words for better identification if no brand exists
+                            brandRaw = titleWords.slice(0, 2).join(' ');
+                        }
+                        
+                        // Normalize brand string to group effectively (e.g. "stanley" and "Stanley ")
+                        const brand = brandRaw.trim().replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                        
+                        brandCounts[brand] = (brandCounts[brand] || 0) + 1;
+                        
+                        const p = parseFloat(c.price);
+                        sum += p;
+                        compPrices.push(p);
+                    });
+                    
+                    b.brands = Object.entries(brandCounts)
+                        .map(([name, count]) => ({ name, count }))
+                        .sort((a, b) => b.count - a.count);
+                    
+                    b.actualAvg = sum / b.competitors.length;
+                    
+                    compPrices.sort((x, y) => x - y);
+                    const midIdx = Math.floor(compPrices.length / 2);
+                    if (compPrices.length % 2 === 0) {
+                        b.actualMedian = (compPrices[midIdx - 1] + compPrices[midIdx]) / 2;
+                    } else {
+                        b.actualMedian = compPrices[midIdx];
+                    }
+                }
+            });
+
+            // Normalize densities to sum up to N (competitor count) if count > 5
+            if (count > 5) {
+                const scale = count / prices.length;
+                bins.forEach(b => {
+                    b.count = parseFloat((b.count * scale).toFixed(1));
+                });
+            }
+
+            return { bins, min: rawMin, max: rawMax, p25, median, p75 };
+        }
+
+        function renderPricingHistogram(row) {
+            const container = document.getElementById('overview-histogram-chart');
+            const emptyState = document.getElementById('overview-chart-empty');
+            const loader = document.getElementById('overview-chart-loading');
+            const panel = document.getElementById('product-metrics-panel');
+
+            if (loader) loader.style.display = 'none';
+
+            if (!row || !row.floor_price || !row.ceiling_price || !row.n_competitors) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                if (panel) panel.style.display = 'none';
+                return;
+            }
+
+            const count = parseInt(row.n_competitors) || 0;
+            if (count === 0) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                if (panel) panel.style.display = 'none';
+                return;
+            }
+
+            if (container) container.style.display = 'block';
+            if (emptyState) emptyState.style.display = 'none';
+
+            const matchedRec = globalRecommendations.find(rec => {
+                const recKey = rec.parent_asin || rec.asin;
+                const rowKey = row.parent_asin || row.asin;
+                return recKey === rowKey || rec.asin === row.asin || rec.parent_asin === row.parent_asin;
+            });
+            const rawMedian = parseFloat(row.median_price) || 0;
+            const marketIndex = window.currentAvgMarketIndex || 100;
+            const targetPriceVal = rawMedian * (marketIndex / 100);
+
+            // Update Product-specific Metrics Panel & Break-even calculations
+            if (panel) {
+                // Store active product row globally for dynamic updates on COGS change
+                window.activeProductRow = row;
+
+                const curPriceEl = document.getElementById('product-current-price');
+                const bePriceEl = document.getElementById('product-breakeven-price');
+                const tgtPriceEl = document.getElementById('product-target-price');
+                const badgeEl = document.getElementById('product-profitability-badge');
+                const cogsInput = document.getElementById('product-cogs-input');
+                
+                const yourPriceVal = parseFloat(row.your_price);
+                const currency = 'AED';
+
+                if (curPriceEl && bePriceEl && tgtPriceEl && badgeEl && cogsInput) {
+                    const parentAsin = row.parent_asin || row.asin;
+                    const cogsKey = `saddl_cogs_${currentClientId}_${parentAsin}`;
+                    
+                    // Setup the input field value from localStorage
+                    const savedCogs = localStorage.getItem(cogsKey);
+                    
+                    // Temporarily remove standard event listener to avoid infinite loops when setting value programmatically
+                    cogsInput.oninput = null;
+                    if (document.activeElement !== cogsInput) {
+                        cogsInput.value = savedCogs !== null ? savedCogs : '';
+                    }
+                    
+                    // Add real-time event listener to save and re-calculate
+                    cogsInput.oninput = (e) => {
+                        const newCogs = e.target.value.trim();
+                        if (newCogs === '' || parseFloat(newCogs) >= 0) {
+                            if (newCogs === '') {
+                                localStorage.removeItem(cogsKey);
+                            } else {
+                                localStorage.setItem(cogsKey, newCogs);
+                            }
+                            // Re-render overview metrics panel in real time
+                            if (window.activeProductRow) {
+                                renderPricingHistogram(window.activeProductRow);
+                            }
+                            // Re-render recommendations table to show warnings in real time
+                            renderRecommendations(globalRecommendations);
+                        }
+                    };
+
+                    panel.style.display = 'flex';
+                    
+                    // Render Current Price
+                    if (!isNaN(yourPriceVal) && yourPriceVal >= 0) {
+                        curPriceEl.textContent = `${currency} ${yourPriceVal.toFixed(2)}`;
+                    } else {
+                        curPriceEl.textContent = '--';
+                    }
+
+                    // Render Target Price
+                    if (targetPriceVal && !isNaN(targetPriceVal)) {
+                        tgtPriceEl.textContent = `${currency} ${targetPriceVal.toFixed(2)}`;
+                    } else {
+                        tgtPriceEl.textContent = '--';
+                    }
+
+                    // Render Break-even Price & Profitability Badge
+                    const parsedCogs = parseFloat(savedCogs);
+                    if (savedCogs !== null && !isNaN(parsedCogs) && parsedCogs > 0) {
+                        const breakEvenPrice = parsedCogs / 0.3;
+                        bePriceEl.textContent = `${currency} ${breakEvenPrice.toLocaleString('en-AE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        
+                        // Margin analysis against Current Price
+                        const comparisonPrice = !isNaN(yourPriceVal) ? yourPriceVal : 0;
+                        if (comparisonPrice < breakEvenPrice) {
+                            badgeEl.style.display = 'inline-block';
+                            badgeEl.style.background = 'rgba(239, 68, 68, 0.15)';
+                            badgeEl.style.color = 'var(--danger)';
+                            badgeEl.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+                            badgeEl.textContent = '⚠️ Unsafe Margin';
+                        } else {
+                            badgeEl.style.display = 'inline-block';
+                            badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                            badgeEl.style.color = 'var(--success)';
+                            badgeEl.style.border = '1px solid rgba(16, 185, 129, 0.2)';
+                            badgeEl.textContent = '✓ Margin Safe';
+                        }
+                    } else if (parsedCogs === 0) {
+                        bePriceEl.textContent = `${currency} 0.00`;
+                        badgeEl.style.display = 'inline-block';
+                        badgeEl.style.background = 'rgba(245, 158, 11, 0.15)';
+                        badgeEl.style.color = 'var(--warning)';
+                        badgeEl.style.border = '1px solid rgba(245, 158, 11, 0.2)';
+                        badgeEl.textContent = '⚠️ Enter COGS';
+                    } else {
+                        bePriceEl.textContent = '--';
+                        badgeEl.style.display = 'none';
+                    }
+                }
+            }
+
+            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors) 
+                ? matchedRec.metadata.competitors 
+                : [];
+
+            const dataModel = generatePricingDistribution(row, rawCompetitors, 200, 10);
+            if (!dataModel) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+
+            const xLabels = dataModel.bins.map(b => b.mid);
+            const densities = dataModel.bins.map(b => b.count);
+            
+            let yourPrice = parseFloat(row.your_price);
+            if (isNaN(yourPrice)) yourPrice = parseFloat(row.current_price);
+            if (matchedRec && (isNaN(yourPrice) || yourPrice <= 0)) {
+                yourPrice = parseFloat(matchedRec.calculatedCurrentPrice) || parseFloat(matchedRec.current_price) || parseFloat(matchedRec.your_price) || 0;
+            }
+            if (isNaN(yourPrice)) yourPrice = 0;
+
+            const currency = 'AED';
+
+            const options = {
+                series: [
+                    {
+                        name: 'Competitor Count (Height)',
+                        type: 'column',
+                        data: densities
+                    },
+                    {
+                        name: 'Market Pricing Wave',
+                        type: 'line',
+                        data: densities
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    toolbar: { show: false },
+                    background: 'transparent',
+                    foreColor: '#949eb5'
+                },
+                stroke: {
+                    width: [0, 3],
+                    curve: 'smooth'
+                },
+                colors: ['rgba(91, 138, 240, 0.15)', '#5b8af0'],
+                fill: {
+                    type: ['solid', 'gradient'],
+                    gradient: {
+                        shade: 'dark',
+                        type: 'vertical',
+                        shadeIntensity: 0.5,
+                        gradientToColors: ['#a78bfa'],
+                        inverseColors: false,
+                        opacityFrom: 0.8,
+                        opacityTo: 0.2
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    type: 'numeric',
+                    categories: xLabels,
+                    labels: {
+                        formatter: (value) => `${currency} ${parseFloat(value).toFixed(1)}`,
+                        style: { colors: '#949eb5', fontSize: '11px', fontFamily: 'Inter' }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    show: true,
+                    title: {
+                        text: 'Number of Competitors',
+                        style: { color: '#949eb5', fontWeight: 500, fontSize: '11px' }
+                    },
+                    labels: {
+                        style: { colors: '#949eb5' }
+                    }
+                },
+                grid: {
+                    borderColor: 'rgba(255, 255, 255, 0.05)',
+                    strokeDashArray: 4
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                        const bin = dataModel.bins[dataPointIndex];
+                        if (!bin) return '';
+                        
+                        let brandsHtml = '';
+                        const totalComps = bin.competitors.length;
+                        
+                        if (totalComps > 0) {
+                            const topBrands = bin.brands.slice(0, 4);
+                            brandsHtml = `<ul style="list-style: none; padding: 0; margin: 0 0 10px 0;">` +
+                                topBrands.map(b => `<li style="font-size: 13px; color: var(--text); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;"><span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;">• ${b.name}</span><span style="color: var(--text-dim); font-size: 11px;">(${b.count})</span></li>`).join('') +
+                                `</ul>`;
+                            
+                            if (bin.brands.length > 4) {
+                                const remaining = bin.brands.length - 4;
+                                brandsHtml += `<div style="font-size: 12px; color: var(--text-dim); font-style: italic; margin-bottom: 10px;">+${remaining} more brand${remaining > 1 ? 's' : ''}</div>`;
+                            }
+                        } else {
+                            brandsHtml = `<div style="font-size: 13px; color: var(--text-dim); margin-bottom: 10px; font-style: italic;">No specific brands identified in this slice.</div>`;
+                        }
+
+                        const priceRange = `Price range: ${currency} ${(bin.start).toFixed(1)} - ${(bin.end).toFixed(1)}`;
+                        
+                        let footerHtml = '';
+                        if (totalComps > 0) {
+                            footerHtml = `
+                                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim);">
+                                    <span>Avg: ${currency} ${bin.actualAvg.toFixed(2)}</span>
+                                    <span>Med: ${currency} ${bin.actualMedian.toFixed(2)}</span>
+                                </div>
+                            `;
+                        } else {
+                            footerHtml = `<div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; font-size: 12px; color: var(--text-dim);">Height Density: ${bin.count.toFixed(1)}</div>`;
+                        }
+
+                        return `
+                            <div class="custom-tooltip" style="background: rgba(22, 25, 35, 0.9); backdrop-filter: blur(12px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-radius: 8px; padding: 16px; min-width: 220px;">
+                                <div style="font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase;">
+                                    ${priceRange}
+                                </div>
+                                <div style="font-size: 13px; color: var(--text); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                                    Competitors Found: <b style="color: white;">${totalComps}</b>
+                                </div>
+                                ${brandsHtml}
+                                ${footerHtml}
+                            </div>
+                        `;
+                    }
+                },
+                legend: { show: false },
+                annotations: {
+                    xaxis: [
+                        // 1. Adjusted Median Line Annotation
+                        {
+                            x: targetPriceVal,
+                            borderColor: '#f59e0b',
+                            strokeDashArray: 5,
+                            borderWidth: 2,
+                            label: {
+                                style: { color: '#fff', background: '#f59e0b', fontSize: '10px', fontWeight: 700, padding: { left: 6, right: 6, top: 4, bottom: 4 } },
+                                text: `Adjusted Median: ${currency} ${Number.isFinite(targetPriceVal) ? targetPriceVal.toFixed(2) : '0.00'}`
+                            }
+                        }
+                    ]
+                }
+            };
+
+            // Add Your Price line if valid
+            if (Number.isFinite(yourPrice) && yourPrice > 0) {
+                options.annotations.xaxis.push({
+                    x: yourPrice,
+                    borderColor: '#10b981',
+                    strokeDashArray: 0,
+                    borderWidth: 3,
+                    label: {
+                        style: { color: '#fff', background: '#10b981', fontSize: '11px', fontWeight: 800, padding: { left: 8, right: 8, top: 5, bottom: 5 } },
+                        text: `Our Price: ${currency} ${yourPrice.toFixed(2)}`
+                    }
+                });
+            }
+
+            if (currentOverviewChartInstance) {
+                currentOverviewChartInstance.destroy();
+            }
+
+            currentOverviewChartInstance = new ApexCharts(document.getElementById('overview-histogram-chart'), options);
+            currentOverviewChartInstance.render();
+        }
+
+        function renderRatingVsPriceBubbleChart(row) {
+            const container = document.getElementById('overview-bubble-chart');
+            const emptyState = document.getElementById('overview-bubble-empty');
+            const loader = document.getElementById('overview-bubble-loading');
+
+            if (loader) loader.style.display = 'none';
+
+            if (!row || !row.asin) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+
+            // Find matching recommendation to get competitors list
+            const matchedRec = globalRecommendations.find(rec => {
+                const recKey = rec.parent_asin || rec.asin;
+                const rowKey = row.parent_asin || row.asin;
+                return recKey === rowKey || rec.asin === row.asin || rec.parent_asin === row.parent_asin;
+            });
+
+            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors) 
+                ? matchedRec.metadata.competitors 
+                : [];
+
+            // 1. Get reference/include keyword, exclude keywords, and exclude brands
+            const parentAsin = row.parent_asin || row.asin;
+            
+            // Try to read from DOM elements if they exist (live edited values)
+            const domInclude = document.getElementById(`ref-name-${parentAsin}`);
+            const domExcludeKws = document.getElementById(`exclude-keywords-${parentAsin}`);
+            const domExcludeBrands = document.getElementById(`exclude-brands-${parentAsin}`);
+            
+            let referenceName = domInclude ? domInclude.value : (row.reference_name || '');
+            let excludeKeywordsStr = '';
+            
+            if (domExcludeKws || domExcludeBrands) {
+                const kwsVal = domExcludeKws ? domExcludeKws.value.trim() : '';
+                const brandsVal = domExcludeBrands ? domExcludeBrands.value.trim() : '';
+                excludeKeywordsStr = kwsVal;
+                if (brandsVal) {
+                    excludeKeywordsStr = `${kwsVal}|brand_exclude: ${brandsVal}`;
+                }
+            } else {
+                excludeKeywordsStr = row.exclude_keywords || (matchedRec && matchedRec.exclude_keywords) || '';
+            }
+
+            let excludeKeywords = [];
+            let excludeBrands = [];
+            if (excludeKeywordsStr && excludeKeywordsStr.trim()) {
+                const parts = excludeKeywordsStr.split('|brand_exclude:');
+                const kwsPart = parts[0] || '';
+                const brandsPart = parts[1] || '';
+                
+                excludeKeywords = kwsPart.split(',').map(kw => kw.trim().toLowerCase()).filter(Boolean);
+                excludeBrands = brandsPart.split(',').map(b => b.trim().toLowerCase()).filter(Boolean);
+            }
+
+            if (rawCompetitors.length === 0) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+
+            if (container) container.style.display = 'block';
+            if (emptyState) emptyState.style.display = 'none';
+
+            const ourPrice = parseFloat(row.your_price) || 0;
+            let ourRatingRaw = parseFloat(row.rating) || 0;
+            let ourRatingEstimated = false;
+            if (!ourRatingRaw || ourRatingRaw <= 0) {
+                ourRatingRaw = 4.5;
+                ourRatingEstimated = true;
+            }
+            const ourRating = ourRatingRaw;
+            const ourReviews = parseInt(row.reviews) || 0;
+
+            // Safe parsing, mapping, and filtering
+            const cleanCompetitors = rawCompetitors.map(c => {
+                let p = parseFloat(c.floor_price) || parseFloat(c.price) || parseFloat(c.competitor_price) || 0;
+                let r = parseFloat(c.rating) || 0;
+                let isEstimatedRating = false;
+                if (!r || r <= 0) {
+                    r = 4.0;
+                    isEstimatedRating = true;
+                }
+                let rev = parseInt(c.reviews) || 0;
+                return {
+                    asin: c.asin,
+                    title: c.title || c.asin || 'Competitor Offer',
+                    brand: c.brand && c.brand !== 'null' && c.brand !== 'None' ? c.brand : '',
+                    price: p,
+                    rating: r,
+                    reviews: rev,
+                    isEstimatedRating: isEstimatedRating
+                };
+            }).filter(c => {
+                if (c.price <= 0) return false;
+                
+                const titleLower = c.title.toLowerCase();
+                const brandLower = c.brand.toLowerCase();
+                
+                // A. Exclude Keywords
+                if (excludeKeywords.some(kw => titleLower.includes(kw))) {
+                    return false;
+                }
+                
+                // B. Exclude Brands
+                if (excludeBrands.length > 0) {
+                    const compBrandClean = brandLower.replace(/\s+/g, ' ').trim();
+                    let matchesExcludedBrand = false;
+                    for (const brand of excludeBrands) {
+                        const brandClean = brand.replace(/\s+/g, ' ').trim();
+                        if (!brandClean) continue;
+                        if (compBrandClean === brandClean) {
+                            matchesExcludedBrand = true;
+                            break;
+                        }
+                        
+                        // Word boundary check (e.g. "stanley" matches "stanley pmi")
+                        const escaped = brandClean.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                        const regex = new RegExp('\\b' + escaped + '\\b');
+                        if (regex.test(compBrandClean)) {
+                            matchesExcludedBrand = true;
+                            break;
+                        }
+                    }
+                    if (matchesExcludedBrand) return false;
+                }
+                
+                // C. Include Keywords (Reference Name)
+                if (referenceName && referenceName.trim()) {
+                    const refLower = referenceName.trim().toLowerCase();
+                    const phrases = refLower.split(',').map(p => p.trim()).filter(Boolean);
+                    if (phrases.length > 0) {
+                        let matchesAnyPhrase = false;
+                        for (const phrase of phrases) {
+                            const keywords = phrase.split(/\s+/).map(kw => kw.trim()).filter(Boolean);
+                            if (keywords.length === 0) continue;
+                            
+                            let phraseMatches = true;
+                            for (const kw of keywords) {
+                                if (!titleLower.includes(kw)) {
+                                    phraseMatches = false;
+                                    break;
+                                }
+                            }
+                            if (phraseMatches) {
+                                matchesAnyPhrase = true;
+                                break;
+                            }
+                        }
+                        if (!matchesAnyPhrase) return false;
+                    }
+                }
+                
+                return true;
+            });
+
+            if (cleanCompetitors.length === 0) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+
+            if (cleanCompetitors.length === 0) {
+                if (container) container.style.display = 'none';
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+
+            // Normalization for bubble sizing (clamp bubble size to between 10px and 45px visually)
+            const allReviews = [...cleanCompetitors.map(c => c.reviews), ourReviews];
+            const maxReviews = Math.max(...allReviews, 1);
+            const minReviews = Math.min(...allReviews, 0);
+
+            function normalizeSize(revs) {
+                if (maxReviews === minReviews) return 15;
+                return 10 + ((revs - minReviews) / (maxReviews - minReviews)) * 35;
+            }
+
+            // Map competitors data series
+            const formattedCompetitors = cleanCompetitors.map(c => {
+                return {
+                    x: c.price,
+                    y: c.rating,
+                    z: normalizeSize(c.reviews),
+                    title: c.title,
+                    brand: c.brand,
+                    asin: c.asin,
+                    actualReviews: c.reviews,
+                    isEstimatedRating: c.isEstimatedRating
+                };
+            });
+
+            // Map our product data series
+            const formattedOurProduct = [{
+                x: ourPrice,
+                y: ourRating,
+                z: normalizeSize(ourReviews),
+                title: row.title || row.reference_name || 'Our Product Group',
+                brand: 'S2C',
+                asin: row.asin,
+                actualReviews: ourReviews,
+                isEstimatedRating: ourRatingEstimated
+            }];
+
+            // Compute Market Median Price for vertical divider
+            const competitorPrices = formattedCompetitors.map(pt => pt.x);
+            competitorPrices.sort((a, b) => a - b);
+            const medianPrice = competitorPrices.length > 0 ? competitorPrices[Math.floor(competitorPrices.length / 2)] : ourPrice;
+
+            const currency = 'AED';
+
+            const options = {
+                series: [
+                    {
+                        name: 'Competitors',
+                        data: formattedCompetitors.map(pt => [pt.x, pt.y, pt.z])
+                    },
+                    {
+                        name: 'Our Product',
+                        data: formattedOurProduct.map(pt => [pt.x, pt.y, pt.z])
+                    }
+                ],
+                chart: {
+                    height: 380,
+                    type: 'bubble',
+                    toolbar: { show: false },
+                    background: 'transparent',
+                    foreColor: '#949eb5'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                fill: {
+                    opacity: [0.6, 0.95]
+                },
+                colors: ['#5b8af0', '#10b981'],
+                xaxis: {
+                    tickAmount: 8,
+                    type: 'numeric',
+                    labels: {
+                        formatter: (val) => `${currency} ${parseFloat(val).toFixed(0)}`,
+                        style: { colors: '#949eb5', fontSize: '11px', fontFamily: 'Inter' }
+                    },
+                    title: {
+                        text: 'Selling Price (AED)',
+                        style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    min: 1.0,
+                    max: 5.0,
+                    tickAmount: 4,
+                    labels: {
+                        formatter: (val) => `${parseFloat(val).toFixed(1)} ★`,
+                        style: { colors: '#949eb5' }
+                    },
+                    title: {
+                        text: 'Average Rating (Stars)',
+                        style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
+                    }
+                },
+                grid: {
+                    borderColor: 'rgba(255, 255, 255, 0.05)',
+                    strokeDashArray: 4
+                },
+                legend: {
+                    show: true,
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    fontFamily: 'Inter',
+                    fontSize: '12px',
+                    labels: { colors: '#f0f2f5' },
+                    markers: { radius: 12 }
+                },
+                annotations: {
+                    xaxis: [{
+                        x: medianPrice,
+                        borderColor: 'rgba(255, 255, 255, 0.25)',
+                        strokeDashArray: 4,
+                        label: {
+                            style: { color: '#fff', background: 'rgba(91, 138, 240, 0.4)', fontSize: '9px', fontWeight: 600 },
+                            text: `Median Price: ${currency} ${medianPrice.toFixed(0)}`
+                        }
+                    }],
+                    yaxis: [{
+                        y: 4.2,
+                        borderColor: 'rgba(255, 255, 255, 0.25)',
+                        strokeDashArray: 4,
+                        label: {
+                            style: { color: '#fff', background: 'rgba(245, 158, 11, 0.4)', fontSize: '9px', fontWeight: 600 },
+                            text: 'Quality Threshold (4.2★)'
+                        }
+                    }]
+                },
+                tooltip: {
+                    shared: false,
+                    intersect: true,
+                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                        const pt = (seriesIndex === 0) ? formattedCompetitors[dataPointIndex] : formattedOurProduct[dataPointIndex];
+                        if (!pt) return '';
+
+                        let segment = '';
+                        let segmentColor = '';
+                        if (pt.y >= 4.2) {
+                            if (pt.x <= medianPrice) {
+                                segment = 'Value Leader Zone';
+                                segmentColor = 'var(--success)';
+                            } else {
+                                segment = 'Premium Segment';
+                                segmentColor = 'var(--accent)';
+                            }
+                        } else {
+                            if (pt.x <= medianPrice) {
+                                segment = 'Budget Zone';
+                                segmentColor = 'var(--warning)';
+                            } else {
+                                segment = 'Overpriced / Vulnerable';
+                                segmentColor = 'var(--danger)';
+                            }
+                        }
+
+                        const brandLabel = pt.brand ? pt.brand.trim().replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) : 'Competitor';
+                        const truncatedTitle = pt.title.length > 60 ? pt.title.substring(0, 60) + '...' : pt.title;
+                        const isOurs = (seriesIndex === 1);
+
+                        return `
+                            <div class="custom-tooltip" style="
+                                background: rgba(22, 25, 35, 0.95);
+                                backdrop-filter: blur(12px) saturate(180%);
+                                border: 1.5px solid ${isOurs ? 'var(--success)' : 'rgba(255, 255, 255, 0.08)'};
+                                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                                border-radius: 8px;
+                                padding: 14px;
+                                min-width: 250px;
+                                color: var(--text);
+                                font-family: var(--font-main);
+                                line-height: 1.4;
+                            ">
+                                <div style="font-size: 11px; font-weight: 700; color: ${isOurs ? 'var(--success)' : 'var(--accent)'}; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;">
+                                    ${isOurs ? '★ Our Product' : brandLabel}
+                                </div>
+                                <div style="font-size: 12px; font-weight: 600; color: white; margin-bottom: 10px; line-height: 1.4;">
+                                    ${truncatedTitle}
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; margin-bottom: 8px; color: var(--text-dim);">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Price:</span> <b style="color: white; font-family: monospace;">AED ${pt.x.toFixed(2)}</b>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Rating:</span> <b style="color: white;">${pt.isEstimatedRating ? `${pt.y.toFixed(1)} ★ (N/A)` : `${pt.y.toFixed(1)} ★`}</b>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Reviews:</span> <b style="color: white;">${pt.actualReviews.toLocaleString()}</b>
+                                    </div>
+                                </div>
+                                <div style="font-size: 10px; font-weight: 700; color: ${segmentColor}; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+                                    ${segment}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            };
+
+            if (currentBubbleChartInstance) {
+                currentBubbleChartInstance.destroy();
+            }
+
+            currentBubbleChartInstance = new ApexCharts(document.getElementById('overview-bubble-chart'), options);
+            currentBubbleChartInstance.render();
+        }
+
+        function renderOverview(rows, overviewData = {}) {
+            if (!rows || rows.length === 0) {
+                resetKPIs();
+                return;
+            }
+
+            // Deduplicate by parent ASIN, keeping only the latest snapshot for each group.
+            const latestRowsMap = new Map();
+            rows.forEach(r => {
+                const key = r.parent_asin || r.asin;
+                const existing = latestRowsMap.get(key);
+                if (!existing || new Date(r.snapshot_date) > new Date(existing.snapshot_date)) {
+                    latestRowsMap.set(key, r);
+                }
+            });
+            const uniqueRows = Array.from(latestRowsMap.values());
+            
+            // Store global reference for product switching
+            overviewSnapshots = uniqueRows;
+
+            // Clear error if any
+            const subTitle = document.getElementById('sub-title');
+            const simBanner = document.getElementById('sim-banner');
+            if (subTitle && subTitle.textContent.includes('Connection Lost')) {
+                subTitle.innerHTML = 'Real-time market positioning & repricing intelligence <span id="sim-banner" style="display:none; background: var(--warning-glow); color: var(--warning); padding: 2px 8px; border-radius: 6px; font-size: 11px; margin-left: 10px; border: 1px solid var(--warning);">SIMULATION MODE</span>';
+            }
+
+            let validCount = 0;
+            const avgIndex = uniqueRows.reduce((acc, r) => {
+                let val = parseFloat(r.index_vs_median);
+                if (isNaN(val) || val === 0) {
+                    const yp = parseFloat(r.your_price);
+                    const mp = parseFloat(r.median_price);
+                    if (yp > 0 && mp > 0) {
+                        val = (yp / mp) * 100;
+                    } else {
+                        return acc;
+                    }
+                }
+                validCount++;
+                return acc + val;
+            }, 0) / (validCount || 1);
+            window.currentAvgMarketIndex = avgIndex;
+            const indexElem = document.getElementById('kpi-index');
+            if (indexElem) indexElem.textContent = avgIndex.toFixed(1);
+
+            const activeCategory = (document.getElementById('overview-category-filter') || {}).value || 'all';
+            const parentCount = Number(overviewData.parent_asin_count);
+            const skusCount = (activeCategory === 'all' && Number.isFinite(parentCount) && parentCount > 0)
+                ? parentCount
+                : uniqueRows.length;
+            const skusElem = document.getElementById('kpi-skus');
+            if (skusElem) skusElem.textContent = skusCount;
+
+            // Dynamic Health Score Calculation
+            const healthyZones = ['budget', 'value', 'mid_market', 'premium'];
+            const healthyCount = uniqueRows.filter(r => healthyZones.includes(r.zone)).length;
+            const healthScore = Math.round((healthyCount / uniqueRows.length) * 100);
+            const healthElem = document.getElementById('kpi-health');
+            if (healthElem) {
+                healthElem.textContent = healthScore + '%';
+                healthElem.style.color = healthScore > 80 ? 'var(--success)' : (healthScore > 50 ? 'var(--warning)' : 'var(--danger)');
+            }
+
+            const portfolioMarker = document.getElementById('portfolio-marker');
+            if (portfolioMarker) {
+                // Feature removed per user request
+            }
+
+            // Populate Overview Product Selector dropdown
+            const selector = document.getElementById('overview-product-selector');
+            if (selector) {
+                const previousSelection = selector.value;
+                
+                selector.innerHTML = `<option value="" disabled>Select Product to Analyze...</option>` + 
+                    uniqueRows.map((r, index) => {
+                        const asin = r.parent_asin || r.asin;
+                        const labelText = getParentAsinTitle(r);
+                        const optionLabel = `${asin} - ${labelText}`;
+                        const isSelected = previousSelection 
+                            ? (r.asin === previousSelection) 
+                            : (index === 0);
+                        return `<option value="${escapeHtml(r.asin)}" title="${escapeHtml(optionLabel)}" ${isSelected ? 'selected' : ''}>
+                            ${escapeHtml(optionLabel)}
+                        </option>`;
+                    }).join('');
+                selector.title = selector.options[selector.selectedIndex]?.textContent.trim() || '';
+
+                // Render Chart for the currently selected product
+                const activeAsin = selector.value;
+                const activeRow = uniqueRows.find(r => r.asin === activeAsin);
+                if (activeRow) {
+                    renderPricingHistogram(activeRow);
+                    renderRatingVsPriceBubbleChart(activeRow);
+                    updatePortfolioMarkers(activeRow);
+                } else if (uniqueRows.length > 0) {
+                    // Fallback to first if mismatch
+                    selector.value = uniqueRows[0].asin;
+                    renderPricingHistogram(uniqueRows[0]);
+                    renderRatingVsPriceBubbleChart(uniqueRows[0]);
+                    updatePortfolioMarkers(uniqueRows[0]);
+                } else {
+                    renderPricingHistogram(null);
+                    renderRatingVsPriceBubbleChart(null);
+                }
+            }
+        }
+
+        function calculateMarketPosition(price, competitors = [], adjMedian = 0) {
+            const compCount = competitors ? competitors.length : 0;
+            if (compCount === 0) {
+                return { pct: 50, zone: 'no_competitors' };
+            }
+
+            if (price <= 0) {
+                return { pct: 0, zone: 'below_market' };
+            }
+
+            if (price === adjMedian) {
+                return { pct: 50, zone: 'mid_market' };
+            }
+
+            let pct = 50;
+            let zone = 'mid_market';
+
+            if (price < adjMedian) {
+                pct = (price / (adjMedian || 1)) * 50;
+                if (pct < 15) zone = 'below_market';
+                else if (pct < 35) zone = 'budget';
+                else zone = 'value';
+            } else {
+                const over = price - adjMedian;
+                pct = Math.min(100.0, 50.0 + (over / (adjMedian || 1)) * 50.0);
+                if (pct > 85) zone = 'above_market';
+                else if (pct > 65) zone = 'premium';
+                else zone = 'mid_market';
+            }
+
+            return { pct, zone };
+        }
+
+        function updatePortfolioMarkers(selectedRow) {
+            if (!selectedRow) return;
+            const marketIndex = window.currentAvgMarketIndex || 100;
+            
+            // Look up in globalRecommendations for accurate min/max/percentile info
+            let targetRec = globalRecommendations.find(r => (r.parent_asin || r.asin) === (selectedRow.parent_asin || selectedRow.asin));
+            targetRec = targetRec || selectedRow;
+            
+            const meta = targetRec.metadata || targetRec;
+            
+            let rawMedian = parseFloat(meta?.median_price);
+            if (isNaN(rawMedian)) rawMedian = parseFloat(targetRec?.median_price);
+            if (isNaN(rawMedian)) rawMedian = parseFloat(targetRec?.recommended_price);
+            if (isNaN(rawMedian)) rawMedian = parseFloat(selectedRow?.median_price);
+            if (isNaN(rawMedian)) rawMedian = 0;
+
+            let currentPrice = parseFloat(targetRec?.current_price);
+            if (isNaN(currentPrice)) currentPrice = parseFloat(targetRec?.your_price);
+            if (isNaN(currentPrice)) currentPrice = parseFloat(selectedRow?.current_price);
+            if (isNaN(currentPrice)) currentPrice = parseFloat(selectedRow?.your_price);
+            if (isNaN(currentPrice)) currentPrice = 0;
+
+            const adjMedian = rawMedian * (marketIndex / 100);
+            
+            let competitors = meta?.competitors || [];
+            let nCompetitors = competitors.length;
+            if (nCompetitors === 0) {
+                const metaCount = meta?.n_competitors || targetRec?.n_competitors || selectedRow?.n_competitors;
+                const reasonMatch = String(targetRec?.reasoning || selectedRow?.reasoning || '').match(/^(\d+)\s+competitors/i);
+                const count = Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0);
+                if (count > 0) {
+                    competitors = new Array(count).fill({});
+                    nCompetitors = count;
+                }
+            }
+
+            const adjMedianPos = calculateMarketPosition(adjMedian, competitors, adjMedian);
+            const currentPos = calculateMarketPosition(currentPrice, competitors, adjMedian);
+            
+            const adjMedianPct = adjMedianPos.pct;
+            const currentPct = currentPos.pct;
+            
+            const markerOrig = document.getElementById('portfolio-marker-original');
+            const markerAdj = document.getElementById('portfolio-marker-adjusted');
+            const markerCurr = document.getElementById('portfolio-marker-current');
+            const legend = document.getElementById('portfolio-map-legend');
+            
+            if (nCompetitors === 0) {
+                if (markerOrig) markerOrig.style.display = 'none';
+                if (markerAdj) markerAdj.style.display = 'none';
+                if (markerCurr) markerCurr.style.display = 'none';
+                if (legend) legend.style.display = 'none';
+                return;
+            }
+
+            if (markerOrig) {
+                markerOrig.style.display = 'none';
+            }
+            if (markerAdj) {
+                markerAdj.style.display = 'block';
+                markerAdj.style.left = `${adjMedianPct}%`;
+                markerAdj.title = `Adjusted Median: AED ${adjMedian.toFixed(2)}`;
+            }
+            if (markerCurr) {
+                if (currentPrice > 0) {
+                    markerCurr.style.display = 'block';
+                    markerCurr.style.left = `${currentPct}%`;
+                    markerCurr.title = `Current Price: AED ${currentPrice.toFixed(2)}`;
+                } else {
+                    markerCurr.style.display = 'none';
+                }
+            }
+            if (legend) {
+                legend.style.display = 'flex';
+            }
+        }
+
+                        function renderRecommendations(recs) {
+                            const body = document.getElementById('recs-body');
+                            const kpiRecs = document.getElementById('kpi-recs');
+                            if (!body) return;
+                            
+                            if (!recs || recs.length === 0) {
+                                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No pending recommendations</td></tr>';
+                                if (kpiRecs) kpiRecs.textContent = '0';
+                                return;
+                            }
+
+                            // Deduplicate by Parent ASIN — prefer row where asin === parent_asin as the representative
+                            const parentMap = new Map();
+                            recs.forEach(r => {
+                                const key = r.parent_asin || r.asin;
+                                if (!parentMap.has(key)) {
+                                    parentMap.set(key, r);
+                                } else {
+                                    const existing = parentMap.get(key);
+                                    // Prefer the row where the asin IS the parent_asin (canonical representative)
+                                    const isCurrent = r.asin === r.parent_asin;
+                                    const existingIsCanonical = existing.asin === existing.parent_asin;
+                                    if (isCurrent && !existingIsCanonical) {
+                                        parentMap.set(key, r);
+                                    }
+                                }
+                            });
+
+                            let processedRecs = Array.from(parentMap.values());
+
+                            // Precompute properties for consistency in filters, sorting, and rendering
+                            processedRecs.forEach(r => {
+                                const rawMedian = (r.metadata && r.metadata.median_price) ? Number(r.metadata.median_price) : (r.recommended_price || 0);
+                                const marketIndex = window.currentAvgMarketIndex || 100;
+                                r.calculatedAdjMedian = rawMedian * (marketIndex / 100);
+                                
+                                let currentPrice = parseFloat(r.current_price);
+                                if (isNaN(currentPrice)) currentPrice = parseFloat(r.your_price);
+                                if (isNaN(currentPrice)) currentPrice = 0;
+                                r.calculatedCurrentPrice = currentPrice;
+
+                                // Dynamic Action Comparison against Adjusted Median
+                                let action = 'hold';
+                                const changeAmt = r.calculatedAdjMedian - r.calculatedCurrentPrice;
+                                const changePct = r.calculatedCurrentPrice > 0 ? (changeAmt / r.calculatedCurrentPrice) * 100 : 0;
+                                if (Math.abs(changePct) < 1.0) {
+                                    action = 'hold';
+                                } else if (changeAmt > 0) {
+                                    action = 'increase';
+                                } else {
+                                    action = 'decrease';
+                                }
+
+                                r.calculatedAction = action;
+
+                                // Precompute competitor count
+                                const metaCount = r.metadata && Number(r.metadata.n_competitors);
+                                const reasonMatch = String(r.reasoning || '').match(/^(\d+)\s+competitors/i);
+                                r._competitorCount = Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0);
+
+                                // Precompute competitor range dynamically (with robust fallback to competitors array)
+                                let pMin = parseFloat(r.metadata && r.metadata.floor_price) || 0;
+                                let pMax = parseFloat(r.metadata && r.metadata.ceiling_price) || 0;
+                                if (pMin === 0 || pMax === 0) {
+                                    if (r.metadata && r.metadata.competitors && r.metadata.competitors.length > 0) {
+                                        const prices = r.metadata.competitors.map(c => parseFloat(c.price)).filter(p => !isNaN(p) && p > 0);
+                                        if (prices.length > 0) {
+                                            pMin = Math.min(...prices);
+                                            pMax = Math.max(...prices);
+                                        }
+                                    }
+                                }
+                                r.calculatedFloorPrice = pMin;
+                                r.calculatedCeilingPrice = pMax;
+
+                                // Calculate Market Position dynamically using direct Adj. Median comparison
+                                let competitors = (r.metadata && r.metadata.competitors) || [];
+                                if (competitors.length === 0 && r._competitorCount > 0) {
+                                    competitors = new Array(r._competitorCount).fill({});
+                                }
+                                const marketPos = calculateMarketPosition(r.calculatedCurrentPrice, competitors, r.calculatedAdjMedian);
+                                r.calculatedPct = marketPos.pct;
+                                r.calculatedZone = marketPos.zone;
+
+                                // Build dynamic reasoning text
+                                const zoneMessageMap = {
+                                    'below_market': 'Currently below market floor.',
+                                    'budget': 'Currently in budget zone.',
+                                    'value': 'Currently in value zone.',
+                                    'mid_market': 'Currently in mid-market zone.',
+                                    'premium': 'Currently in premium zone.',
+                                    'above_market': 'Currently above market ceiling.'
+                                };
+                                const zoneMsg = zoneMessageMap[marketPos.zone] || '';
+                                const targetMsg = `Mid-market strategy: adjusted median (AED ${r.calculatedAdjMedian.toFixed(2)}).`;
+                                const compMsg = `${r._competitorCount} competitors. Range AED ${pMin.toFixed(2)}-AED ${pMax.toFixed(2)}. Adjusted Median AED ${r.calculatedAdjMedian.toFixed(2)}.`;
+                                r.calculatedReasoning = `${compMsg} | ${zoneMsg} | ${targetMsg}`;
+                            });
+
+                            // 1. Apply Search Filter
+                            const searchVal = (document.getElementById('recs-search')?.value || '').toLowerCase().trim();
+                            if (searchVal) {
+                                processedRecs = processedRecs.filter(r => {
+                                    const asin = (r.parent_asin || r.asin || '').toLowerCase();
+                                    const title = (r.title || '').toLowerCase();
+                                    const reasoning = (r.calculatedReasoning || r.reasoning || '').toLowerCase();
+                                    return asin.includes(searchVal) || title.includes(searchVal) || reasoning.includes(searchVal);
+                                });
+                            }
+
+                            // 2. Apply Action Filter
+                            const actionFilter = document.getElementById('recs-action-filter')?.value || 'all';
+                            if (actionFilter !== 'all') {
+                                processedRecs = processedRecs.filter(r => (r.calculatedAction || '').toLowerCase() === actionFilter);
+                            }
+
+                            // 4. Apply Sort
+                            const sortBy = document.getElementById('recs-sort-by')?.value || 'default';
+                            if (sortBy === 'default') {
+                                processedRecs.sort((a, b) => {
+                                    if (a.calculatedAction !== b.calculatedAction) return a.calculatedAction === 'decrease' ? -1 : 1;
+                                    return (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin);
+                                });
+                            } else if (sortBy === 'asin-asc') {
+                                processedRecs.sort((a, b) => (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin));
+                            } else if (sortBy === 'asin-desc') {
+                                processedRecs.sort((a, b) => (b.parent_asin || b.asin).localeCompare(a.parent_asin || a.asin));
+                            } else if (sortBy === 'title-asc') {
+                                processedRecs.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                            } else if (sortBy === 'title-desc') {
+                                processedRecs.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+                            } else if (sortBy === 'current-desc') {
+                                processedRecs.sort((a, b) => (b.calculatedCurrentPrice || 0) - (a.calculatedCurrentPrice || 0));
+                            } else if (sortBy === 'current-asc') {
+                                processedRecs.sort((a, b) => (a.calculatedCurrentPrice || 0) - (b.calculatedCurrentPrice || 0));
+                            } else if (sortBy === 'target-desc') {
+                                processedRecs.sort((a, b) => (b.calculatedAdjMedian || 0) - (a.calculatedAdjMedian || 0));
+                            } else if (sortBy === 'target-asc') {
+                                processedRecs.sort((a, b) => (a.calculatedAdjMedian || 0) - (b.calculatedAdjMedian || 0));
+                            } else if (sortBy === 'competitors-desc') {
+                                processedRecs.sort((a, b) => b._competitorCount - a._competitorCount);
+                            }
+
+                            if (kpiRecs) kpiRecs.textContent = processedRecs.length;
+
+                            if (processedRecs.length === 0) {
+                                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No matching recommendations</td></tr>';
+                                return;
+                            }
+
+                            body.innerHTML = processedRecs.map(r => {
+                                const adjMedian = r.calculatedAdjMedian;
+                                const currentPrice = r.calculatedCurrentPrice;
+                                const pct = r.calculatedPct;
+                                const zone = r.calculatedZone;
+                                const action = r.calculatedAction;
+                                const reasoning = r.calculatedReasoning;
+
+                                const readableZone = zone.replace(/_/g, ' ');
+
+                                return `
+                                <tr data-asin="${r.parent_asin || r.asin}" style="border-left: 3px solid var(--accent);">
+                                    <td>
+                                        <div style="font-weight: 700; color: var(--text); margin-bottom: 6px;">${r.parent_asin || r.asin}</div>
+                                        <div style="font-weight: 600; color: var(--text); font-size: 13px; line-height: 1.4; max-width: 300px; word-break: break-word;" title="${r.title || 'Parent ASIN Group'}">${r.title || 'Parent ASIN Group'}</div>
+                                    </td>
+                                    <td><span class="price-badge" style="color: ${r._competitorCount > 0 ? 'var(--success)' : 'var(--danger)'}">${r._competitorCount.toLocaleString()}</span></td>
+                                    <td><span class="price-badge">${(currentPrice || 0).toFixed(2)}</span></td>
+                                    <td>
+                                        <span class="price-badge" style="color: var(--text);">${(r.metadata?.median_price || r.recommended_price || 0).toFixed(2)}</span>
+                                    </td>
+                                    <td>
+                                        <span class="price-badge" style="color: var(--warning); font-weight: 700;">${adjMedian.toFixed(2)}</span>
+                                    </td>
+                                    <td>
+                                        <span class="action-chip action-${action}">${action}</span>
+                                    </td>
+                                    <td style="color: var(--text-dim); font-size: 13px; max-width: 400px; line-height: 1.4;">
+                                        ${reasoning}
+                                    </td>
+                                    <td>
+                                        ${(() => {
+                                            if (r._competitorCount > 0) {
+                                                return `
+                                                    <div class="mini-zone-container" title="Percentile: ${pct.toFixed(1)}% | Zone: ${readableZone}">
+                                                        <div class="mini-zone-bar">
+                                                            <div class="mini-zone-marker" style="left: ${pct}%;"></div>
+                                                        </div>
+                                                        <div class="mini-zone-label zone-text-${zone}">${readableZone}</div>
+                                                    </div>
+                                                `;
+                                            } else {
+                                                return `
+                                                    <div class="mini-zone-container" style="opacity: 0.4;">
+                                                        <div class="mini-zone-bar" style="background: var(--border);"></div>
+                                                        <div class="mini-zone-label">No Competitors</div>
+                                                    </div>
+                                                `;
+                                            }
+                                        })()}
+                                    </td>
+                                </tr>
+                            `}).join('');
+
+                        }
+
+        function renderAlerts(alerts) {
+            renderAlertFeed('alerts-feed', alerts, 10);
+        }
+
+        function renderAlertFeed(targetId, alerts, limit = 50) {
+            const container = document.getElementById(targetId);
+            if (!container) return;
+
+            if (!alerts || alerts.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 40px;">No recent alerts</div>';
+                return;
+            }
+
+            const items = alerts.slice(0, limit);
+            container.innerHTML = items.map(a => {
+                const parentAsin = a.parent_asin || a.asin || '';
+                const parentTitle = a.parent_title || '';
+                
+                let displayTitle = a.title;
+                if (parentAsin && a.sku_id && displayTitle.includes(a.sku_id)) {
+                    displayTitle = displayTitle.replace(a.sku_id, parentAsin);
+                } else if (parentAsin && a.asin && displayTitle.includes(a.asin)) {
+                    displayTitle = displayTitle.replace(a.asin, parentAsin);
+                }
+
+                return `
+                    <div class="alert-item">
+                        <div class="alert-icon alert-${a.severity}">
+                            ${a.alert_type === 'floor_breach' ? '▼' : '▲'}
+                        </div>
+                        <div class="alert-content" style="flex-grow: 1;">
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text);">${displayTitle}</h4>
+                            ${parentTitle ? `<div style="font-size: 12px; font-weight: 600; color: var(--accent); margin-top: 2px; line-height: 1.4; max-width: 350px; word-break: break-word;" title="${parentTitle}">${parentTitle}</div>` : ''}
+                            <p style="margin: 6px 0 0 0; font-size: 13px; color: var(--text-dim); line-height: 1.4;">${a.message}</p>
+                            <div class="alert-time" style="font-size: 11px; color: var(--text-dim); margin-top: 4px; opacity: 0.7;">${new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+
+        function renderCategories(cats) {
+            const body = document.getElementById('categories-body');
+            if (!body) return;
+            if (!cats || cats.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-dim); padding: 40px;">No product ranking data found.</td></tr>';
+                return;
+            }
+
+            // Capture active focus and selection before rendering
+            const activeElementId = document.activeElement ? document.activeElement.id : null;
+            let selectionStart = null, selectionEnd = null;
+            if (activeElementId && (activeElementId.startsWith('ref-name-') || activeElementId.startsWith('exclude-keywords-') || activeElementId.startsWith('exclude-brands-'))) {
+                const activeEl = document.getElementById(activeElementId);
+                if (activeEl) { selectionStart = activeEl.selectionStart; selectionEnd = activeEl.selectionEnd; }
+            }
+            const drafts = getDrafts(currentClientId);
+
+            let rowsHtml = '';
+            
+            // Sort categories by their best performing product
+            const sortedCats = [...cats].sort((a, b) => {
+                const minA = Math.min(...(a.products || []).map(p => Number(p.rank) || 999999));
+                const minB = Math.min(...(b.products || []).map(p => Number(p.rank) || 999999));
+                return minA - minB;
+            });
+
+            sortedCats.forEach((c, cIndex) => {
+                const products = Array.isArray(c.products) ? c.products : [];
+                if (products.length === 0) return;
+
+                // Sort products within category by Rank
+                products.sort((a, b) => (Number(a.rank) || 999999) - (Number(b.rank) || 999999));
+                
+                const catIdSafe = c.category_name.replace(/[^a-zA-Z0-9]/g, '-');
+                const groupClass = `cat-group-${catIdSafe}`;
+                window.expandedCategoryGroups = window.expandedCategoryGroups || new Set();
+                const isExpanded = window.expandedCategoryGroups.has(groupClass);
+
+                // Category Header Row
+                rowsHtml += `
+                    <tr style="border-top: 2px solid var(--border); background: rgba(255,255,255,0.02);">
+                        <td style="padding: 16px;">
+                            <div style="font-weight: 700; color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${c.category_name}</div>
+                        </td>
+                        <td style="padding: 16px;">
+                            <button onclick="toggleCategoryGroup('${groupClass}', this)" class="btn-toggle-details ${isExpanded ? 'active' : ''}" style="display: flex; align-items: center; gap: 8px;">
+                                <svg class="toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(${isExpanded ? '180deg' : '0deg'});">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                                <b>${products.length} Parent ASINs</b>
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                `;
+
+                // Product Rows (Hidden by default)
+                products.forEach((p) => {
+                    const rank = Number(p.rank || 0);
+                    let statusClass = 'action-hold';
+                    let statusText = 'Tracking';
+                    
+                    if (rank > 0 && rank < 10) {
+                        statusClass = 'action-increase';
+                        statusText = 'Top 10';
+                    } else if (rank > 0 && rank < 100) {
+                        statusClass = 'action-increase';
+                        statusText = 'Top 100';
+                    } else if (rank === 0) {
+                        statusClass = 'action-hold';
+                        statusText = 'Inactive';
+                    }
+
+                    // Parse brand exclusions delimiter on render
+                    const parts = (p.exclude_keywords || '').split('|brand_exclude:');
+                    const excludeKws = (parts[0] || '').trim();
+                    const excludeBrands = (parts[1] || '').trim();
+
+                    const draft = drafts[p.asin] || {};
+                    const finalRefName = draft.reference_name !== undefined ? draft.reference_name : (p.reference_name || '');
+                    const finalExcludeKws = draft.exclude_keywords !== undefined ? draft.exclude_keywords : excludeKws;
+                    const finalExcludeBrands = draft.exclude_brands !== undefined ? draft.exclude_brands : excludeBrands;
+
+                    rowsHtml += `
+                        <tr class="${groupClass}" style="display: ${isExpanded ? 'table-row' : 'none'}; background: rgba(0,0,0,0.1);">
+                            <td style="padding: 12px 16px;"></td>
+                            <td style="padding: 12px 16px;">
+                                <div style="font-weight: 600; color: var(--text); font-size: 14px; line-height: 1.4;">${escapeHtml(p.title || 'Untitled Product')}</div>
+                            </td>
+                            <td style="padding: 12px 16px;">
+                                <span style="font-family: monospace; color: var(--text-dim); font-size: 12px;">${p.asin}</span>
+                            </td>
+                            <td style="padding: 12px 16px;">
+                                <span class="price-badge" style="color: var(--success); font-weight: 700; background: rgba(0, 200, 83, 0.1);">
+                                    ${rank > 0 ? '#' + rank.toLocaleString() : '--'}
+                                </span>
+                            </td>
+                            <td style="padding: 12px 16px; min-width: 320px;">
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 11px; color: var(--text-dim); width: 110px; text-align: right;">Include Keywords:</span>
+                                        <input type="text" id="ref-name-${p.asin}" value="${escapeHtml(finalRefName)}" oninput="handleCategoryInput('${p.asin}')" placeholder="e.g. Electrolyte Hydration Powder" style="
+                                            background: var(--surface-solid);
+                                            border: 1px solid var(--border);
+                                            padding: 6px 10px;
+                                            border-radius: 6px;
+                                            color: var(--text);
+                                            font-size: 12px;
+                                            outline: none;
+                                            flex-grow: 1;
+                                        ">
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 11px; color: var(--text-dim); width: 110px; text-align: right;">Exclude Keywords:</span>
+                                        <input type="text" id="exclude-keywords-${p.asin}" value="${escapeHtml(finalExcludeKws)}" oninput="handleCategoryInput('${p.asin}')" placeholder="e.g. plastic, duplicate, charger" style="
+                                            background: var(--surface-solid);
+                                            border: 1px solid var(--border);
+                                            padding: 6px 10px;
+                                            border-radius: 6px;
+                                            color: var(--text);
+                                            font-size: 12px;
+                                            outline: none;
+                                            flex-grow: 1;
+                                        ">
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 11px; color: var(--text-dim); width: 110px; text-align: right;">Exclude Brands:</span>
+                                        <input type="text" id="exclude-brands-${p.asin}" value="${escapeHtml(finalExcludeBrands)}" oninput="handleCategoryInput('${p.asin}')" placeholder="e.g. Stanley, Owala" style="
+                                            background: var(--surface-solid);
+                                            border: 1px solid var(--border);
+                                            padding: 6px 10px;
+                                            border-radius: 6px;
+                                            color: var(--text);
+                                            font-size: 12px;
+                                            outline: none;
+                                            flex-grow: 1;
+                                        ">
+                                    </div>
+                                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
+                                        <button onclick="saveReferenceName('${p.asin}')" class="btn-toggle-details" id="btn-save-${p.asin}" style="margin: 0; padding: 6px 12px; font-size: 11px;">
+                                            Save Settings
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 12px 16px;">
+                                <span class="action-chip ${statusClass}">${statusText}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+
+            body.innerHTML = rowsHtml || '<tr><td colspan="6" style="text-align: center; color: var(--text-dim); padding: 40px;">No products found in monitored categories.</td></tr>';
+
+            // Restore active focus and selection
+            if (activeElementId) {
+                const newActiveEl = document.getElementById(activeElementId);
+                if (newActiveEl) {
+                    newActiveEl.focus();
+                    if (selectionStart !== null && selectionEnd !== null) {
+                        try { newActiveEl.setSelectionRange(selectionStart, selectionEnd); } catch (e) {}
+                    }
+                }
+            }
+        }
+        
+        async function saveReferenceName(parentAsin) {
+            const inputVal = document.getElementById(`ref-name-${parentAsin}`).value;
+            const excludeKwsVal = document.getElementById(`exclude-keywords-${parentAsin}`).value.trim();
+            const excludeBrandsVal = document.getElementById(`exclude-brands-${parentAsin}`).value.trim();
+            const btn = document.getElementById(`btn-save-${parentAsin}`);
+            const originalText = btn.innerText;
+            btn.innerText = 'Saving...';
+            
+            // Combine keywords and brands using delimiter
+            let finalExcludeVal = excludeKwsVal;
+            if (excludeBrandsVal) {
+                finalExcludeVal = `${excludeKwsVal}|brand_exclude: ${excludeBrandsVal}`;
+            }
+            
+            try {
+                const resp = await fetch(`${API_BASE}/update-reference-name`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Client-Id': currentClientId,
+                        'X-Internal-Token': 'saddl_secret_token_123'
+                    },
+                    body: JSON.stringify({
+                        client_id: currentClientId,
+                        parent_asin: parentAsin,
+                        reference_name: inputVal,
+                        exclude_keywords: finalExcludeVal
+                    })
+                });
+                
+                if (resp.ok) {
+                    const payload = await resp.json();
+                    const count = payload.analysis && Number(payload.analysis.priced_competitors);
+                    btn.innerText = Number.isFinite(count) ? `${count} matched` : 'Saved!';
+                    btn.style.color = 'var(--success)';
+                    clearDraft(currentClientId, parentAsin);
+                    await refreshData();
+                    setTimeout(() => { 
+                        btn.innerText = originalText; 
+                        btn.style.color = 'var(--accent)';
+                    }, 2000);
+                } else {
+                    btn.innerText = 'Error';
+                    btn.style.color = 'var(--danger)';
+                    setTimeout(() => { btn.innerText = originalText; }, 2000);
+                }
+            } catch (e) {
+                console.error(e);
+                btn.innerText = 'Error';
+            }
+        }
+        window.expandedCategoryGroups = window.expandedCategoryGroups || new Set();
+        function toggleCategoryGroup(groupClass, btn) {
+            const rows = document.querySelectorAll('.' + groupClass);
+            const icon = btn.querySelector('.toggle-icon');
+            if (rows.length === 0) return;
+            const isVisible = rows[0].style.display !== 'none';
+
+            rows.forEach(row => {
+                row.style.display = isVisible ? 'none' : 'table-row';
+            });
+
+            if (isVisible) {
+                icon.style.transform = 'rotate(0deg)';
+                btn.classList.remove('active');
+                window.expandedCategoryGroups.delete(groupClass);
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+                btn.classList.add('active');
+                window.expandedCategoryGroups.add(groupClass);
+            }
+        }
+
+        function toggleProductDetails(containerId, btn) {
+            const container = document.getElementById(containerId);
+            const isVisible = container.classList.contains('visible');
+            
+            // Close all other containers first (optional, but cleaner)
+            // document.querySelectorAll('.product-details-container').forEach(c => c.classList.remove('visible'));
+            // document.querySelectorAll('.btn-toggle-details').forEach(b => b.classList.remove('active'));
+
+            if (isVisible) {
+                container.classList.remove('visible');
+                btn.classList.remove('active');
+            } else {
+                container.classList.add('visible');
+                btn.classList.add('active');
+            }
+        }
+
+
+        window.onerror = function(msg, url, line, col, error) {
+            console.error('🔥 Dashboard Error:', msg, 'at', line, ':', col);
+            return false;
+        };
+
+        // Initial Load
+        (async function init() {
+            try {
+
+
+                await fetchAccounts();
+                switchTab('benchmarking');
+                
+                // Refresh every 60 seconds
+                setInterval(() => {
+                    tabDataLoaded = { benchmarking: false, categories: false };
+                    refreshData();
+                }, 60000);
+            } catch (err) {
+                console.error('❌ Init failed:', err);
+            }
+        })();
+
+
+
+        // Overview Product Selector Change Event
+        const ovProdSelector = document.getElementById('overview-product-selector');
+        if (ovProdSelector) {
+            ovProdSelector.addEventListener('change', (e) => {
+                const selectedAsin = e.target.value;
+                e.target.title = e.target.options[e.target.selectedIndex]?.textContent.trim() || '';
+                const selectedRow = overviewSnapshots.find(r => r.asin === selectedAsin);
+                if (selectedRow) {
+                    const loader = document.getElementById('overview-chart-loading');
+                    const bubbleLoader = document.getElementById('overview-bubble-loading');
+                    if (loader) loader.style.display = 'flex';
+                    if (bubbleLoader) bubbleLoader.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        renderPricingHistogram(selectedRow);
+                        renderRatingVsPriceBubbleChart(selectedRow);
+                        updatePortfolioMarkers(selectedRow);
+                    }, 150);
+                }
+            });
+        }
+
+        // Repricing Table Row Click Interactive Selection
+        const recsBody = document.getElementById('recs-body');
+        if (recsBody) {
+            recsBody.addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const clickedAsin = row.getAttribute('data-asin');
+                if (!clickedAsin) return;
+
+                // Highlight the clicked row
+                document.querySelectorAll('#recs-body tr').forEach(tr => tr.classList.remove('selected-row'));
+                row.classList.add('selected-row');
+
+                // Find and map to the corresponding snapshot
+                const selectedRow = overviewSnapshots.find(s => 
+                    s.asin === clickedAsin || 
+                    s.parent_asin === clickedAsin || 
+                    (s.parent_asin && s.parent_asin === clickedAsin)
+                );
+                
+                if (selectedRow) {
+                    const selector = document.getElementById('overview-product-selector');
+                    if (selector) {
+                        selector.value = selectedRow.asin;
+                        selector.title = selector.options[selector.selectedIndex]?.textContent.trim() || '';
+                        
+                        const loader = document.getElementById('overview-chart-loading');
+                        const bubbleLoader = document.getElementById('overview-bubble-loading');
+                        if (loader) loader.style.display = 'flex';
+                        if (bubbleLoader) bubbleLoader.style.display = 'flex';
+                        
+                        setTimeout(() => {
+                            renderPricingHistogram(selectedRow);
+                            renderRatingVsPriceBubbleChart(selectedRow);
+                            updatePortfolioMarkers(selectedRow);
+                        }, 150);
+                    }
+                }
+            });
+        }
+
+        // Bind filters & sorting event listeners for Repricing Recommendations
+        const recsSearchInput = document.getElementById('recs-search');
+        if (recsSearchInput) {
+            recsSearchInput.addEventListener('input', () => {
+                renderRecommendations(globalRecommendations);
+            });
+        }
+
+        const recsActionFilter = document.getElementById('recs-action-filter');
+        if (recsActionFilter) {
+            recsActionFilter.addEventListener('change', () => {
+                renderRecommendations(globalRecommendations);
+            });
+        }
+
+        const recsSortBy = document.getElementById('recs-sort-by');
+        if (recsSortBy) {
+            recsSortBy.addEventListener('change', () => {
+                renderRecommendations(globalRecommendations);
+            });
+        }
+
+        function getActiveRow() {
+            const selector = document.getElementById('overview-product-selector');
+            if (selector && selector.value && typeof overviewSnapshots !== 'undefined') {
+                return overviewSnapshots.find(r => r.asin === selector.value);
+            }
+            return null;
+        }
+
+        const catBody = document.getElementById('categories-body');
+        if (catBody) {
+            catBody.addEventListener('input', (e) => {
+                if (e.target.tagName === 'INPUT') {
+                    const activeRow = getActiveRow();
+                    if (activeRow) {
+                        renderRatingVsPriceBubbleChart(activeRow);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

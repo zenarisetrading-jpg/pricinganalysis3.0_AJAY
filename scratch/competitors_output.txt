@@ -1,0 +1,63 @@
+Categories associated with B0DLX3GJNJ:
+  Category ID: 12373047031 | Category Name: Sports Supplements | Marketplace: A2VIGQ35RCS4UG
+
+Total unique competitors found: 56
+
+ASIN            | Category ID     | Brand Name                | Price      | Product Name                                       | Category Name
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+B000FGWDL8      | 12373047031     | THORNE                    | 169.00     | THORNE L-Glutamine Powder - Amino Acid Supplement  | Sports Supplements
+B000H7P9M0      | 12373047031     | NOW                       | 71.73      | NOW Supplements, L-Theanine 200 mg with Inositol,  | Sports Supplements
+B000MGWFWI      | 12373047031     | NOW                       | 83.00      | Now Foods NOW Supplements, NAC (N-Acetyl Cysteine) | Sports Supplements
+B000QSNYGI      | 12373047031     | Optimum Nutrition         | 172.00     | Optimum Nutrition (ON) Gold Standard 100% Whey Pro | Sports Supplements
+B0019LRYD0      | 12373047031     | NOW                       | 82.00      | Now Foods, Taurine, Double Strength, 1,000 Mg, 100 | Sports Supplements
+B002DYIZEO      | 12373047031     | Optimum Nutrition         | 176.98     | Optimum Nutrition (ON) Micronized Creatine Monohyd | Sports Supplements
+B002J0RHTQ      | 12373047031     | NOW                       | 97.72      | NOW Foods Glycine (100 Capsules, 1000mg)           | Sports Supplements
+B003AIF4Q4      | 12373047031     | HIGH5                     | 32.00      | HIGH5 ZERO Electrolyte Tablet - Hydration Tablets  | Sports Supplements
+B007SYSQ7K      | 12373047031     | Garden of Life            | 174.40     | Garden Of Life Raw Organic Protein Plant Formula,  | Sports Supplements
+B00GL2HMES      | 12373047031     | Nutricost                 | 133.20     | Nutricost Creatine Monohydrate Micronized Powder 5 | Sports Supplements
+B00IUHNCIW      | 12373047031     | Muscletech                | 87.00      | MuscleTech | Platinum | Creatine Monohydrate Powde | Sports Supplements
+B00J074W7Q      | 12373047031     | Orgain                    | 165.86     | Orgain Organic Plant Based Protein Powder, Vanilla | Sports Supplements
+B00J074W94      | 12373047031     | Orgain                    | 207.36     | Orgain NA1 Orgain Organic Protein Plant Based Powd | Sports Supplements
+B00PYB2X8C      | 12373047031     | Optimum Nutrition         | 107.00     | Optimum Nutrition (ON) Gold Standard Pre-Workout,  | Sports Supplements
+B00SCO8AA8      | 12373047031     | Isopure                   | 148.85     | Isopure Unflavored Whey Isolate Protein Powder, wi | Sports Supplements
+B00U3RGQK8      | 12373047031     | Quest                     | 109.85     | Quest Nutrition Chocolate Peanut Butter Bars, High | Sports Supplements
+B01CIS83HI      | 12373047031     | Quest                     | 119.00     | Quest Nutrition Protein Bars (Chocolate Chip Cooki | Sports Supplements
+B01HQVR9ZE      | 12373047031     | Nutricost                 | 74.00      | Nutricost L-Citrulline 1500mg, 180 Capsules - 750m | Sports Supplements
+B01LYRVQOG      | 12373047031     | Ketosource                | 139.00     | Ketosource Premium C8 MCT Oil | Boosts Ketones 3X  | Sports Supplements
+B07978VPPH      | 12373047031     | THORNE                    | 189.00     | THORNE Creatine - Micronized Creatine Monohydrate  | Sports Supplements
+B0797CF6QL      | 12373047031     | THORNE                    | 129.00     | Thorne Berberine - 200 mg (Formerly Berbercap) - S | Sports Supplements
+B079GH6V2Z      | 12373047031     | Nutricost                 | 110.80     | Nutricost Berberine HCl 1200mg, 60 Vegetarian Caps | Sports Supplements
+B07CZ5M78T      | 12373047031     | Science in Sport          | 38.00      | Science In Sport Hydro Electrolyte Tablets | Sugar | Sports Supplements
+B07HCNM7KQ      | 12373047031     | Liquid I.V.               | 150.00     | Liquid I.V. Hydration Multiplier, Electrolyte Powd | Sports Supplements
+B07PXQWJDV      | 12373047031     | Sunshine Nutrition        | 20.30      | Sunshine Nutrition Isotonic Electrolyte Effervesce | Sports Supplements
+B07RYWYDFT      | 12373047031     | Phizz                     | 100.00     | Phizz Electrolytes, Multivitamin & Hydration Table | Sports Supplements
+B08FCRJW9V      | 12373047031     | Double Wood Supplements   | 89.98      | Double Wood Supplements Glycine - 1,000mg (300 Cap | Sports Supplements
+B09BZFPP37      | 12373047031     | GEMFUL                    | 31.99      | GEMFUL Shaker Bottle for Protein Mixes BPA-Free Le | Sports Supplements
+B0B6242P2W      | 12373047031     | Ultima Replenisher        | 149.00     | Ultima Replenisher Daily Electrolyte Powder – Trop | Sports Supplements
+B0BL1TDB9P      | 12373047031     | Barebells                 | 146.00     | Barebells Protein Bars, Creamy Crisp - 12 Count, 1 | Sports Supplements
+B0BS49D1G5      | 12373047031     | Grenade                   | 103.00     | Grenade High Protein, Low Sugar Bar - Oreo, 12 x 6 | Sports Supplements
+B0C2QM5S4B      | 12373047031     | Applied Nutrition         | 97.90      | Applied Nutrition ABE Powder Pre Workout Food Supp | Sports Supplements
+B0C5RHJF1F      | 12373047031     | Grenade                   | 102.99     | Grenade OREO Protein Bar - High Protein, Low Sugar | Sports Supplements
+B0C7GWGLWV      | 12373047031     | VOLTRX                    | 79.99      | VOLTRX Protein Shaker Bottle, Titanus USB C Rechar | Sports Supplements
+B0CCJQCN9F      | 12373047031     | HUMANTRA                  | 115.00     | Humantra Electrolytes Powder - Himalayan Lime Flav | Sports Supplements
+B0CCJZ248Z      | 12373047031     | Sports Research           | 91.00      | Sports Research Creatine Monohydrate - Gain Lean M | Sports Supplements
+B0CCPJR1FZ      | 12373047031     | Activise                  | 0.00       | Activise Electrolyte Effervescent Tab Orange 20's  | Sports Supplements
+B0CGDWCLGY      | 12373047031     | Grenade                   | 102.00     | Grenade High Protein, Low Sugar Bar - Oreo White,  | Sports Supplements
+B0CLYGV2J8      | 12373047031     | O.R.S                     | 0.00       | O.R.S Hydration Tablets With Electrolytes, Lemon,  | Sports Supplements
+B0CP2VG5M8      | 12373047031     | vifssg                    | 110.00     | VIFSSG Creatine Monohydrate Gummies 5 g for Men &  | Sports Supplements
+B0CQ3JTR6F      | 12373047031     | Transparent Labs          | 379.00     | Transparent Labs Grass-Fed Whey Protein Isolate -  | Sports Supplements
+B0CQPGBBVP      | 12373047031     | Muscletech                | 108.36     | MuscleTech | Platinum Essential Amino Acids Supple | Sports Supplements
+B0CZ3WT6G2      | 12373047031     | aitnaturals               | 42.79      | Aitnaturals 100% Micronized Creatine Monohydrate P | Sports Supplements
+B0D1TZBQ23      | 12373047031     | Rule 1 Proteins           | 89.25      | Rule1 1 Essential Amino 9 | Blue Razz Lemonade | S | Sports Supplements
+B0D9ZX8SC9      | 12373047031     | HUMANTRA                  | 115.00     | Humantra Electrolytes Powder - Lychee Flavor, 20ct | Sports Supplements
+B0DQH65KMM      | 12373047031     | Noble Nature              | 39.00      | Electrolyte 40 Effervescent Tablets - With Sodium, | Sports Supplements
+B0DRD5DKPT      | 12373047031     | SPORTER                   | 67.99      | Sporter Creatine Monohydrate Powder - 400g, 80 Ser | Sports Supplements
+B0DVXD2WBB      | 12373047031     | THORNE                    | 179.00     | THORNE Daily Electrolytes - Zero Sugar & Low-Calor | Sports Supplements
+B0F1BSR4VR      | 12373047031     | Drink LMNT                | 169.99     | LMNT Zero Sugar Electrolytes - Lemonade | Drink Mi | Sports Supplements
+B0F257BKKB      | 12373047031     | Optimum Nutrition         | 95.00      | Optimum Nutrition Creatine Monohydrate Plus Powder | Sports Supplements
+B0F3D3JW3M      | 12373047031     | NBL NATURAL               | 49.00      | NBL Natural EAA Hydration | EAAs + BCAA Powder | M | Sports Supplements
+B0F56D7B8M      | 12373047031     | Nothing Silly             | 38.00      | Nothing Silly Energy Bars | Variety Pack | Pack of | Sports Supplements
+B0F947562R      | 12373047031     | Dymatize                  | 174.99     | Dymatize ISO100 Whey Protein Powder Isolate, Salte | Sports Supplements
+B0FCYTYM4Y      | 12373047031     | rite.                     | 169.00     | Rite. Performance Protein - Vegan Protein Powder w | Sports Supplements
+B0GD7HZ5MX      | 12373047031     | it'skoōa                  | 22.00      | its kooa proteingummy, 20g whey protein gummies, s | Sports Supplements
+B0GH25WM4N      | 12373047031     | OWNKIND                   | 125.00     | OWNKIND Electrolytes Powder Sachets - Strawberry & | Sports Supplements

@@ -1,0 +1,26 @@
+INFO:     127.0.0.1:60810 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60812 - "POST /api/v1/benchmarking/upload-data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53221 - "GET /api/v1/benchmarking/overview?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53221 - "GET /api/v1/benchmarking/alerts?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53221 - "GET /api/v1/benchmarking/account-bsr-categories?account_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55322 - "GET /benchmarking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55322 - "GET /api/v1/benchmarking/accounts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61955 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58338 - "GET /api/v1/benchmarking/overview?client_id=s2c-uae HTTP/1.1" 200 OK
+WARNING: Settings table not found: {'message': "Could not find the table 'public.pb_settings' in the schema cache", 'code': 'PGRST205', 'hint': "Perhaps you meant the table 'public.pb_client_listings'", 'details': None}
+INFO:     127.0.0.1:55322 - "GET /api/v1/benchmarking/automation-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61955 - "GET /api/v1/benchmarking/overview?client_id=acme_store HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58338 - "GET /api/v1/benchmarking/alerts?client_id=acme_store HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:58338 - "GET /api/v1/benchmarking/recommendations?client_id=acme_store HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:61955 - "GET /api/v1/benchmarking/alerts?client_id=acme_store HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61955 - "GET /api/v1/benchmarking/recommendations?client_id=acme_store HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56333 - "GET /api/v1/benchmarking/overview?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56333 - "GET /api/v1/benchmarking/alerts?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56333 - "GET /api/v1/benchmarking/account-bsr-categories?account_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57802 - "POST /api/v1/benchmarking/upload-data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58449 - "GET /api/v1/benchmarking/overview?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58449 - "GET /api/v1/benchmarking/alerts?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58449 - "GET /api/v1/benchmarking/account-bsr-categories?account_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64904 - "GET /api/v1/benchmarking/overview?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64904 - "GET /api/v1/benchmarking/alerts?client_id=oneshot_uae HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64904 - "GET /api/v1/benchmarking/account-bsr-categories?account_id=oneshot_uae HTTP/1.1" 200 OK
