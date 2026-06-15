@@ -827,7 +827,6 @@ async def get_overview(
 
 
 
-
 @router.get("/alerts")
 async def get_alerts(
     client_id: str = Query(...),

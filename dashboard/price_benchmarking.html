@@ -358,13 +358,19 @@
             height: 8px;
             width: 100%;
             background: linear-gradient(to right,
-                    #ef4444 0%, /* Red: Below */
-                    #f59e0b 20%, /* Orange: Budget */
-                    #10b981 40%, /* Green: Value */
-                    #10b981 60%, /* Green: Mid */
-                    #3b82f6 80%, /* Blue: Premium */
-                    #6366f1 100% /* Indigo: Above */
-            );
+                    #ef4444 0%,
+                    /* Red: Below */
+                    #f59e0b 20%,
+                    /* Orange: Budget */
+                    #10b981 40%,
+                    /* Green: Value */
+                    #10b981 60%,
+                    /* Green: Mid */
+                    #3b82f6 80%,
+                    /* Blue: Premium */
+                    #6366f1 100%
+                    /* Indigo: Above */
+                );
             border-radius: 4px;
             position: relative;
             display: flex;
@@ -378,8 +384,9 @@
             height: 12px;
             background: #ffffff;
             border-radius: 50%;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0,0,0,0.5);
-            transform: translateX(-50%); /* Centered exactly on the percentage line */
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.5);
+            transform: translateX(-50%);
+            /* Centered exactly on the percentage line */
             border: 1.5px solid var(--background);
             transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
@@ -393,12 +400,29 @@
             color: var(--text-dim);
         }
 
-        .zone-text-below_market { color: #ef4444 !important; }
-        .zone-text-budget       { color: #f59e0b !important; }
-        .zone-text-value        { color: #10b981 !important; }
-        .zone-text-mid_market   { color: #10b981 !important; }
-        .zone-text-premium      { color: #3b82f6 !important; }
-        .zone-text-above_market { color: #6366f1 !important; }
+        .zone-text-below_market {
+            color: #ef4444 !important;
+        }
+
+        .zone-text-budget {
+            color: #f59e0b !important;
+        }
+
+        .zone-text-value {
+            color: #10b981 !important;
+        }
+
+        .zone-text-mid_market {
+            color: #10b981 !important;
+        }
+
+        .zone-text-premium {
+            color: #3b82f6 !important;
+        }
+
+        .zone-text-above_market {
+            color: #6366f1 !important;
+        }
 
         /* Recommendations Table */
         .table-container {
@@ -580,11 +604,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--accent);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(16px);
         }
 
@@ -649,13 +673,16 @@
             color: var(--text) !important;
             font-family: var(--font-main) !important;
         }
+
         .apexcharts-tooltip-title {
-            background: rgba(255,255,255,0.03) !important;
+            background: rgba(255, 255, 255, 0.03) !important;
             border-bottom: 1px solid var(--border) !important;
             font-weight: 700 !important;
             color: var(--text) !important;
         }
-        .apexcharts-xcrosshairs, .apexcharts-ycrosshairs {
+
+        .apexcharts-xcrosshairs,
+        .apexcharts-ycrosshairs {
             stroke: var(--border) !important;
         }
 
@@ -668,14 +695,16 @@
             transition: opacity 0.25s ease;
             background: rgba(18, 20, 30, 0.85) !important;
             backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255,255,255,0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
             border-radius: 10px !important;
             padding: 4px 6px !important;
         }
+
         /* Show toolbar on chart hover */
         .apexcharts-canvas:hover .apexcharts-toolbar {
             opacity: 1 !important;
         }
+
         .apexcharts-menu-icon,
         .apexcharts-zoom-icon,
         .apexcharts-zoomin-icon,
@@ -690,6 +719,7 @@
             justify-content: center !important;
             transition: background 0.15s ease, transform 0.1s ease !important;
         }
+
         .apexcharts-menu-icon:hover,
         .apexcharts-zoom-icon:hover,
         .apexcharts-zoomin-icon:hover,
@@ -699,27 +729,33 @@
             background: rgba(91, 138, 240, 0.18) !important;
             transform: scale(1.1) !important;
         }
+
         .apexcharts-zoom-icon.apexcharts-selected,
         .apexcharts-pan-icon.apexcharts-selected {
             background: rgba(91, 138, 240, 0.30) !important;
             border-radius: 6px !important;
         }
+
         .apexcharts-toolbar svg {
             fill: #a0aec0 !important;
         }
+
         .apexcharts-toolbar svg:hover {
             fill: #e2e8f0 !important;
         }
+
         /* Zoom selection rectangle */
         .apexcharts-zoom-rect {
             fill: rgba(91, 138, 240, 0.12) !important;
             stroke: rgba(91, 138, 240, 0.6) !important;
             stroke-width: 1.5px !important;
         }
+
         /* Pan cursor */
         .apexcharts-canvas.apexcharts-theme-light[data-zoom="pan"] {
             cursor: grab !important;
         }
+
         .apexcharts-canvas.apexcharts-theme-light[data-zoom="pan"]:active {
             cursor: grabbing !important;
         }
@@ -728,6 +764,7 @@
         .chart-interactive-wrapper {
             position: relative;
         }
+
         .chart-lock-overlay {
             position: absolute;
             inset: 0;
@@ -742,14 +779,17 @@
             transition: background 0.2s ease, backdrop-filter 0.2s ease, opacity 0.2s ease;
             opacity: 1;
         }
+
         .chart-lock-overlay:hover {
             background: rgba(10, 12, 20, 0.28);
             backdrop-filter: blur(1px);
         }
+
         .chart-lock-overlay:hover .chart-lock-hint {
             opacity: 1;
             transform: translateY(0);
         }
+
         .chart-lock-hint {
             display: flex;
             flex-direction: column;
@@ -760,16 +800,18 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(91, 138, 240, 0.35);
             border-radius: 14px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transform: translateY(6px);
             transition: opacity 0.2s ease, transform 0.2s ease;
             pointer-events: none;
         }
+
         .chart-lock-hint-icon {
             font-size: 22px;
             line-height: 1;
         }
+
         .chart-lock-hint-text {
             font-size: 12px;
             font-weight: 600;
@@ -777,16 +819,19 @@
             letter-spacing: 0.04em;
             white-space: nowrap;
         }
+
         .chart-lock-hint-sub {
             font-size: 10px;
             color: rgba(140, 155, 180, 0.75);
             white-space: nowrap;
         }
+
         /* Active / unlocked state — glowing ring around the chart */
         .chart-interactive-wrapper.chart-active {
             box-shadow: 0 0 0 2px rgba(91, 138, 240, 0.55), 0 0 20px rgba(91, 138, 240, 0.12);
             border-radius: 12px;
         }
+
         /* Deactivate hint badge shown when chart is active */
         .chart-active-badge {
             position: absolute;
@@ -808,6 +853,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+
         .chart-active-badge.visible {
             opacity: 1;
         }
@@ -816,13 +862,16 @@
         #alerts-feed::-webkit-scrollbar {
             width: 6px;
         }
+
         #alerts-feed::-webkit-scrollbar-track {
             background: transparent;
         }
+
         #alerts-feed::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
         }
+
         #alerts-feed::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.2);
         }
@@ -832,9 +881,11 @@
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
         }
+
         #recs-body tr:hover {
             background: rgba(255, 255, 255, 0.03);
         }
+
         #recs-body tr.selected-row {
             background: rgba(91, 138, 240, 0.15) !important;
             border-left: 3px solid var(--accent) !important;
@@ -915,16 +966,19 @@
                             <div class="kpi-value" id="kpi-recs" style="color: var(--warning)">--</div>
                         </div>
                     </div>
-                    
+
                     <div class="dashboard-left"
                         style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
-                        
+
                         <!-- Competitor Price Distribution & Positioning Card -->
                         <div class="card">
-                            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div class="card-header"
+                                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                                 <div>
                                     <h3 class="card-title">Market Price Landscape & Our Position</h3>
-                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">See where competitors are pricing their items. The taller the blue bars, the more competitors are pricing at that amount.</p>
+                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">See where
+                                        competitors are pricing their items. The taller the blue bars, the more
+                                        competitors are pricing at that amount.</p>
                                 </div>
                                 <div class="client-selector" style="min-width: min(560px, 100%); flex: 1 1 420px;">
                                     <select id="overview-product-selector" style="
@@ -945,10 +999,14 @@
                             </div>
                             <div class="card-body" style="padding: 20px; position: relative;">
                                 <!-- Product-specific Metrics Panel (Break-even Price - COGS Refactoring) -->
-                                <div id="product-metrics-panel" style="display: none; margin-bottom: 20px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; gap: 24px; display: flex; flex-wrap: wrap; backdrop-filter: var(--glass); align-items: center;">
+                                <div id="product-metrics-panel"
+                                    style="display: none; margin-bottom: 20px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; gap: 24px; display: flex; flex-wrap: wrap; backdrop-filter: var(--glass); align-items: center;">
                                     <div style="flex: 1.2; min-width: 180px;">
-                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">COGS Input (AED)</div>
-                                        <input type="number" id="product-cogs-input" step="0.01" min="0" placeholder="Enter product COGS" style="
+                                        <div
+                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
+                                            COGS Input (AED)</div>
+                                        <input type="number" id="product-cogs-input" step="0.01" min="0"
+                                            placeholder="Enter product COGS" style="
                                             background: rgba(255, 255, 255, 0.05);
                                             border: 1px solid var(--border);
                                             color: var(--text);
@@ -959,24 +1017,42 @@
                                             width: 100%;
                                             outline: none;
                                             transition: border-color 0.2s;
-                                        " oninput="this.style.borderColor = 'var(--accent)'" onblur="this.style.borderColor = 'var(--border)'">
-                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Enter operational cost basis</div>
+                                        " oninput="this.style.borderColor = 'var(--accent)'"
+                                            onblur="this.style.borderColor = 'var(--border)'">
+                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Enter
+                                            operational cost basis</div>
                                     </div>
-                                    <div style="flex: 1; min-width: 180px; border-left: 1px solid var(--border); padding-left: 20px; position: relative;">
-                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                    <div
+                                        style="flex: 1; min-width: 180px; border-left: 1px solid var(--border); padding-left: 20px; position: relative;">
+                                        <div
+                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                                             Break-even Price
-                                            <span id="product-profitability-badge" style="padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; display: inline-block;"></span>
+                                            <span id="product-profitability-badge"
+                                                style="padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; display: inline-block;"></span>
                                         </div>
-                                        <div id="product-breakeven-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px;">--</div>
-                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Calculated automatically as COGS ÷ 0.3</div>
+                                        <div id="product-breakeven-price"
+                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px;">
+                                            --</div>
+                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Calculated
+                                            automatically as COGS ÷ 0.3</div>
                                     </div>
-                                    <div style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
-                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">Current Selling Price</div>
-                                        <div id="product-current-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text); margin-top: 4px;">--</div>
+                                    <div
+                                        style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
+                                        <div
+                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            Current Selling Price</div>
+                                        <div id="product-current-price"
+                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text); margin-top: 4px;">
+                                            --</div>
                                     </div>
-                                    <div style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
-                                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">ADJ.MEDIAN</div>
-                                        <div id="product-target-price" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--warning); margin-top: 4px;">--</div>
+                                    <div
+                                        style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
+                                        <div
+                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
+                                            ADJ.MEDIAN</div>
+                                        <div id="product-target-price"
+                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--warning); margin-top: 4px;">
+                                            --</div>
                                     </div>
                                 </div>
 
@@ -987,22 +1063,26 @@
                                     display: flex; align-items: center; justify-content: center;
                                     border-radius: var(--radius); z-index: 10;
                                 ">
-                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating Price Distribution Graph...</span>
+                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating
+                                        Price Distribution Graph...</span>
                                 </div>
-                                
+
                                 <!-- Empty State overlay -->
                                 <div id="overview-chart-empty" style="
                                     display: none; height: 350px; align-items: center; justify-content: center;
                                     flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
                                 ">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                        <line x1="9" y1="17" x2="9" y2="12"/>
-                                        <line x1="15" y1="17" x2="15" y2="10"/>
-                                        <line x1="12" y1="17" x2="12" y2="7"/>
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="9" y1="17" x2="9" y2="12" />
+                                        <line x1="15" y1="17" x2="15" y2="10" />
+                                        <line x1="12" y1="17" x2="12" y2="7" />
                                     </svg>
                                     <span style="font-weight: 600;">No Competitor Data Available</span>
-                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active competitor offers to construct a pricing distribution for this parent ASIN.</span>
+                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active
+                                        competitor offers to construct a pricing distribution for this parent
+                                        ASIN.</span>
                                 </div>
 
                                 <!-- Chart Container -->
@@ -1024,24 +1104,38 @@
                                     gap: 16px;
                                 ">
                                     <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div style="width: 14px; height: 14px; background: #10b981; border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div
+                                            style="width: 14px; height: 14px; background: #10b981; border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
+                                        </div>
                                         <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Our Price (Green Line)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Your current selling price. See if you are sitting inside the crowded peaks or open valleys.</div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Our
+                                                Price (Green Line)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Your
+                                                current selling price. See if you are sitting inside the crowded peaks
+                                                or open valleys.</div>
                                         </div>
                                     </div>
                                     <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div style="width: 14px; height: 14px; border: 2px dashed #f59e0b; border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div
+                                            style="width: 14px; height: 14px; border: 2px dashed #f59e0b; border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
+                                        </div>
                                         <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Adjusted Median (Gold Line)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">The competitor median price adjusted using the Average Market Index.</div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Adjusted
+                                                Median (Gold Line)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">The
+                                                competitor median price adjusted using the Average Market Index.</div>
                                         </div>
                                     </div>
                                     <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div style="width: 14px; height: 14px; background: rgba(91, 138, 240, 0.3); border-radius: 4px; margin-top: 3px; flex-shrink: 0;"></div>
+                                        <div
+                                            style="width: 14px; height: 14px; background: rgba(91, 138, 240, 0.3); border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
+                                        </div>
                                         <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Blue Columns (Competitors)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Taller bars represent popular price points with high competition. Flat areas represent open, low-competition ranges.</div>
+                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Blue
+                                                Columns (Competitors)</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">
+                                                Taller bars represent popular price points with high competition. Flat
+                                                areas represent open, low-competition ranges.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1053,7 +1147,9 @@
                             <div class="card-header">
                                 <div>
                                     <h3 class="card-title">Rating vs. Competitor Price Position Map</h3>
-                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Analyze quality vs. pricing. Bubbles show competitors; size indicates review volume (popularity). Quadrants separate value from vulnerability.</p>
+                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Analyze quality
+                                        vs. pricing. Bubbles show competitors; size indicates review volume
+                                        (popularity). Quadrants separate value from vulnerability.</p>
                                 </div>
                             </div>
                             <div class="card-body" style="padding: 20px; position: relative;">
@@ -1064,21 +1160,24 @@
                                     display: flex; align-items: center; justify-content: center;
                                     border-radius: var(--radius); z-index: 10;
                                 ">
-                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating Rating vs. Price Position Map...</span>
+                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating
+                                        Rating vs. Price Position Map...</span>
                                 </div>
-                                
+
                                 <!-- Empty State overlay -->
                                 <div id="overview-bubble-empty" style="
                                     display: none; height: 380px; align-items: center; justify-content: center;
                                     flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
                                 ">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <line x1="12" y1="8" x2="12" y2="12"/>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
                                     </svg>
                                     <span style="font-weight: 600;">No Rating vs Price Data Available</span>
-                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active competitor rating data to construct this visual map.</span>
+                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active
+                                        competitor rating data to construct this visual map.</span>
                                 </div>
 
                                 <!-- Bubble Chart Container -->
@@ -1100,19 +1199,24 @@
                                     color: var(--text-dim);
                                 ">
                                     <div style="border-left: 3px solid var(--success); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value Leaders</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value
+                                            Leaders</strong>
                                         Low Price / High Rating (Top-Left)
                                     </div>
                                     <div style="border-left: 3px solid var(--accent); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium Segment</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium
+                                            Segment</strong>
                                         High Price / High Rating (Top-Right)
                                     </div>
                                     <div style="border-left: 3px solid var(--warning); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget Brands</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget
+                                            Brands</strong>
                                         Low Price / Low Rating (Bottom-Left)
                                     </div>
                                     <div style="border-left: 3px solid var(--danger); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced / Vulnerable</strong>
+                                        <strong
+                                            style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced /
+                                            Vulnerable</strong>
                                         High Price / Low Rating (Bottom-Right)
                                     </div>
                                 </div>
@@ -1120,10 +1224,10 @@
                         </div>
 
                     </div>
-                    
+
                     <div class="dashboard-right"
                         style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
-                        
+
                         <!-- Portfolio Position Map -->
                         <div class="card">
                             <div class="card-header">
@@ -1131,13 +1235,24 @@
                             </div>
                             <div class="position-map" style="height: auto; padding: 20px 0; position: relative;">
                                 <div class="zone-bar" style="margin-bottom: 24px;">
-                                    <div class="zone-marker-original" id="portfolio-marker-original" style="display: none;" title="Original Median"></div>
-                                    <div class="zone-marker-adjusted" id="portfolio-marker-adjusted" style="display: none;" title="Adjusted Median"></div>
-                                    <div class="zone-marker-current" id="portfolio-marker-current" style="display: none;" title="Current Product Position"></div>
+                                    <div class="zone-marker-original" id="portfolio-marker-original"
+                                        style="display: none;" title="Original Median"></div>
+                                    <div class="zone-marker-adjusted" id="portfolio-marker-adjusted"
+                                        style="display: none;" title="Adjusted Median"></div>
+                                    <div class="zone-marker-current" id="portfolio-marker-current"
+                                        style="display: none;" title="Current Product Position"></div>
                                 </div>
-                                <div id="portfolio-map-legend" style="display: none; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);">
-                                    <div style="display: flex; align-items: center; gap: 4px;"><div style="width: 8px; height: 8px; background: var(--accent); border: 1px dashed white; border-radius: 2px;"></div> Adjusted Median</div>
-                                    <div style="display: flex; align-items: center; gap: 4px;"><div style="width: 8px; height: 8px; background: white; border-radius: 2px;"></div> Current Position</div>
+                                <div id="portfolio-map-legend"
+                                    style="display: none; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);">
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <div
+                                            style="width: 8px; height: 8px; background: var(--accent); border: 1px dashed white; border-radius: 2px;">
+                                        </div> Adjusted Median
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <div style="width: 8px; height: 8px; background: white; border-radius: 2px;">
+                                        </div> Current Position
+                                    </div>
                                 </div>
                                 <div class="zone-labels" style="margin-top: 8px;">
                                     <span>Below</span><span>Budget</span><span>Value</span><span>Mid</span><span>Premium</span><span>Above</span>
@@ -1156,9 +1271,11 @@
                     </div>
 
                     <div class="card" style="grid-column: span 2;">
-                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+                        <div class="card-header"
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
                             <h3 class="card-title">Repricing Recommendations</h3>
-                            <div class="table-controls" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <div class="table-controls"
+                                style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                                 <!-- Category Filter Dropdown (primary filter - must select to see data) -->
                                 <select id="recs-category-filter" style="
                                     background: var(--surface-solid);
@@ -1175,7 +1292,8 @@
                                 ">
                                     <option value="">-- Select a Category --</option>
                                 </select>
-                                <input type="text" id="recs-search" placeholder="Search ASIN, Title, Reasoning..." style="
+                                <input type="text" id="recs-search" placeholder="Search ASIN, Title, Reasoning..."
+                                    style="
                                     background: rgba(255,255,255,0.05);
                                     border: 1px solid var(--border);
                                     padding: 8px 16px;
@@ -1235,7 +1353,8 @@
                                         <th>Competitors</th>
                                         <th>Current</th>
                                         <th>Median</th>
-                                        <th title="Median price adjusted using Avg. Market Index.">Adj. Median <span style="cursor:help; font-size:10px;">ⓘ</span></th>
+                                        <th title="Median price adjusted using Avg. Market Index.">Adj. Median <span
+                                                style="cursor:help; font-size:10px;">ⓘ</span></th>
                                         <th>Action</th>
                                         <th>Reasoning</th>
                                         <th>Market Position</th>
@@ -1253,13 +1372,16 @@
             <!-- View: CATEGORIES (My Product Rankings) -->
             <div id="view-categories" style="display: none;">
                 <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <div>
                             <h2 style="font-size: 20px; font-weight: 700; color: var(--text);">My Product Rankings</h2>
-                            <p style="font-size: 13px; color: var(--text-dim);">Live BSR monitoring for your product portfolio.</p>
+                            <p style="font-size: 13px; color: var(--text-dim);">Live BSR monitoring for your product
+                                portfolio.</p>
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <input type="text" id="category-search" placeholder="Search products or categories..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; color: var(--text); font-size: 13px; width: 250px;">
+                            <input type="text" id="category-search" placeholder="Search products or categories..."
+                                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; color: var(--text); font-size: 13px; width: 250px;">
                         </div>
                     </div>
                     <div class="table-container">
@@ -1431,18 +1553,18 @@
                     headers: { 'X-Internal-Token': 'saddl_secret_token_123' }
                 });
                 const data = await resp.json();
-                
+
                 if (data.accounts && data.accounts.length > 0) {
-                    accountSelector.innerHTML = data.accounts.map(acc => 
+                    accountSelector.innerHTML = data.accounts.map(acc =>
                         `<option value="${acc.client_id}" ${acc.client_id === currentClientId ? 'selected' : ''}>
                             ${acc.client_name || acc.client_id} [${acc.client_id}]
                         </option>`
                     ).join('');
-                    
+
                     if (!currentClientId || !data.accounts.find(a => a.client_id === currentClientId)) {
                         currentClientId = data.accounts[0].client_id;
                     }
-                    accountSelector.value = currentClientId; 
+                    accountSelector.value = currentClientId;
                     refreshData();
                 } else {
                     accountSelector.innerHTML = '<option value="" disabled selected>No accounts found</option>';
@@ -1494,7 +1616,7 @@
                     }
                     obj[h] = val;
                 });
-                
+
                 // Map common price columns to floor_price if missing
                 if (!obj.floor_price) {
                     obj.floor_price = obj.price || obj['selling price'] || obj.selling_price || obj.amount || obj.buy_box_price;
@@ -1517,11 +1639,11 @@
 
         async function refreshData() {
             try {
-                const headers = { 
+                const headers = {
                     'X-Client-Id': currentClientId,
                     'X-Internal-Token': 'saddl_secret_token_123'
                 };
-                
+
                 const promises = [];
 
                 if (activeTab === 'benchmarking') {
@@ -1539,7 +1661,7 @@
 
                         if (!overviewResp.ok) throw new Error(`HTTP ${overviewResp.status}`);
                         const overviewData = await overviewResp.json();
-                        
+
                         renderOverview(overviewData.rows, overviewData);
                         renderRecommendations(globalRecommendations);
 
@@ -1594,7 +1716,7 @@
                 .split(',')
                 .map(phrase => phrase.trim().split(/\s+/).filter(k => k))
                 .filter(group => group.length > 0);
-            
+
             if (keywordGroups.length === 0) {
                 renderCategories(window.allCategories);
                 return;
@@ -1609,7 +1731,7 @@
                     const titleLower = (p.title || '').toLowerCase();
                     const asinLower = (p.asin || '').toLowerCase();
                     const refLower = (p.reference_name || '').toLowerCase();
-                    
+
                     return keywordGroups.some(group =>
                         group.every(kw =>
                             titleLower.includes(kw) ||
@@ -1618,7 +1740,7 @@
                         )
                     );
                 });
-                
+
                 // If there are matching products, we return this category with the matching products list
                 if (matchingProducts.length > 0) {
                     return {
@@ -1663,7 +1785,7 @@
             // Find matching recommendation to get Our Price and Adjusted Median Price
             let yourPrice = parseFloat(row.your_price);
             if (isNaN(yourPrice)) yourPrice = parseFloat(row.current_price);
-            
+
             const matchedRec = globalRecommendations.find(rec => {
                 const recKey = rec.parent_asin || rec.asin;
                 const rowKey = row.parent_asin || row.asin;
@@ -1714,7 +1836,7 @@
                         }
                     });
                 }
-                
+
                 if (prices.length < count) {
                     const missingCount = count - prices.length;
                     const quartiles = [];
@@ -1729,7 +1851,7 @@
                     } else {
                         quartiles.push(rawMin, p25, median, p75, rawMax);
                     }
-                    
+
                     for (let i = 0; i < missingCount; i++) {
                         const priceVal = quartiles[i % quartiles.length] || median;
                         prices.push(priceVal);
@@ -1753,7 +1875,7 @@
                     } else {
                         p = p75 + ((q - 0.75) / 0.25) * (rawMax - p75);
                     }
-                    
+
                     const jitter = (Math.random() - 0.5) * 0.015 * (rawMax - rawMin);
                     prices.push(Math.max(rawMin, Math.min(rawMax, p + jitter)));
                 }
@@ -1806,12 +1928,12 @@
             competitorSource.forEach(comp => {
                 const p = parseFloat(comp.price);
                 if (isNaN(p)) return;
-                
+
                 // Clamp to prevent dropping items due to database floor_price rounding
                 const clampedP = Math.max(minBound, Math.min(maxBound, p));
                 const epsilon = 0.0001; // Absorb floating point JS drift
                 let assigned = false;
-                
+
                 for (let i = 0; i < binCount; i++) {
                     const isLast = (i === binCount - 1);
                     if (clampedP >= (bins[i].start - epsilon) && (isLast ? clampedP <= (bins[i].end + epsilon) : clampedP < bins[i].end)) {
@@ -1820,7 +1942,7 @@
                         break;
                     }
                 }
-                
+
                 // Absolute safety net guarantees no dropped competitors
                 if (!assigned && binCount > 0) {
                     if (clampedP < bins[0].start) bins[0].competitors.push(comp);
@@ -1834,7 +1956,7 @@
                     const brandCounts = {};
                     let sum = 0;
                     const compPrices = [];
-                    
+
                     b.competitors.forEach(c => {
                         let brandRaw = c.brand || '';
                         if (brandRaw === 'None' || brandRaw === 'null') {
@@ -1845,23 +1967,23 @@
                             // Extract first two words for better identification if no brand exists
                             brandRaw = titleWords.slice(0, 2).join(' ');
                         }
-                        
+
                         // Normalize brand string to group effectively (e.g. "stanley" and "Stanley ")
                         const brand = brandRaw.trim().replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-                        
+
                         brandCounts[brand] = (brandCounts[brand] || 0) + 1;
-                        
+
                         const p = parseFloat(c.price);
                         sum += p;
                         compPrices.push(p);
                     });
-                    
+
                     b.brands = Object.entries(brandCounts)
                         .map(([name, count]) => ({ name, count }))
                         .sort((a, b) => b.count - a.count);
-                    
+
                     b.actualAvg = sum / b.competitors.length;
-                    
+
                     compPrices.sort((x, y) => x - y);
                     const midIdx = Math.floor(compPrices.length / 2);
                     if (compPrices.length % 2 === 0) {
@@ -1928,23 +2050,23 @@
                 const tgtPriceEl = document.getElementById('product-target-price');
                 const badgeEl = document.getElementById('product-profitability-badge');
                 const cogsInput = document.getElementById('product-cogs-input');
-                
+
                 const yourPriceVal = parseFloat(row.your_price);
                 const currency = 'AED';
 
                 if (curPriceEl && bePriceEl && tgtPriceEl && badgeEl && cogsInput) {
                     const parentAsin = row.parent_asin || row.asin;
                     const cogsKey = `saddl_cogs_${currentClientId}_${parentAsin}`;
-                    
+
                     // Setup the input field value from localStorage
                     const savedCogs = localStorage.getItem(cogsKey);
-                    
+
                     // Temporarily remove standard event listener to avoid infinite loops when setting value programmatically
                     cogsInput.oninput = null;
                     if (document.activeElement !== cogsInput) {
                         cogsInput.value = savedCogs !== null ? savedCogs : '';
                     }
-                    
+
                     // Add real-time event listener to save and re-calculate
                     cogsInput.oninput = (e) => {
                         const newCogs = e.target.value.trim();
@@ -1964,7 +2086,7 @@
                     };
 
                     panel.style.display = 'flex';
-                    
+
                     // Render Current Price
                     if (!isNaN(yourPriceVal) && yourPriceVal >= 0) {
                         curPriceEl.textContent = `${currency} ${yourPriceVal.toFixed(2)}`;
@@ -1984,7 +2106,7 @@
                     if (savedCogs !== null && !isNaN(parsedCogs) && parsedCogs > 0) {
                         const breakEvenPrice = parsedCogs / 0.3;
                         bePriceEl.textContent = `${currency} ${breakEvenPrice.toLocaleString('en-AE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                        
+
                         // Margin analysis against Current Price
                         const comparisonPrice = !isNaN(yourPriceVal) ? yourPriceVal : 0;
                         if (comparisonPrice < breakEvenPrice) {
@@ -2014,8 +2136,8 @@
                 }
             }
 
-            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors) 
-                ? matchedRec.metadata.competitors 
+            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors)
+                ? matchedRec.metadata.competitors
                 : [];
 
             const dataModel = generatePricingDistribution(row, rawCompetitors, 200, 10);
@@ -2027,7 +2149,7 @@
 
             const xLabels = dataModel.bins.map(b => b.mid);
             const densities = dataModel.bins.map(b => b.count);
-            
+
             let yourPrice = parseFloat(row.your_price);
             if (isNaN(yourPrice)) yourPrice = parseFloat(row.current_price);
             if (matchedRec && (isNaN(yourPrice) || yourPrice <= 0)) {
@@ -2074,8 +2196,8 @@
                         autoScaleYaxis: true
                     },
                     events: {
-                        beforeMount: function(chartCtx) {},
-                        scrolled: function(chartCtx, config) {}
+                        beforeMount: function (chartCtx) { },
+                        scrolled: function (chartCtx, config) { }
                     }
                 },
                 stroke: {
@@ -2125,19 +2247,19 @@
                 tooltip: {
                     shared: true,
                     intersect: false,
-                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                         const bin = dataModel.bins[dataPointIndex];
                         if (!bin) return '';
-                        
+
                         let brandsHtml = '';
                         const totalComps = bin.competitors.length;
-                        
+
                         if (totalComps > 0) {
                             const topBrands = bin.brands.slice(0, 4);
                             brandsHtml = `<ul style="list-style: none; padding: 0; margin: 0 0 10px 0;">` +
                                 topBrands.map(b => `<li style="font-size: 13px; color: var(--text); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;"><span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;">• ${b.name}</span><span style="color: var(--text-dim); font-size: 11px;">(${b.count})</span></li>`).join('') +
                                 `</ul>`;
-                            
+
                             if (bin.brands.length > 4) {
                                 const remaining = bin.brands.length - 4;
                                 brandsHtml += `<div style="font-size: 12px; color: var(--text-dim); font-style: italic; margin-bottom: 10px;">+${remaining} more brand${remaining > 1 ? 's' : ''}</div>`;
@@ -2147,7 +2269,7 @@
                         }
 
                         const priceRange = `Price range: ${currency} ${(bin.start).toFixed(1)} - ${(bin.end).toFixed(1)}`;
-                        
+
                         let footerHtml = '';
                         if (totalComps > 0) {
                             footerHtml = `
@@ -2236,21 +2358,21 @@
                 return recKey === rowKey || rec.asin === row.asin || rec.parent_asin === row.parent_asin;
             });
 
-            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors) 
-                ? matchedRec.metadata.competitors 
+            const rawCompetitors = (matchedRec && matchedRec.metadata && matchedRec.metadata.competitors)
+                ? matchedRec.metadata.competitors
                 : [];
 
             // 1. Get reference/include keyword, exclude keywords, and exclude brands
             const parentAsin = row.parent_asin || row.asin;
-            
+
             // Try to read from DOM elements if they exist (live edited values)
             const domInclude = document.getElementById(`ref-name-${parentAsin}`);
             const domExcludeKws = document.getElementById(`exclude-keywords-${parentAsin}`);
             const domExcludeBrands = document.getElementById(`exclude-brands-${parentAsin}`);
-            
+
             let referenceName = domInclude ? domInclude.value : (row.reference_name || '');
             let excludeKeywordsStr = '';
-            
+
             if (domExcludeKws || domExcludeBrands) {
                 const kwsVal = domExcludeKws ? domExcludeKws.value.trim() : '';
                 const brandsVal = domExcludeBrands ? domExcludeBrands.value.trim() : '';
@@ -2268,7 +2390,7 @@
                 const parts = excludeKeywordsStr.split('|brand_exclude:');
                 const kwsPart = parts[0] || '';
                 const brandsPart = parts[1] || '';
-                
+
                 excludeKeywords = kwsPart.split(',').map(kw => kw.trim().toLowerCase()).filter(Boolean);
                 excludeBrands = brandsPart.split(',').map(b => b.trim().toLowerCase()).filter(Boolean);
             }
@@ -2313,15 +2435,15 @@
                 };
             }).filter(c => {
                 if (c.price <= 0) return false;
-                
+
                 const titleLower = c.title.toLowerCase();
                 const brandLower = c.brand.toLowerCase();
-                
+
                 // A. Exclude Keywords
                 if (excludeKeywords.some(kw => titleLower.includes(kw))) {
                     return false;
                 }
-                
+
                 // B. Exclude Brands
                 if (excludeBrands.length > 0) {
                     const compBrandClean = brandLower.replace(/\s+/g, ' ').trim();
@@ -2333,7 +2455,7 @@
                             matchesExcludedBrand = true;
                             break;
                         }
-                        
+
                         // Word boundary check (e.g. "stanley" matches "stanley pmi")
                         const escaped = brandClean.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                         const regex = new RegExp('\\b' + escaped + '\\b');
@@ -2344,7 +2466,7 @@
                     }
                     if (matchesExcludedBrand) return false;
                 }
-                
+
                 // C. Include Keywords (Reference Name)
                 if (referenceName && referenceName.trim()) {
                     const refLower = referenceName.trim().toLowerCase();
@@ -2354,7 +2476,7 @@
                         for (const phrase of phrases) {
                             const keywords = phrase.split(/\s+/).map(kw => kw.trim()).filter(Boolean);
                             if (keywords.length === 0) continue;
-                            
+
                             let phraseMatches = true;
                             for (const kw of keywords) {
                                 if (!titleLower.includes(kw)) {
@@ -2370,7 +2492,7 @@
                         if (!matchesAnyPhrase) return false;
                     }
                 }
-                
+
                 return true;
             });
 
@@ -2533,7 +2655,7 @@
                 tooltip: {
                     shared: false,
                     intersect: true,
-                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                         const pt = (seriesIndex === 0) ? formattedCompetitors[dataPointIndex] : formattedOurProduct[dataPointIndex];
                         if (!pt) return '';
 
@@ -2719,7 +2841,7 @@
                 }
             });
             const uniqueRows = Array.from(latestRowsMap.values());
-            
+
             // Store global reference for product switching
             overviewSnapshots = uniqueRows;
 
@@ -2801,13 +2923,13 @@
                     }
                 }
 
-                selector.innerHTML = `<option value="" disabled>Select Product to Analyze...</option>` + 
+                selector.innerHTML = `<option value="" disabled>Select Product to Analyze...</option>` +
                     uniqueRows.map((r) => {
                         const asin = r.parent_asin || r.asin;
                         const labelText = getParentAsinTitle(r);
                         const optionLabel = `${asin} - ${labelText}`;
-                        const isSelected = previousSelection 
-                            ? (r.asin === previousSelection) 
+                        const isSelected = previousSelection
+                            ? (r.asin === previousSelection)
                             : (r.asin === (autoFirstRow && autoFirstRow.asin));
                         return `<option value="${escapeHtml(r.asin)}" title="${escapeHtml(optionLabel)}" ${isSelected ? 'selected' : ''}>
                             ${escapeHtml(optionLabel)}
@@ -2871,13 +2993,13 @@
         function updatePortfolioMarkers(selectedRow) {
             if (!selectedRow) return;
             const marketIndex = window.currentAvgMarketIndex || 100;
-            
+
             // Look up in globalRecommendations for accurate min/max/percentile info
             let targetRec = globalRecommendations.find(r => (r.parent_asin || r.asin) === (selectedRow.parent_asin || selectedRow.asin));
             targetRec = targetRec || selectedRow;
-            
+
             const meta = targetRec.metadata || targetRec;
-            
+
             let rawMedian = parseFloat(meta?.median_price);
             if (isNaN(rawMedian)) rawMedian = parseFloat(targetRec?.median_price);
             if (isNaN(rawMedian)) rawMedian = parseFloat(targetRec?.recommended_price);
@@ -2891,7 +3013,7 @@
             if (isNaN(currentPrice)) currentPrice = 0;
 
             const adjMedian = rawMedian * (marketIndex / 100);
-            
+
             let competitors = meta?.competitors || [];
             let nCompetitors = competitors.length;
             if (nCompetitors === 0) {
@@ -2906,15 +3028,15 @@
 
             const adjMedianPos = calculateMarketPosition(adjMedian, competitors, adjMedian);
             const currentPos = calculateMarketPosition(currentPrice, competitors, adjMedian);
-            
+
             const adjMedianPct = adjMedianPos.pct;
             const currentPct = currentPos.pct;
-            
+
             const markerOrig = document.getElementById('portfolio-marker-original');
             const markerAdj = document.getElementById('portfolio-marker-adjusted');
             const markerCurr = document.getElementById('portfolio-marker-current');
             const legend = document.getElementById('portfolio-map-legend');
-            
+
             if (nCompetitors === 0) {
                 if (markerOrig) markerOrig.style.display = 'none';
                 if (markerAdj) markerAdj.style.display = 'none';
@@ -2945,205 +3067,205 @@
             }
         }
 
-                        function renderRecommendations(recs) {
-                            const body = document.getElementById('recs-body');
-                            const kpiRecs = document.getElementById('kpi-recs');
-                            if (!body) return;
-                            
-                            if (!recs || recs.length === 0) {
-                                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No pending recommendations</td></tr>';
-                                if (kpiRecs) kpiRecs.textContent = '0';
-                                return;
-                            }
+        function renderRecommendations(recs) {
+            const body = document.getElementById('recs-body');
+            const kpiRecs = document.getElementById('kpi-recs');
+            if (!body) return;
 
-                            // Deduplicate by Parent ASIN — prefer row where asin === parent_asin as the representative
-                            const parentMap = new Map();
-                            recs.forEach(r => {
-                                const key = r.parent_asin || r.asin;
-                                if (!parentMap.has(key)) {
-                                    parentMap.set(key, r);
-                                } else {
-                                    const existing = parentMap.get(key);
-                                    // Prefer the row where the asin IS the parent_asin (canonical representative)
-                                    const isCurrent = r.asin === r.parent_asin;
-                                    const existingIsCanonical = existing.asin === existing.parent_asin;
-                                    if (isCurrent && !existingIsCanonical) {
-                                        parentMap.set(key, r);
-                                    }
-                                }
-                            });
+            if (!recs || recs.length === 0) {
+                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No pending recommendations</td></tr>';
+                if (kpiRecs) kpiRecs.textContent = '0';
+                return;
+            }
 
-                            let processedRecs = Array.from(parentMap.values());
+            // Deduplicate by Parent ASIN — prefer row where asin === parent_asin as the representative
+            const parentMap = new Map();
+            recs.forEach(r => {
+                const key = r.parent_asin || r.asin;
+                if (!parentMap.has(key)) {
+                    parentMap.set(key, r);
+                } else {
+                    const existing = parentMap.get(key);
+                    // Prefer the row where the asin IS the parent_asin (canonical representative)
+                    const isCurrent = r.asin === r.parent_asin;
+                    const existingIsCanonical = existing.asin === existing.parent_asin;
+                    if (isCurrent && !existingIsCanonical) {
+                        parentMap.set(key, r);
+                    }
+                }
+            });
 
-                            // --- Populate Category Dropdown dynamically from loaded recs ---
-                            const catDropdown = document.getElementById('recs-category-filter');
-                            if (catDropdown) {
-                                const prevCatVal = catDropdown.value;
-                                // Collect unique categories from recs (category_name stored on each rec)
-                                const catSet = new Map(); // cat_name -> true
-                                processedRecs.forEach(r => {
-                                    const cn = r.category_name || (r.metadata && r.metadata.category_name) || '';
-                                    if (cn && !catSet.has(cn)) catSet.set(cn, true);
-                                });
-                                const sortedCats = Array.from(catSet.keys()).sort();
-                                catDropdown.innerHTML = '<option value="">-- Select a Category --</option>' +
-                                    sortedCats.map(cn => `<option value="${escapeHtml(cn)}" ${prevCatVal === cn ? 'selected' : ''}>${escapeHtml(cn)}</option>`).join('');
+            let processedRecs = Array.from(parentMap.values());
 
-                                // AUTO-SELECT: on first load (no previous selection), pick the first category
-                                // so the table renders immediately without requiring user interaction
-                                if (!prevCatVal && sortedCats.length > 0) {
-                                    catDropdown.value = sortedCats[0];
-                                }
-                            }
+            // --- Populate Category Dropdown dynamically from loaded recs ---
+            const catDropdown = document.getElementById('recs-category-filter');
+            if (catDropdown) {
+                const prevCatVal = catDropdown.value;
+                // Collect unique categories from recs (category_name stored on each rec)
+                const catSet = new Map(); // cat_name -> true
+                processedRecs.forEach(r => {
+                    const cn = r.category_name || (r.metadata && r.metadata.category_name) || '';
+                    if (cn && !catSet.has(cn)) catSet.set(cn, true);
+                });
+                const sortedCats = Array.from(catSet.keys()).sort();
+                catDropdown.innerHTML = '<option value="">-- Select a Category --</option>' +
+                    sortedCats.map(cn => `<option value="${escapeHtml(cn)}" ${prevCatVal === cn ? 'selected' : ''}>${escapeHtml(cn)}</option>`).join('');
 
-                            // Precompute properties for consistency in filters, sorting, and rendering
-                            processedRecs.forEach(r => {
-                                const rawMedian = (r.metadata && r.metadata.median_price) ? Number(r.metadata.median_price) : (r.recommended_price || 0);
-                                const marketIndex = window.currentAvgMarketIndex || 100;
-                                r.calculatedAdjMedian = rawMedian * (marketIndex / 100);
-                                
-                                let currentPrice = parseFloat(r.current_price);
-                                if (isNaN(currentPrice)) currentPrice = parseFloat(r.your_price);
-                                if (isNaN(currentPrice)) currentPrice = 0;
-                                r.calculatedCurrentPrice = currentPrice;
+                // AUTO-SELECT: on first load (no previous selection), pick the first category
+                // so the table renders immediately without requiring user interaction
+                if (!prevCatVal && sortedCats.length > 0) {
+                    catDropdown.value = sortedCats[0];
+                }
+            }
 
-                                // Dynamic Action Comparison against Adjusted Median
-                                let action = 'hold';
-                                const changeAmt = r.calculatedAdjMedian - r.calculatedCurrentPrice;
-                                const changePct = r.calculatedCurrentPrice > 0 ? (changeAmt / r.calculatedCurrentPrice) * 100 : 0;
-                                if (Math.abs(changePct) < 1.0) {
-                                    action = 'hold';
-                                } else if (changeAmt > 0) {
-                                    action = 'increase';
-                                } else {
-                                    action = 'decrease';
-                                }
+            // Precompute properties for consistency in filters, sorting, and rendering
+            processedRecs.forEach(r => {
+                const rawMedian = (r.metadata && r.metadata.median_price) ? Number(r.metadata.median_price) : (r.recommended_price || 0);
+                const marketIndex = window.currentAvgMarketIndex || 100;
+                r.calculatedAdjMedian = rawMedian * (marketIndex / 100);
 
-                                r.calculatedAction = action;
+                let currentPrice = parseFloat(r.current_price);
+                if (isNaN(currentPrice)) currentPrice = parseFloat(r.your_price);
+                if (isNaN(currentPrice)) currentPrice = 0;
+                r.calculatedCurrentPrice = currentPrice;
 
-                                // Precompute competitor count
-                                const metaCount = r.metadata && Number(r.metadata.n_competitors);
-                                const reasonMatch = String(r.reasoning || '').match(/^(\d+)\s+competitors/i);
-                                r._competitorCount = Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0);
+                // Dynamic Action Comparison against Adjusted Median
+                let action = 'hold';
+                const changeAmt = r.calculatedAdjMedian - r.calculatedCurrentPrice;
+                const changePct = r.calculatedCurrentPrice > 0 ? (changeAmt / r.calculatedCurrentPrice) * 100 : 0;
+                if (Math.abs(changePct) < 1.0) {
+                    action = 'hold';
+                } else if (changeAmt > 0) {
+                    action = 'increase';
+                } else {
+                    action = 'decrease';
+                }
 
-                                // Precompute competitor range dynamically (with robust fallback to competitors array)
-                                let pMin = parseFloat(r.metadata && r.metadata.floor_price) || 0;
-                                let pMax = parseFloat(r.metadata && r.metadata.ceiling_price) || 0;
-                                if (pMin === 0 || pMax === 0) {
-                                    if (r.metadata && r.metadata.competitors && r.metadata.competitors.length > 0) {
-                                        const prices = r.metadata.competitors.map(c => parseFloat(c.price)).filter(p => !isNaN(p) && p > 0);
-                                        if (prices.length > 0) {
-                                            pMin = Math.min(...prices);
-                                            pMax = Math.max(...prices);
-                                        }
-                                    }
-                                }
-                                r.calculatedFloorPrice = pMin;
-                                r.calculatedCeilingPrice = pMax;
+                r.calculatedAction = action;
 
-                                // Calculate Market Position dynamically using direct Adj. Median comparison
-                                let competitors = (r.metadata && r.metadata.competitors) || [];
-                                if (competitors.length === 0 && r._competitorCount > 0) {
-                                    competitors = new Array(r._competitorCount).fill({});
-                                }
-                                const marketPos = calculateMarketPosition(r.calculatedCurrentPrice, competitors, r.calculatedAdjMedian);
-                                r.calculatedPct = marketPos.pct;
-                                r.calculatedZone = marketPos.zone;
+                // Precompute competitor count
+                const metaCount = r.metadata && Number(r.metadata.n_competitors);
+                const reasonMatch = String(r.reasoning || '').match(/^(\d+)\s+competitors/i);
+                r._competitorCount = Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0);
 
-                                // Build dynamic reasoning text
-                                const zoneMessageMap = {
-                                    'below_market': 'Currently below market floor.',
-                                    'budget': 'Currently in budget zone.',
-                                    'value': 'Currently in value zone.',
-                                    'mid_market': 'Currently in mid-market zone.',
-                                    'premium': 'Currently in premium zone.',
-                                    'above_market': 'Currently above market ceiling.'
-                                };
-                                const zoneMsg = zoneMessageMap[marketPos.zone] || '';
-                                const targetMsg = `Mid-market strategy: adjusted median (AED ${r.calculatedAdjMedian.toFixed(2)}).`;
-                                const compMsg = `${r._competitorCount} competitors. Range AED ${pMin.toFixed(2)}-AED ${pMax.toFixed(2)}. Adjusted Median AED ${r.calculatedAdjMedian.toFixed(2)}.`;
-                                r.calculatedReasoning = `${compMsg} | ${zoneMsg} | ${targetMsg}`;
-                            });
+                // Precompute competitor range dynamically (with robust fallback to competitors array)
+                let pMin = parseFloat(r.metadata && r.metadata.floor_price) || 0;
+                let pMax = parseFloat(r.metadata && r.metadata.ceiling_price) || 0;
+                if (pMin === 0 || pMax === 0) {
+                    if (r.metadata && r.metadata.competitors && r.metadata.competitors.length > 0) {
+                        const prices = r.metadata.competitors.map(c => parseFloat(c.price)).filter(p => !isNaN(p) && p > 0);
+                        if (prices.length > 0) {
+                            pMin = Math.min(...prices);
+                            pMax = Math.max(...prices);
+                        }
+                    }
+                }
+                r.calculatedFloorPrice = pMin;
+                r.calculatedCeilingPrice = pMax;
 
-                            // 0. Apply Category Filter (primary gate — must select a category)
-                            const selectedCategory = document.getElementById('recs-category-filter')?.value || '';
-                            if (!selectedCategory) {
-                                // No category selected — show prompt instead of all recs
-                                body.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 48px; color: var(--text-dim);">
+                // Calculate Market Position dynamically using direct Adj. Median comparison
+                let competitors = (r.metadata && r.metadata.competitors) || [];
+                if (competitors.length === 0 && r._competitorCount > 0) {
+                    competitors = new Array(r._competitorCount).fill({});
+                }
+                const marketPos = calculateMarketPosition(r.calculatedCurrentPrice, competitors, r.calculatedAdjMedian);
+                r.calculatedPct = marketPos.pct;
+                r.calculatedZone = marketPos.zone;
+
+                // Build dynamic reasoning text
+                const zoneMessageMap = {
+                    'below_market': 'Currently below market floor.',
+                    'budget': 'Currently in budget zone.',
+                    'value': 'Currently in value zone.',
+                    'mid_market': 'Currently in mid-market zone.',
+                    'premium': 'Currently in premium zone.',
+                    'above_market': 'Currently above market ceiling.'
+                };
+                const zoneMsg = zoneMessageMap[marketPos.zone] || '';
+                const targetMsg = `Mid-market strategy: adjusted median (AED ${r.calculatedAdjMedian.toFixed(2)}).`;
+                const compMsg = `${r._competitorCount} competitors. Range AED ${pMin.toFixed(2)}-AED ${pMax.toFixed(2)}. Adjusted Median AED ${r.calculatedAdjMedian.toFixed(2)}.`;
+                r.calculatedReasoning = `${compMsg} | ${zoneMsg} | ${targetMsg}`;
+            });
+
+            // 0. Apply Category Filter (primary gate — must select a category)
+            const selectedCategory = document.getElementById('recs-category-filter')?.value || '';
+            if (!selectedCategory) {
+                // No category selected — show prompt instead of all recs
+                body.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 48px; color: var(--text-dim);">
                                     <div style="font-size: 32px; margin-bottom: 12px;">📂</div>
                                     <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Select a Category to View Analysis</div>
                                     <div style="font-size: 13px;">Use the <b style="color: var(--accent);">Category</b> dropdown above to filter repricing recommendations by product category.</div>
                                 </td></tr>`;
-                                if (kpiRecs) kpiRecs.textContent = processedRecs.length;
-                                return;
-                            }
-                            processedRecs = processedRecs.filter(r => {
-                                const cn = r.category_name || (r.metadata && r.metadata.category_name) || '';
-                                return cn === selectedCategory;
-                            });
+                if (kpiRecs) kpiRecs.textContent = processedRecs.length;
+                return;
+            }
+            processedRecs = processedRecs.filter(r => {
+                const cn = r.category_name || (r.metadata && r.metadata.category_name) || '';
+                return cn === selectedCategory;
+            });
 
-                            // 1. Apply Search Filter
-                            const searchVal = (document.getElementById('recs-search')?.value || '').toLowerCase().trim();
-                            if (searchVal) {
-                                processedRecs = processedRecs.filter(r => {
-                                    const asin = (r.parent_asin || r.asin || '').toLowerCase();
-                                    const title = (r.title || '').toLowerCase();
-                                    const reasoning = (r.calculatedReasoning || r.reasoning || '').toLowerCase();
-                                    return asin.includes(searchVal) || title.includes(searchVal) || reasoning.includes(searchVal);
-                                });
-                            }
+            // 1. Apply Search Filter
+            const searchVal = (document.getElementById('recs-search')?.value || '').toLowerCase().trim();
+            if (searchVal) {
+                processedRecs = processedRecs.filter(r => {
+                    const asin = (r.parent_asin || r.asin || '').toLowerCase();
+                    const title = (r.title || '').toLowerCase();
+                    const reasoning = (r.calculatedReasoning || r.reasoning || '').toLowerCase();
+                    return asin.includes(searchVal) || title.includes(searchVal) || reasoning.includes(searchVal);
+                });
+            }
 
-                            // 2. Apply Action Filter
-                            const actionFilter = document.getElementById('recs-action-filter')?.value || 'all';
-                            if (actionFilter !== 'all') {
-                                processedRecs = processedRecs.filter(r => (r.calculatedAction || '').toLowerCase() === actionFilter);
-                            }
+            // 2. Apply Action Filter
+            const actionFilter = document.getElementById('recs-action-filter')?.value || 'all';
+            if (actionFilter !== 'all') {
+                processedRecs = processedRecs.filter(r => (r.calculatedAction || '').toLowerCase() === actionFilter);
+            }
 
-                            // 4. Apply Sort
-                            const sortBy = document.getElementById('recs-sort-by')?.value || 'default';
-                            if (sortBy === 'default') {
-                                processedRecs.sort((a, b) => {
-                                    if (a.calculatedAction !== b.calculatedAction) return a.calculatedAction === 'decrease' ? -1 : 1;
-                                    return (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin);
-                                });
-                            } else if (sortBy === 'asin-asc') {
-                                processedRecs.sort((a, b) => (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin));
-                            } else if (sortBy === 'asin-desc') {
-                                processedRecs.sort((a, b) => (b.parent_asin || b.asin).localeCompare(a.parent_asin || a.asin));
-                            } else if (sortBy === 'title-asc') {
-                                processedRecs.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-                            } else if (sortBy === 'title-desc') {
-                                processedRecs.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
-                            } else if (sortBy === 'current-desc') {
-                                processedRecs.sort((a, b) => (b.calculatedCurrentPrice || 0) - (a.calculatedCurrentPrice || 0));
-                            } else if (sortBy === 'current-asc') {
-                                processedRecs.sort((a, b) => (a.calculatedCurrentPrice || 0) - (b.calculatedCurrentPrice || 0));
-                            } else if (sortBy === 'target-desc') {
-                                processedRecs.sort((a, b) => (b.calculatedAdjMedian || 0) - (a.calculatedAdjMedian || 0));
-                            } else if (sortBy === 'target-asc') {
-                                processedRecs.sort((a, b) => (a.calculatedAdjMedian || 0) - (b.calculatedAdjMedian || 0));
-                            } else if (sortBy === 'competitors-desc') {
-                                processedRecs.sort((a, b) => b._competitorCount - a._competitorCount);
-                            }
+            // 4. Apply Sort
+            const sortBy = document.getElementById('recs-sort-by')?.value || 'default';
+            if (sortBy === 'default') {
+                processedRecs.sort((a, b) => {
+                    if (a.calculatedAction !== b.calculatedAction) return a.calculatedAction === 'decrease' ? -1 : 1;
+                    return (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin);
+                });
+            } else if (sortBy === 'asin-asc') {
+                processedRecs.sort((a, b) => (a.parent_asin || a.asin).localeCompare(b.parent_asin || b.asin));
+            } else if (sortBy === 'asin-desc') {
+                processedRecs.sort((a, b) => (b.parent_asin || b.asin).localeCompare(a.parent_asin || a.asin));
+            } else if (sortBy === 'title-asc') {
+                processedRecs.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            } else if (sortBy === 'title-desc') {
+                processedRecs.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+            } else if (sortBy === 'current-desc') {
+                processedRecs.sort((a, b) => (b.calculatedCurrentPrice || 0) - (a.calculatedCurrentPrice || 0));
+            } else if (sortBy === 'current-asc') {
+                processedRecs.sort((a, b) => (a.calculatedCurrentPrice || 0) - (b.calculatedCurrentPrice || 0));
+            } else if (sortBy === 'target-desc') {
+                processedRecs.sort((a, b) => (b.calculatedAdjMedian || 0) - (a.calculatedAdjMedian || 0));
+            } else if (sortBy === 'target-asc') {
+                processedRecs.sort((a, b) => (a.calculatedAdjMedian || 0) - (b.calculatedAdjMedian || 0));
+            } else if (sortBy === 'competitors-desc') {
+                processedRecs.sort((a, b) => b._competitorCount - a._competitorCount);
+            }
 
-                            if (kpiRecs) kpiRecs.textContent = processedRecs.length;
+            if (kpiRecs) kpiRecs.textContent = processedRecs.length;
 
-                            if (processedRecs.length === 0) {
-                                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No matching recommendations</td></tr>';
-                                return;
-                            }
+            if (processedRecs.length === 0) {
+                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No matching recommendations</td></tr>';
+                return;
+            }
 
-                            body.innerHTML = processedRecs.map(r => {
-                                const adjMedian = r.calculatedAdjMedian;
-                                const currentPrice = r.calculatedCurrentPrice;
-                                const pct = r.calculatedPct;
-                                const zone = r.calculatedZone;
-                                const action = r.calculatedAction;
-                                const reasoning = r.calculatedReasoning;
+            body.innerHTML = processedRecs.map(r => {
+                const adjMedian = r.calculatedAdjMedian;
+                const currentPrice = r.calculatedCurrentPrice;
+                const pct = r.calculatedPct;
+                const zone = r.calculatedZone;
+                const action = r.calculatedAction;
+                const reasoning = r.calculatedReasoning;
 
-                                const readableZone = zone.replace(/_/g, ' ');
+                const readableZone = zone.replace(/_/g, ' ');
 
-                                return `
+                return `
                                 <tr data-asin="${r.parent_asin || r.asin}" style="border-left: 3px solid var(--accent);">
                                     <td>
                                         <div style="font-weight: 700; color: var(--text); margin-bottom: 6px;">${r.parent_asin || r.asin}</div>
@@ -3165,8 +3287,8 @@
                                     </td>
                                     <td>
                                         ${(() => {
-                                            if (r._competitorCount > 0) {
-                                                return `
+                        if (r._competitorCount > 0) {
+                            return `
                                                     <div class="mini-zone-container" title="Percentile: ${pct.toFixed(1)}% | Zone: ${readableZone}">
                                                         <div class="mini-zone-bar">
                                                             <div class="mini-zone-marker" style="left: ${pct}%;"></div>
@@ -3174,20 +3296,20 @@
                                                         <div class="mini-zone-label zone-text-${zone}">${readableZone}</div>
                                                     </div>
                                                 `;
-                                            } else {
-                                                return `
+                        } else {
+                            return `
                                                     <div class="mini-zone-container" style="opacity: 0.4;">
                                                         <div class="mini-zone-bar" style="background: var(--border);"></div>
                                                         <div class="mini-zone-label">No Competitors</div>
                                                     </div>
                                                 `;
-                                            }
-                                        })()}
+                        }
+                    })()}
                                     </td>
                                 </tr>
                             `}).join('');
 
-                        }
+        }
 
         function renderAlerts(alerts) {
             renderAlertFeed('alerts-feed', alerts, 10);
@@ -3206,7 +3328,7 @@
             container.innerHTML = items.map(a => {
                 const parentAsin = a.parent_asin || a.asin || '';
                 const parentTitle = a.parent_title || '';
-                
+
                 let displayTitle = a.title;
                 if (parentAsin && a.sku_id && displayTitle.includes(a.sku_id)) {
                     displayTitle = displayTitle.replace(a.sku_id, parentAsin);
@@ -3250,7 +3372,7 @@
             const drafts = getDrafts(currentClientId);
 
             let rowsHtml = '';
-            
+
             // Sort categories by their best performing product
             const sortedCats = [...cats].sort((a, b) => {
                 const minA = Math.min(...(a.products || []).map(p => Number(p.rank) || 999999));
@@ -3264,7 +3386,7 @@
 
                 // Sort products within category by Rank
                 products.sort((a, b) => (Number(a.rank) || 999999) - (Number(b.rank) || 999999));
-                
+
                 const catIdSafe = c.category_name.replace(/[^a-zA-Z0-9]/g, '-');
                 const groupClass = `cat-group-${catIdSafe}`;
                 window.expandedCategoryGroups = window.expandedCategoryGroups || new Set();
@@ -3296,7 +3418,7 @@
                     const rank = Number(p.rank || 0);
                     let statusClass = 'action-hold';
                     let statusText = 'Tracking';
-                    
+
                     if (rank > 0 && rank < 10) {
                         statusClass = 'action-increase';
                         statusText = 'Top 10';
@@ -3396,12 +3518,12 @@
                 if (newActiveEl) {
                     newActiveEl.focus();
                     if (selectionStart !== null && selectionEnd !== null) {
-                        try { newActiveEl.setSelectionRange(selectionStart, selectionEnd); } catch (e) {}
+                        try { newActiveEl.setSelectionRange(selectionStart, selectionEnd); } catch (e) { }
                     }
                 }
             }
         }
-        
+
         async function saveReferenceName(parentAsin) {
             const inputVal = document.getElementById(`ref-name-${parentAsin}`).value;
             const excludeKwsVal = document.getElementById(`exclude-keywords-${parentAsin}`).value.trim();
@@ -3409,17 +3531,17 @@
             const btn = document.getElementById(`btn-save-${parentAsin}`);
             const originalText = btn.innerText;
             btn.innerText = 'Saving...';
-            
+
             // Combine keywords and brands using delimiter
             let finalExcludeVal = excludeKwsVal;
             if (excludeBrandsVal) {
                 finalExcludeVal = `${excludeKwsVal}|brand_exclude: ${excludeBrandsVal}`;
             }
-            
+
             try {
                 const resp = await fetch(`${API_BASE}/update-reference-name`, {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-Client-Id': currentClientId,
                         'X-Internal-Token': 'saddl_secret_token_123'
@@ -3431,7 +3553,7 @@
                         exclude_keywords: finalExcludeVal
                     })
                 });
-                
+
                 if (resp.ok) {
                     const payload = await resp.json();
                     const count = payload.analysis && Number(payload.analysis.priced_competitors);
@@ -3439,8 +3561,8 @@
                     btn.style.color = 'var(--success)';
                     clearDraft(currentClientId, parentAsin);
                     await refreshData();
-                    setTimeout(() => { 
-                        btn.innerText = originalText; 
+                    setTimeout(() => {
+                        btn.innerText = originalText;
                         btn.style.color = 'var(--accent)';
                     }, 2000);
                 } else {
@@ -3478,7 +3600,7 @@
         function toggleProductDetails(containerId, btn) {
             const container = document.getElementById(containerId);
             const isVisible = container.classList.contains('visible');
-            
+
             // Close all other containers first (optional, but cleaner)
             // document.querySelectorAll('.product-details-container').forEach(c => c.classList.remove('visible'));
             // document.querySelectorAll('.btn-toggle-details').forEach(b => b.classList.remove('active'));
@@ -3493,7 +3615,7 @@
         }
 
 
-        window.onerror = function(msg, url, line, col, error) {
+        window.onerror = function (msg, url, line, col, error) {
             console.error('🔥 Dashboard Error:', msg, 'at', line, ':', col);
             return false;
         };
@@ -3505,7 +3627,7 @@
 
                 await fetchAccounts();
                 switchTab('benchmarking');
-                
+
                 // Refresh every 60 seconds
                 setInterval(() => {
                     tabDataLoaded = { benchmarking: false, categories: false };
@@ -3530,7 +3652,7 @@
                     const bubbleLoader = document.getElementById('overview-bubble-loading');
                     if (loader) loader.style.display = 'flex';
                     if (bubbleLoader) bubbleLoader.style.display = 'flex';
-                    
+
                     setTimeout(() => {
                         renderPricingHistogram(selectedRow);
                         renderRatingVsPriceBubbleChart(selectedRow);
@@ -3554,23 +3676,23 @@
                 row.classList.add('selected-row');
 
                 // Find and map to the corresponding snapshot
-                const selectedRow = overviewSnapshots.find(s => 
-                    s.asin === clickedAsin || 
-                    s.parent_asin === clickedAsin || 
+                const selectedRow = overviewSnapshots.find(s =>
+                    s.asin === clickedAsin ||
+                    s.parent_asin === clickedAsin ||
                     (s.parent_asin && s.parent_asin === clickedAsin)
                 );
-                
+
                 if (selectedRow) {
                     const selector = document.getElementById('overview-product-selector');
                     if (selector) {
                         selector.value = selectedRow.asin;
                         selector.title = selector.options[selector.selectedIndex]?.textContent.trim() || '';
-                        
+
                         const loader = document.getElementById('overview-chart-loading');
                         const bubbleLoader = document.getElementById('overview-bubble-loading');
                         if (loader) loader.style.display = 'flex';
                         if (bubbleLoader) bubbleLoader.style.display = 'flex';
-                        
+
                         setTimeout(() => {
                             renderPricingHistogram(selectedRow);
                             renderRatingVsPriceBubbleChart(selectedRow);

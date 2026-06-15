@@ -23,7 +23,11 @@ def run_scheduled_discovery():
     print(f"Found {len(accounts)} accounts to process.")
     
     for acc in accounts:
+<<<<<<< HEAD
         account_id = acc.get("client_id")
+=======
+        account_id = acc.get("account_id")
+>>>>>>> 5021546c74a8a9e0d82812ff2d0468e014ba5e35
         if not account_id:
             continue
             
