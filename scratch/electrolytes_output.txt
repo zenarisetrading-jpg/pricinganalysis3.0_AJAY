@@ -1,0 +1,25 @@
+Categories associated with B0DLX3GJNJ:
+  Category ID: 12373047031 | Category Name: Sports Supplements | Marketplace: A2VIGQ35RCS4UG
+
+Total electrolyte competitors found: 18
+
+ASIN            | Category ID     | Brand Name                | Price      | Product Name                                       | Category Name
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+B003AIF4Q4      | 12373047031     | HIGH5                     | 32.00      | HIGH5 ZERO Electrolyte Tablet - Hydration Tablets  | Sports Supplements
+B07CZ5M78T      | 12373047031     | Science in Sport          | 38.00      | Science In Sport Hydro Electrolyte Tablets | Sugar | Sports Supplements
+B07HCNM7KQ      | 12373047031     | Liquid I.V.               | 150.00     | Liquid I.V. Hydration Multiplier, Electrolyte Powd | Sports Supplements
+B07PXQWJDV      | 12373047031     | Sunshine Nutrition        | 20.30      | Sunshine Nutrition Isotonic Electrolyte Effervesce | Sports Supplements
+B07RYWYDFT      | 12373047031     | Phizz                     | 100.00     | Phizz Electrolytes, Multivitamin & Hydration Table | Sports Supplements
+B0B6242P2W      | 12373047031     | Ultima Replenisher        | 149.00     | Ultima Replenisher Daily Electrolyte Powder – Trop | Sports Supplements
+B0CCJQCN9F      | 12373047031     | HUMANTRA                  | 115.00     | Humantra Electrolytes Powder - Himalayan Lime Flav | Sports Supplements
+B0CCPJR1FZ      | 12373047031     | Activise                  | 0.00       | Activise Electrolyte Effervescent Tab Orange 20's  | Sports Supplements
+B0CLYGV2J8      | 12373047031     | O.R.S                     | 0.00       | O.R.S Hydration Tablets With Electrolytes, Lemon,  | Sports Supplements
+B0CQPGBBVP      | 12373047031     | Muscletech                | 108.36     | MuscleTech | Platinum Essential Amino Acids Supple | Sports Supplements
+B0D1TZBQ23      | 12373047031     | Rule 1 Proteins           | 89.25      | Rule1 1 Essential Amino 9 | Blue Razz Lemonade | S | Sports Supplements
+B0D9ZX8SC9      | 12373047031     | HUMANTRA                  | 115.00     | Humantra Electrolytes Powder - Lychee Flavor, 20ct | Sports Supplements
+B0DQH65KMM      | 12373047031     | Noble Nature              | 39.00      | Electrolyte 40 Effervescent Tablets - With Sodium, | Sports Supplements
+B0DVXD2WBB      | 12373047031     | THORNE                    | 179.00     | THORNE Daily Electrolytes - Zero Sugar & Low-Calor | Sports Supplements
+B0F1BSR4VR      | 12373047031     | Drink LMNT                | 169.99     | LMNT Zero Sugar Electrolytes - Lemonade | Drink Mi | Sports Supplements
+B0F257BKKB      | 12373047031     | Optimum Nutrition         | 95.00      | Optimum Nutrition Creatine Monohydrate Plus Powder | Sports Supplements
+B0F3D3JW3M      | 12373047031     | NBL NATURAL               | 49.00      | NBL Natural EAA Hydration | EAAs + BCAA Powder | M | Sports Supplements
+B0GH25WM4N      | 12373047031     | OWNKIND                   | 125.00     | OWNKIND Electrolytes Powder Sachets - Strawberry & | Sports Supplements

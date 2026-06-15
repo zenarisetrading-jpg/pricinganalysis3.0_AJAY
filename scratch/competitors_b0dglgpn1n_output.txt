@@ -1,0 +1,111 @@
+Categories associated with B0DGLGPN1N:
+  Category ID: 22202768031 | Category Name: Baby & Toddler Electrolyte Drinks | Marketplace: A2VIGQ35RCS4UG
+
+Total unique competitors found: 104
+
+ASIN            | Category ID     | Brand Name                | Price      | Product Name                                       | Category Name
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+B000ARWL2S      | 22202768031     | Pedialyte                 | 570.00     | Pedialyte Electrolyte Drink, Hydration Drinks for  | Baby & Toddler Electrolyte Drinks
+B001E48ORM      | 22202768031     | Dioralyte                 | 134.98     | Dioralyte Natural Electrolyte Powder - Pack of 6 s | Baby & Toddler Electrolyte Drinks
+B00815PLWS      | 22202768031     | SQWINCHER                 | 92.28      | SQWINCHER Qwik Stik Electrolyte Mix - Zero Sugar,  | Baby & Toddler Electrolyte Drinks
+B008DNMOW8      | 22202768031     | Elete Citrilyte Add-in    | 238.33     | Elete Citrilyte Add-in Electrolyte Hydration Drops | Baby & Toddler Electrolyte Drinks
+B00B6R23WO      | 22202768031     | elete Electrolyte Add-In  | 112.49     | Elete 240ml Citrilyte Mix                          | Baby & Toddler Electrolyte Drinks
+B00LMDEORE      | 22202768031     | Good Sense                | 153.60     | Good Sense Pedia Electrolyte Liquid, Unflavored, 3 | Baby & Toddler Electrolyte Drinks
+B00NQCKRMA      | 22202768031     | Pedialyte                 | 213.53     | Pedialyte Electrolyte Solution Freezer Pops, Varie | Baby & Toddler Electrolyte Drinks
+B00URXQOX2      | 22202768031     | Pedialyte                 | 155.16     | Pedialyte Electrolyte Powder, 0.6 Fl Oz Pouch, 6 C | Baby & Toddler Electrolyte Drinks
+B00URXQOXM      | 22202768031     | Pedialyte                 | 145.00     | Pedialyte Electrolyte Powder Strawberry Lemonade,  | Baby & Toddler Electrolyte Drinks
+B01BTDN8P0      | 22202768031     | Nuun                      | 135.00     | Nuun Natural Electrolyte Enhanced, Tri-Berry 8 X 1 | Baby & Toddler Electrolyte Drinks
+B01F38WHD6      | 22202768031     | Hydralyte                 | 149.00     | Hydralyte, Effervescent Electrolyte, Berry Artific | Baby & Toddler Electrolyte Drinks
+B01F38WHI6      | 22202768031     | Hydralyte                 | 199.00     | Hydralyte, Effervescent Electrolyte, Natural Orang | Baby & Toddler Electrolyte Drinks
+B01IGEKVVO      | 22202768031     | Nuun                      | 546.00     | Nuun Sport: Electrolyte Drink Tablets, Tri-Berry,  | Baby & Toddler Electrolyte Drinks
+B01JO4KWAU      | 22202768031     | Pedialyte                 | 152.00     | Pedialyte Electrolyte Powder Packets, Variety Pack | Baby & Toddler Electrolyte Drinks
+B01JO4KWWS      | 22202768031     | Pedialyte                 | 177.00     | Pedialyte Electrolyte Powder Packets, Strawberry L | Baby & Toddler Electrolyte Drinks
+B01K3NQQ1U      | 22202768031     | Pedialyte                 | 71.94      | Pedialyte AdvancedCare Tropical Fruit Electrolyte  | Baby & Toddler Electrolyte Drinks
+B01M4RNUYD      | 22202768031     | Hydralyte                 | 138.00     | Hydralyte Electrolyte Tablets | 40 Orange Electrol | Baby & Toddler Electrolyte Drinks
+B075BHJPST      | 22202768031     | Earth's Best              | 229.55     | Earth's Best Organic Electrolyte Solution, Concord | Baby & Toddler Electrolyte Drinks
+B075HJRHLJ      | 22202768031     | Pedialyte                 | 104.83     | Pedialyte AdvancedCare+ Electrolyte Drink with 33% | Baby & Toddler Electrolyte Drinks
+B078KZ6LSQ      | 22202768031     | Superieur                 | 149.00     | Superieur Electrolytes - Electrolyte Powder Fresh  | Baby & Toddler Electrolyte Drinks
+B078KZDMQT      | 22202768031     | Superieur                 | 157.91     | Superieur Electrolytes - Electrolyte Powder Fresh  | Baby & Toddler Electrolyte Drinks
+B07982HYNF      | 22202768031     | Hydralyte                 | 146.00     | Hydralyte, Effervescent Electrolyte, Color Free, L | Baby & Toddler Electrolyte Drinks
+B079P4SKML      | 22202768031     | Liquid I.V.               | 308.00     | Liquid I.V.® Hydration Multiplier - Acai Berry | E | Baby & Toddler Electrolyte Drinks
+B079Y7VH1Y      | 22202768031     | Pedialyte                 | 243.46     | Pedialyte AdvancedCare+ Electrolyte Drink with 33% | Baby & Toddler Electrolyte Drinks
+B07CBKJXWD      | 22202768031     | Pedialyte                 | 223.14     | Pedialyte Electrolyte Drink, Hydration Drinks for  | Baby & Toddler Electrolyte Drinks
+B07DPCH5XY      | 22202768031     | Nuun                      | 369.00     | Nuun Electrolytes - 8-Pack Tri-Berry, One Size     | Baby & Toddler Electrolyte Drinks
+B07DX7W46M      | 22202768031     | Pedialyte                 | 648.44     | Pedialyte Electrolyte Powder, Orange, Powder Stick | Baby & Toddler Electrolyte Drinks
+B07F1J6P2Z      | 22202768031     | Liquid I.V.               | 2684.00    | Liquid I.V.® Hydration Multiplier® - Açaí Berry -  | Baby & Toddler Electrolyte Drinks
+B07JL1TSXZ      | 22202768031     | Propel                    | 178.00     | Propel Powder Packets Watermelon with Electrolytes | Baby & Toddler Electrolyte Drinks
+B07K9QJFRK      | 22202768031     | Pedialyte                 | 75.85      | Pedialyte AdvancedCare Plus Electrolyte Hydration  | Baby & Toddler Electrolyte Drinks
+B07KK8JMMB      | 22202768031     | Pedialyte                 | 477.26     | Pedialyte Multi Pack, Electrolyte Hydration Drink, | Baby & Toddler Electrolyte Drinks
+B07NDP4ZF9      | 22202768031     | Liquid I.V.               | 225.00     | Liquid I.V. Hydration Multiplier - Passion Fruit - | Baby & Toddler Electrolyte Drinks
+B07NTFSVLR      | 22202768031     | Hydralyte                 | 59.50      | Hydralyte Electrolyte Ice Blocks Orange Flavoured  | Baby & Toddler Electrolyte Drinks
+B07QSXXYPM      | 22202768031     | Pedialyte                 | 62.63      | Pedialyte AdvancedCare Plus Electrolyte Powder, wi | Baby & Toddler Electrolyte Drinks
+B07R4DYNMR      | 22202768031     | Electral                  | 88.00      | Electral FDC ORS - Pack of 30 Sachets x 21.80 g    | Baby & Toddler Electrolyte Drinks
+B07ST37RRY      | 22202768031     | Jacked Factory            | 226.67     | (Orange Mango) - HYDRASURGE Electrolyte Powder - H | Baby & Toddler Electrolyte Drinks
+B07TNSM2H1      | 22202768031     | Pedialyte                 | 397.00     | Pedialyte AdvancedCare Plus Electrolyte Hydration  | Baby & Toddler Electrolyte Drinks
+B07VD1D9SG      | 22202768031     | Hydralyte                 | 45.40      | Hydralyte Vitamin C + Electrolyte Hydration Sports | Baby & Toddler Electrolyte Drinks
+B07W1L1LJD      | 22202768031     | Hydralyte                 | 11.95      | Hydralyte Vitamin C + Electrolyte Hydration Sports | Baby & Toddler Electrolyte Drinks
+B07X5MX1LW      | 22202768031     | DripDrop                  | 175.66     | DripDrop Hydration Packets - Watermelon - Single S | Baby & Toddler Electrolyte Drinks
+B07ZL35661      | 22202768031     | Ultima Replenisher        | 251.03     | Ultima Replenisher Electrolyte Hydration Powder, W | Baby & Toddler Electrolyte Drinks
+B07ZZHVVP2      | 22202768031     | Ultima Replenisher        | 111.80     | Ultima Replenisher Hydration Electrolyte Powder- 3 | Baby & Toddler Electrolyte Drinks
+B085LS9BM3      | 22202768031     | Drink LMNT                | 281.93     | Drink LMNT Zero-Sugar Electrolytes - Orange Salt - | Baby & Toddler Electrolyte Drinks
+B086WPWGY3      | 22202768031     | GoHydrate                 | 61.67      | GoHydrate Electrolyte Drink Mix - A Naturally Flav | Baby & Toddler Electrolyte Drinks
+B088HW8RXH      | 22202768031     | Dioralyte                 | 213.90     | Dioralyte - Fast and Effective Supplement Treatmen | Baby & Toddler Electrolyte Drinks
+B08BG6BDQY      | 22202768031     | Hydralyte                 | 298.00     | Hydralyte Electrolytes Tablets - Berry | 40 Tablet | Baby & Toddler Electrolyte Drinks
+B08CY5SW68      | 22202768031     | Hydralyte                 | 390.00     | Hydralyte Effervescent Electrolytes - Multipack -  | Baby & Toddler Electrolyte Drinks
+B08DLKGMXZ      | 22202768031     | Pedialyte                 | 311.00     | Pedialyte Electrolyte Water with Zero Sugar, Hydra | Baby & Toddler Electrolyte Drinks
+B08FY9S24M      | 22202768031     | Pedialyte                 | 241.00     | Pedialyte Electrolyte Water with Zero Sugar | Hydr | Baby & Toddler Electrolyte Drinks
+B08HMNWG57      | 22202768031     | Hydralyte                 | 229.00     | Hydralyte Electrolyte Ice Blocks Tropical Flavoure | Baby & Toddler Electrolyte Drinks
+B08JL1VXD2      | 22202768031     | REPONE                    | 142.00     | SUERO Electrolyte Solution with Zinc, Rehydrates,  | Baby & Toddler Electrolyte Drinks
+B08JQLLJR7      | 22202768031     | OMS                       | 39.99      | OMS Pediacol Drops 50ml                            | Baby & Toddler Electrolyte Drinks
+B08KBNG7X3      | 22202768031     | Fluid Tactical            | 174.00     | Fluid Tactical- Effervescent Hydration Tablets, El | Baby & Toddler Electrolyte Drinks
+B08KBRXJJ4      | 22202768031     | Fluid Tactical            | 173.00     | Fluid Tactical- Effervescent Hydration Tablets, El | Baby & Toddler Electrolyte Drinks
+B08KBX55SH      | 22202768031     | Fluid Tactical            | 182.00     | Fluid Tactical- Effervescent Hydration Tablets, El | Baby & Toddler Electrolyte Drinks
+B08KC1QNNP      | 22202768031     | Fluid Tactical            | 180.00     | Fluid Tactical- Effervescent Hydration Tablets, El | Baby & Toddler Electrolyte Drinks
+B08MB6H5CL      | 22202768031     | JUNP                      | 148.00     | JUNP Hydration Electrolyte Powder, Electrolytes Dr | Baby & Toddler Electrolyte Drinks
+B08NWBGCS6      | 22202768031     | Kinderlyte                | 116.10     | Kinderlyte Electrolyte Powder for Kids and Adults  | Baby & Toddler Electrolyte Drinks
+B08NWBRPS8      | 22202768031     | Kinderlyte                | 134.73     | Kinderlyte Electrolyte Powder Drink Mix, Hydration | Baby & Toddler Electrolyte Drinks
+B08NWBXXJX      | 22202768031     | Kinderlyte                | 114.19     | Kinderlyte Electrolyte Powder, Advanced Hydration, | Baby & Toddler Electrolyte Drinks
+B08NWCL2D8      | 22202768031     | Kinderlyte                | 129.74     | Kinderlyte Advanced Electrolyte Powder for Kids an | Baby & Toddler Electrolyte Drinks
+B08QCCS776      | 22202768031     | Kinderlyte                | 391.00     | Kinderlyte Electrolyte Solution, 2X Faster Hydrati | Baby & Toddler Electrolyte Drinks
+B08QCRQRJ3      | 22202768031     | Kinderlyte                | 552.00     | Kinderlyte Electrolyte Solution, 2X Faster Hydrati | Baby & Toddler Electrolyte Drinks
+B08QTXZY4D      | 22202768031     | REDMOND                   | 281.33     | REDMOND Re-Lyte Hydration Electrolyte Mix (Pina Co | Baby & Toddler Electrolyte Drinks
+B08W3KRLW3      | 22202768031     | Liquid I.V.               | 110.00     | Liquid IV Watermelon Hydration Drink Mix 10 Count, | Baby & Toddler Electrolyte Drinks
+B08XMTTJRH      | 22202768031     | HYDRANT                   | 342.00     | HYDRANT - Hydration Powder, Fruit Punch Flavor, 30 | Baby & Toddler Electrolyte Drinks
+B08ZYNSZZT      | 22202768031     | Liquid I.V.               | 144.71     | Liquid I.V.® Hydration Multiplier® - Watermelon |  | Baby & Toddler Electrolyte Drinks
+B08ZYQJXZL      | 22202768031     | Liquid I.V.               | 292.01     | Liquid I.V.® Hydration Multiplier - Watermelon | E | Baby & Toddler Electrolyte Drinks
+B091FWDQZJ      | 22202768031     | Ultima Replenisher        | 123.78     | Ultima Replenisher Daily Electrolyte Powder Drink  | Baby & Toddler Electrolyte Drinks
+B09C6LPGGB      | 22202768031     | NatureWorks               | 133.51     | NatureWorks HydroMATE Electrolytes Powder Packets  | Baby & Toddler Electrolyte Drinks
+B09GKZH254      | 22202768031     | NatureWorks               | 187.53     | NatureWorks HydroMATE Hydration Powder Low Sugar E | Baby & Toddler Electrolyte Drinks
+B09NS38Q41      | 22202768031     | Nutricost                 | 85.31      | Nutricost Electrolyte Complex (Advanced Hydration  | Baby & Toddler Electrolyte Drinks
+B09XC6WLKW      | 22202768031     | Fluid Tactical            | 176.00     | Fluid Tactical - Zero Sugar, Keto Electrolyte Powd | Baby & Toddler Electrolyte Drinks
+B09YBN6184      | 22202768031     | Pedialyte                 | 53.46      | Pedialyte Electrolyte Solution, Grape, Hydration D | Baby & Toddler Electrolyte Drinks
+B09YVY3BC9      | 22202768031     | All Sport                 | 86.00      | ALL SPORT ELITE - Performance Electrolyte Drink Mi | Baby & Toddler Electrolyte Drinks
+B09YX6L58J      | 22202768031     | All Sport                 | 55.13      | ALL SPORT ELITE - Performance Electrolyte Drink Mi | Baby & Toddler Electrolyte Drinks
+B09Z6F7YFD      | 22202768031     | Nectar                    | 161.47     | Nectar Hydration Packets - Electrolytes Powder No  | Baby & Toddler Electrolyte Drinks
+B0B2CF1GHH      | 22202768031     | Pedialyte                 | 374.60     | Pedialyte with Immune Support, 36 count, Electroly | Baby & Toddler Electrolyte Drinks
+B0B69SKVR9      | 22202768031     | Liquid I.V.               | 348.00     | Liquid i.v. Hydration multiplier electrolyte drink | Baby & Toddler Electrolyte Drinks
+B0BQ4YQN99      | 22202768031     | Liquid I.V.               | 139.44     | Liquid I.V.® Hydration Multiplier - Seaberry | Ele | Baby & Toddler Electrolyte Drinks
+B0BQ4ZJZGK      | 22202768031     | Liquid I.V.               | 280.00     | Liquid I.V.® Hydration Multiplier® Sugar-Free - Le | Baby & Toddler Electrolyte Drinks
+B0BW4VS7S5      | 22202768031     | Pedialyte                 | 271.00     | Pedialyte with Immune Support, Cherry Punch, Elect | Baby & Toddler Electrolyte Drinks
+B0BXMQX4BM      | 22202768031     | Pedialyte                 | 56.12      | Pedialyte Fast Hydration Electrolyte Powder Packet | Baby & Toddler Electrolyte Drinks
+B0C24KFH9T      | 22202768031     | BERRILYTE                 | 533.00     | Berri Lyte Advanced Plant Based Organic Electrolyt | Baby & Toddler Electrolyte Drinks
+B0C383V14B      | 22202768031     | Pedialyte                 | 40.42      | Pedialyte Fast Hydration Strawberry Electrolyte Po | Baby & Toddler Electrolyte Drinks
+B0C3863JBY      | 22202768031     | Pedialyte                 | 56.00      | Pedialyte Fast Hydration Grape Electrolyte Powder  | Baby & Toddler Electrolyte Drinks
+B0C6FLJB3F      | 22202768031     | CURE HYDRATION MIX        | 70.57      | Cure Hydrating Electrolyte Mix Gift Set | Electrol | Baby & Toddler Electrolyte Drinks
+B0C7CWLQSH      | 22202768031     | Pedialyte                 | 491.00     | Pedialyte Electrolyte Solution, Grape, Hydration D | Baby & Toddler Electrolyte Drinks
+B0C7CZFN37      | 22202768031     | Pedialyte                 | 489.00     | Pedialyte Electrolyte Solution, Strawberry, Hydrat | Baby & Toddler Electrolyte Drinks
+B0CB6GWWYQ      | 22202768031     | ViDrate                   | 175.00     | ViDrate No Sugar Electrolyte Powder Packets - Guav | Baby & Toddler Electrolyte Drinks
+B0CDQVWLZM      | 22202768031     | Hydralyte                 | 299.00     | Hydralyte Shay Mitchell Electrolyte Powder Packets | Baby & Toddler Electrolyte Drinks
+B0CMJ95VWM      | 22202768031     | Pedialyte                 | 57.00      | Pedialyte Electrolyte Drink Mix With Zero Sugar |  | Baby & Toddler Electrolyte Drinks
+B0CQD6HMWB      | 22202768031     | GATORLYTE                 | 487.00     | Gatorade Electrolyte Beverage, Glacier Freeze, 20  | Baby & Toddler Electrolyte Drinks
+B0CT16B5JY      | 22202768031     | RYSE Up Supplements       | 109.00     | RYSE Up Supplements Core Hydration | On The Go Ele | Baby & Toddler Electrolyte Drinks
+B0CTHZVZ14      | 22202768031     | DripDrop                  | 175.86     | DripDrop Hydration - Lemon Lime - Electrolyte Drin | Baby & Toddler Electrolyte Drinks
+B0D2PJ9CQ5      | 22202768031     | O.R.S                     | 59.00      | O.R.S Hydration Tablets With Electrolytes, Lemon a | Baby & Toddler Electrolyte Drinks
+B0D4QZHXD1      | 22202768031     | Precision Hydration       | 468.92     | Precision Hydration Electrolyte Tablets - Multi St | Baby & Toddler Electrolyte Drinks
+B0D4R5V6CR      | 22202768031     | NatureWorks               | 107.25     | NatureWorks HydroMATE Electrolytes Powder No Sugar | Baby & Toddler Electrolyte Drinks
+B0D5GTRJ58      | 22202768031     | Rnrieyta                  | 69.99      | Miagon Crossbody Wallet Phone Case for iPhone 6S P | Baby & Toddler Electrolyte Drinks
+B0DQW95Y7R      | 22202768031     | REDMOND                   | 194.99     | REDMOND Re-Lyte Kids Hydration Electrolyte Mix Pow | Baby & Toddler Electrolyte Drinks
+B0DQWYHWLV      | 22202768031     | REDMOND                   | 87.96      | REDMOND Re-Lyte Kids Hydration Electrolyte Mix Pow | Baby & Toddler Electrolyte Drinks
+B0DSV4JNDF      | 22202768031     | laperva                   | 90.00      | Laperva Hydration Drink – Lemon & Ginger | Sugar-F | Baby & Toddler Electrolyte Drinks
+B0F2BX2XD1      | 22202768031     | Kinderlyte                | 611.00     | Kinderlyte Electrolyte Solution, 2X Faster Hydrati | Baby & Toddler Electrolyte Drinks
+B0F49BRZ9C      | 22202768031     | Kinderlyte                | 415.00     | Kinderlyte Electrolyte Solution, 2X Faster Hydrati | Baby & Toddler Electrolyte Drinks
