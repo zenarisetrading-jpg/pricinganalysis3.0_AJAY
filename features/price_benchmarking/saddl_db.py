@@ -41,31 +41,36 @@ def get_db_connection():
     finally:
         pool.putconn(conn)
 
-def execute_saddl_query(query: str, params: tuple = ()):
-    """Execute a query on the SADDL database with retry logic for closed connections."""
+def execute_saddl_query(query: str, params: tuple = (), *, _retry: bool = True) -> list:
+    """Execute a query on the SADDL database with a single retry on connection loss."""
     pool = get_pool()
     if not pool:
         return []
-    
+
+    conn = None
     try:
-        with pool.getconn() as conn:
-            try:
-                with conn.cursor() as cur:
-                    cur.execute(query, params)
-                    return cur.fetchall()
-            finally:
-                pool.putconn(conn)
+        conn = pool.getconn()
+        with conn.cursor() as cur:
+            cur.execute(query, params)
+            return cur.fetchall()
     except (psycopg2.OperationalError, psycopg2.InterfaceError) as e:
         print(f"⚠️ SADDL connection lost, resetting pool: {e}")
         global _pool
         if _pool:
             _pool.closeall()
             _pool = None
-        # Retry once
-        return execute_saddl_query(query, params)
+        if _retry:
+            return execute_saddl_query(query, params, _retry=False)
+        return []
     except Exception as e:
         print(f"[ERROR] SADDL Query Error: {e}")
         return []
+    finally:
+        if conn is not None:
+            try:
+                pool.putconn(conn)
+            except Exception:
+                pass
 
 def fetch_saddl_accounts():
     """Fetch active accounts from SADDL public.accounts."""
@@ -219,6 +224,77 @@ def fetch_account_performance(account_id: str) -> list[dict[str, Any]]:
         }
         for r in rows
     ]
+
+
+def fetch_competitor_pricing_by_category(category_id: str, marketplace_id: str) -> list[dict]:
+    """
+    Fetch the most recent competitor products from sc_raw.competitor_pricing
+    for a given category and marketplace. Returns at most one row per ASIN (freshest).
+    """
+    query = """
+        SELECT DISTINCT ON (asin)
+            asin, brand, title, price_numeric, currency, rating, reviews_count, product_url, rank
+        FROM sc_raw.competitor_pricing
+        WHERE category_id = %s
+          AND marketplace_id = %s
+          AND price_numeric IS NOT NULL
+          AND price_numeric > 0
+          AND report_date >= (CURRENT_DATE - INTERVAL '30 days')
+        ORDER BY asin, report_date DESC, pulled_at DESC
+    """
+    rows = execute_saddl_query(query, (category_id, marketplace_id))
+    return [
+        {
+            "asin": r[0],
+            "brand": r[1],
+            "title": r[2],
+            "floor_price": float(r[3]),
+            "price": float(r[3]),
+            "currency": r[4],
+            "rating": float(r[5]) if r[5] is not None else None,
+            "reviews": int(r[6]) if r[6] is not None else None,
+            "url": r[7],
+            "sales_rank": int(r[8]) if r[8] is not None else None,
+        }
+        for r in rows
+    ]
+
+
+def fetch_all_parent_categories(account_id: str) -> dict[str, list[dict]]:
+    """
+    Fetch category assignments for ALL parent ASINs in one query.
+    Replaces N individual fetch_parent_asin_categories calls with a single roundtrip.
+    Returns {parent_asin: [{"category_id": ..., "category_name": ..., "marketplace_id": ...}]}.
+    """
+    query = """
+    WITH latest_bsr AS (
+        SELECT DISTINCT ON (b.asin)
+            b.category_id,
+            b.category_name,
+            b.marketplace_id,
+            COALESCE(s.parent_asin, b.asin) AS parent_asin
+        FROM sc_raw.bsr_history b
+        LEFT JOIN sc_raw.sales_traffic s
+            ON b.asin = s.child_asin
+            AND s.account_id = %s
+        WHERE b.account_id = %s
+          AND b.report_date >= (CURRENT_DATE - INTERVAL '30 days')
+        ORDER BY b.asin, b.report_date DESC
+    )
+    SELECT DISTINCT parent_asin, category_id, category_name, marketplace_id
+    FROM latest_bsr
+    WHERE category_id IS NOT NULL
+    """
+    rows = execute_saddl_query(query, (account_id, account_id))
+    result: dict[str, list[dict]] = {}
+    for r in rows:
+        parent = r[0]
+        result.setdefault(parent, []).append({
+            "category_id": r[1],
+            "category_name": r[2],
+            "marketplace_id": r[3],
+        })
+    return result
 
 
 def fetch_parent_asin_categories(account_id: str, parent_asin: str):

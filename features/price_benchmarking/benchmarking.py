@@ -33,6 +33,67 @@ class CompetitorPrice:
 
 
 @dataclass
+class PriceTier:
+    label: str
+    min_price: float
+    max_price: float
+    count: int
+    median: float
+
+
+_TIER_LABELS = ["Budget", "Value", "Mid-Market", "Premium"]
+
+
+def detect_price_tiers(
+    prices: list[float],
+    max_tiers: int = 4,
+    min_gap_pct: float = 0.20,
+) -> list[PriceTier]:
+    """
+    Cluster competitor prices into natural tiers via relative gap detection.
+    A tier break is placed where consecutive sorted prices differ by >= min_gap_pct.
+    """
+    valid = sorted(p for p in prices if p and p > 0)
+    if not valid:
+        return []
+    if len(valid) < 3:
+        return [PriceTier(
+            label=_TIER_LABELS[0],
+            min_price=valid[0],
+            max_price=valid[-1],
+            count=len(valid),
+            median=statistics.median(valid),
+        )]
+
+    gaps = [
+        ((valid[i] - valid[i - 1]) / valid[i - 1], i)
+        for i in range(1, len(valid))
+        if (valid[i] - valid[i - 1]) / valid[i - 1] >= min_gap_pct
+    ]
+    gaps.sort(reverse=True)
+    breaks = sorted(i for _, i in gaps[: max_tiers - 1])
+
+    segments: list[list[float]] = []
+    prev = 0
+    for b in breaks:
+        segments.append(valid[prev:b])
+        prev = b
+    segments.append(valid[prev:])
+
+    return [
+        PriceTier(
+            label=_TIER_LABELS[idx] if idx < len(_TIER_LABELS) else f"Tier {idx + 1}",
+            min_price=seg[0],
+            max_price=seg[-1],
+            count=len(seg),
+            median=statistics.median(seg),
+        )
+        for idx, seg in enumerate(segments)
+        if seg
+    ]
+
+
+@dataclass
 class BenchmarkResult:
     sku_id: str
     asin: str
