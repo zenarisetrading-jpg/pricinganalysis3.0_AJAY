@@ -1182,14 +1182,42 @@
 
                                 <!-- Bubble Chart Container -->
                                 <div id="bubble-wrapper" class="chart-interactive-wrapper">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 10px;">
+                                        <div style="font-size: 14px; font-weight: 600; color: var(--text);">Brand Positioning Map</div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 12px; color: var(--text-dim);">Tier:</span>
+                                            <select id="bubble-tier-filter" style="
+                                                background: transparent;
+                                                color: var(--text);
+                                                border: 1px solid var(--border);
+                                                border-radius: 6px;
+                                                padding: 4px 8px;
+                                                font-size: 12px;
+                                                outline: none;
+                                                cursor: pointer;
+                                                appearance: none;
+                                                -webkit-appearance: none;
+                                                background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23949eb5\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E');
+                                                background-repeat: no-repeat;
+                                                background-position: right 8px center;
+                                                padding-right: 28px;
+                                            ">
+                                                <option value="All" style="background-color: #1a1d29;">All Tiers</option>
+                                                <option value="Entry" style="background-color: #1a1d29;">Entry</option>
+                                                <option value="Mass" style="background-color: #1a1d29;">Mass</option>
+                                                <option value="Mid-Premium" style="background-color: #1a1d29;">Mid-Premium</option>
+                                                <option value="Premium" style="background-color: #1a1d29;">Premium</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div id="overview-bubble-chart" style="height: 380px;"></div>
                                 </div>
 
                                 <!-- Custom Quadrant Legend -->
                                 <div id="bubble-custom-legend" style="
                                     display: grid;
-                                    grid-template-columns: repeat(4, 1fr);
-                                    gap: 12px;
+                                    grid-template-columns: repeat(2, 1fr);
+                                    gap: 10px;
                                     margin-top: 15px;
                                     padding: 12px;
                                     background: rgba(255, 255, 255, 0.015);
@@ -1199,25 +1227,52 @@
                                     color: var(--text-dim);
                                 ">
                                     <div style="border-left: 3px solid var(--success); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value
-                                            Leaders</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value Leaders</strong>
                                         Low Price / High Rating (Top-Left)
                                     </div>
                                     <div style="border-left: 3px solid var(--accent); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium
-                                            Segment</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium Segment</strong>
                                         High Price / High Rating (Top-Right)
                                     </div>
                                     <div style="border-left: 3px solid var(--warning); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget
-                                            Brands</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget Brands</strong>
                                         Low Price / Low Rating (Bottom-Left)
                                     </div>
                                     <div style="border-left: 3px solid var(--danger); padding-left: 8px;">
-                                        <strong
-                                            style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced /
-                                            Vulnerable</strong>
+                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced / Vulnerable</strong>
                                         High Price / Low Rating (Bottom-Right)
+                                    </div>
+                                    <!-- Brand colour key row -->
+                                    <div style="grid-column: span 2; border-top: 1px solid var(--border);
+                                        padding-top: 10px; margin-top: 2px;
+                                        display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                                        <span style="font-size:10px;color:var(--text-dim);font-weight:600;
+                                            text-transform:uppercase;letter-spacing:0.05em;">Brand Key:</span>
+                                        <span style="display:flex;align-items:center;gap:5px;">
+                                            <span style="width:10px;height:10px;border-radius:50%;background:#6366f1;display:inline-block;"></span> Competitors
+                                        </span>
+                                        <span style="display:flex;align-items:center;gap:5px;">
+                                            <span style="width:10px;height:10px;border-radius:50%;background:#10b981;display:inline-block;"></span> Our Product (S2C)
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier Breakdown Panel (populated by JS after chart renders) -->
+                                <div id="bubble-tier-summary" style="
+                                    display: none;
+                                    margin-top: 12px;
+                                    padding: 12px 16px;
+                                    background: rgba(255,255,255,0.02);
+                                    border: 1px solid var(--border);
+                                    border-radius: 10px;
+                                ">
+                                    <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;
+                                        letter-spacing:0.05em;margin-bottom:10px;font-weight:600;">
+                                        Market Tier Breakdown
+                                    </div>
+                                    <div id="bubble-tier-stats" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
+                                    <div style="margin-top:10px;font-size:10px;color:var(--text-dim);line-height:1.5;">
+                                        Tier boundaries computed from competitor price quartiles (Q1 / Q3) for this product.
                                     </div>
                                 </div>
                             </div>
@@ -2338,6 +2393,16 @@
             });
         }
 
+        // ── Canonical Tier Colour Palette (used in bubble chart) ─────────────
+        const TIER_COLORS = {
+            'Entry':        '#60a5fa',
+            'Mass':         '#34d399',
+            'Mid-Premium':  '#fb923c',
+            'Premium':      '#a78bfa',
+        };
+        const TIER_ORDER   = ['Entry', 'Mass', 'Mid-Premium', 'Premium'];
+        const TIER_DEFAULT = '#94a3b8';
+
         function renderRatingVsPriceBubbleChart(row) {
             const container = document.getElementById('overview-bubble-chart');
             const emptyState = document.getElementById('overview-bubble-empty');
@@ -2508,228 +2573,408 @@
                 return;
             }
 
-            // Normalization for bubble sizing (clamp bubble size to between 10px and 45px visually)
+            // Normalization boundaries for CCS calculation
             const allReviews = [...cleanCompetitors.map(c => c.reviews), ourReviews];
             const maxReviews = Math.max(...allReviews, 1);
             const minReviews = Math.min(...allReviews, 0);
 
-            function normalizeSize(revs) {
-                if (maxReviews === minReviews) return 15;
-                return 10 + ((revs - minReviews) / (maxReviews - minReviews)) * 35;
+            const allRatings = [...cleanCompetitors.map(c => c.rating), ourRating];
+            const maxRating = Math.max(...allRatings, 5);
+            const minRating = Math.min(...allRatings, 1);
+
+            function normalizeMetric(val, min, max) {
+                if (max === min) return 1;
+                return (val - min) / (max - min);
             }
 
-            // Map competitors data series
-            const formattedCompetitors = cleanCompetitors.map(c => {
+            function calcCCS(rating, reviews) {
+                const normRating = normalizeMetric(rating, minRating, maxRating);
+                const normReviews = normalizeMetric(reviews, minReviews, maxReviews);
+                return (0.4615 * normRating) + (0.5385 * normReviews);
+            }
+
+            // ── Group Competitors by Brand ───────────
+            const brandGroups = {};
+            cleanCompetitors.forEach(c => {
+                const brandKey = c.brand ? c.brand.trim().toUpperCase() : 'UNKNOWN BRAND';
+                if (!brandGroups[brandKey]) {
+                    brandGroups[brandKey] = {
+                        brand: c.brand ? c.brand.trim() : 'Unknown Brand',
+                        prices: [],
+                        ratings: [],
+                        reviewsArr: [],
+                        ccsArr: [],
+                        asins: [],
+                        titles: []
+                    };
+                }
+                brandGroups[brandKey].prices.push(c.price);
+                brandGroups[brandKey].ratings.push(c.rating);
+                brandGroups[brandKey].reviewsArr.push(c.reviews);
+                brandGroups[brandKey].ccsArr.push(calcCCS(c.rating, c.reviews));
+                brandGroups[brandKey].asins.push(c.asin);
+                brandGroups[brandKey].titles.push(c.title);
+            });
+
+            const brandMetrics = Object.values(brandGroups).map(g => {
+                const sortedPrices = [...g.prices].sort((a, b) => a - b);
+                const sortedCcs = [...g.ccsArr].sort((a, b) => a - b);
                 return {
-                    x: c.price,
-                    y: c.rating,
-                    z: normalizeSize(c.reviews),
-                    title: c.title,
-                    brand: c.brand,
-                    asin: c.asin,
-                    actualReviews: c.reviews,
-                    isEstimatedRating: c.isEstimatedRating
+                    brand: g.brand,
+                    medianPrice: sortedPrices[Math.floor(sortedPrices.length / 2)],
+                    medianCcs: sortedCcs[Math.floor(sortedCcs.length / 2)],
+                    avgRating: g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length,
+                    totalReviews: g.reviewsArr.reduce((a, b) => a + b, 0),
+                    nListings: g.prices.length,
+                    sampleTitle: g.titles[0]
                 };
             });
 
-            // Map our product data series
+            // ── Brand-Level Tier Boundaries: quartile split of brand median prices ───────────
+            const sortedBrandPrices = brandMetrics.map(b => b.medianPrice).sort((a, b) => a - b);
+            function quartile(arr, pct) {
+                if (arr.length === 0) return 0;
+                return arr[Math.max(0, Math.floor(pct * (arr.length - 1)))];
+            }
+            const q1Price = quartile(sortedBrandPrices, 0.25);
+            const q2Price = quartile(sortedBrandPrices, 0.50);
+            const q3Price = quartile(sortedBrandPrices, 0.75);
+            function assignTier(price) {
+                if (price <= q1Price) return 'Entry';
+                if (price <= q2Price) return 'Mass';
+                if (price <= q3Price) return 'Mid-Premium';
+                return 'Premium';
+            }
+
+            // Map Our Product
+            const ourCcs = calcCCS(ourRating, ourReviews);
             const formattedOurProduct = [{
-                x: ourPrice,
-                y: ourRating,
-                z: normalizeSize(ourReviews),
-                title: row.title || row.reference_name || 'Our Product Group',
-                brand: 'S2C',
-                asin: row.asin,
-                actualReviews: ourReviews,
-                isEstimatedRating: ourRatingEstimated
+                x:                 ourCcs,
+                y:                 ourPrice,
+                z:                 8, // Reduced fixed bubble size for our product
+                title:             row.title || row.reference_name || 'Our Product Group',
+                brand:             'S2C',
+                asin:              row.asin,
+                totalReviews:      ourReviews,
+                avgRating:         ourRating,
+                nListings:         1,
+                isEstimatedRating: ourRatingEstimated,
+                tier:              assignTier(ourPrice),
+                tierColor:         '#10b981'
             }];
 
-            // Compute Market Median Price for vertical divider
-            const competitorPrices = formattedCompetitors.map(pt => pt.x);
-            competitorPrices.sort((a, b) => a - b);
-            const medianPrice = competitorPrices.length > 0 ? competitorPrices[Math.floor(competitorPrices.length / 2)] : ourPrice;
+            // Bubble size is fixed to 8 to ensure identical, smaller sizing for all brands
+            function normalizeBubbleSize(listings) {
+                return 8;
+            }
+
+            // Final formatting and tier assignment for competitors
+            const formattedCompetitors = brandMetrics.map(b => ({
+                x:                 b.medianCcs,
+                y:                 b.medianPrice,
+                z:                 normalizeBubbleSize(b.nListings),
+                title:             b.nListings > 1 ? `${b.sampleTitle} (+${b.nListings - 1} more)` : b.sampleTitle,
+                brand:             b.brand,
+                totalReviews:      b.totalReviews,
+                avgRating:         b.avgRating,
+                nListings:         b.nListings,
+                isEstimatedRating: false,
+                tier:              assignTier(b.medianPrice),
+                tierColor:         TIER_COLORS[assignTier(b.medianPrice)] || TIER_DEFAULT
+            }));
+
+            // Compute Market Medians for reference lines
+            const allPriceVals = [...formattedCompetitors.map(pt => pt.y), formattedOurProduct[0].y].sort((a, b) => a - b);
+            const marketMedianPrice = allPriceVals.length > 0 ? allPriceVals[Math.floor(allPriceVals.length / 2)] : ourPrice;
+
+            const allCcsVals = [...formattedCompetitors.map(pt => pt.x), formattedOurProduct[0].x].sort((a, b) => a - b);
+            const marketMedianCcs = allCcsVals.length > 0 ? allCcsVals[Math.floor(allCcsVals.length / 2)] : 0.5;
 
             const currency = 'AED';
 
-            const options = {
-                series: [
-                    {
-                        name: 'Competitors',
-                        data: formattedCompetitors.map(pt => [pt.x, pt.y, pt.z])
-                    },
-                    {
-                        name: 'Our Product',
-                        data: formattedOurProduct.map(pt => [pt.x, pt.y, pt.z])
-                    }
-                ],
-                chart: {
-                    height: 380,
-                    type: 'bubble',
-                    background: 'transparent',
-                    foreColor: '#949eb5',
-                    toolbar: {
-                        show: true,
-                        autoSelected: 'zoom',
-                        tools: {
-                            download: false,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
-                            reset: true
-                        }
-                    },
-                    zoom: {
-                        enabled: true,
-                        type: 'xy'
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                fill: {
-                    opacity: [0.6, 0.95]
-                },
-                colors: ['#5b8af0', '#10b981'],
-                xaxis: {
-                    tickAmount: 8,
-                    type: 'numeric',
-                    labels: {
-                        formatter: (val) => `${currency} ${parseFloat(val).toFixed(0)}`,
-                        style: { colors: '#949eb5', fontSize: '11px', fontFamily: 'Inter' }
-                    },
-                    title: {
-                        text: 'Selling Price (AED)',
-                        style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
-                    },
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    min: 1.0,
-                    max: 5.0,
-                    tickAmount: 4,
-                    labels: {
-                        formatter: (val) => `${parseFloat(val).toFixed(1)} ★`,
-                        style: { colors: '#949eb5' }
-                    },
-                    title: {
-                        text: 'Average Rating (Stars)',
-                        style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
-                    }
-                },
-                grid: {
-                    borderColor: 'rgba(255, 255, 255, 0.05)',
-                    strokeDashArray: 4
-                },
-                legend: {
-                    show: true,
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    fontFamily: 'Inter',
-                    fontSize: '12px',
-                    labels: { colors: '#f0f2f5' },
-                    markers: { radius: 12 }
-                },
-                annotations: {
-                    xaxis: [{
-                        x: medianPrice,
-                        borderColor: 'rgba(255, 255, 255, 0.25)',
-                        strokeDashArray: 4,
-                        label: {
-                            style: { color: '#fff', background: 'rgba(91, 138, 240, 0.4)', fontSize: '9px', fontWeight: 600 },
-                            text: `Median Price: ${currency} ${medianPrice.toFixed(0)}`
-                        }
-                    }],
-                    yaxis: [{
-                        y: 4.2,
-                        borderColor: 'rgba(255, 255, 255, 0.25)',
-                        strokeDashArray: 4,
-                        label: {
-                            style: { color: '#fff', background: 'rgba(245, 158, 11, 0.4)', fontSize: '9px', fontWeight: 600 },
-                            text: 'Quality Threshold (4.2★)'
-                        }
-                    }]
-                },
-                tooltip: {
-                    shared: false,
-                    intersect: true,
-                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-                        const pt = (seriesIndex === 0) ? formattedCompetitors[dataPointIndex] : formattedOurProduct[dataPointIndex];
-                        if (!pt) return '';
-
-                        let segment = '';
-                        let segmentColor = '';
-                        if (pt.y >= 4.2) {
-                            if (pt.x <= medianPrice) {
-                                segment = 'Value Leader Zone';
-                                segmentColor = 'var(--success)';
-                            } else {
-                                segment = 'Premium Segment';
-                                segmentColor = 'var(--accent)';
-                            }
-                        } else {
-                            if (pt.x <= medianPrice) {
-                                segment = 'Budget Zone';
-                                segmentColor = 'var(--warning)';
-                            } else {
-                                segment = 'Overpriced / Vulnerable';
-                                segmentColor = 'var(--danger)';
-                            }
-                        }
-
-                        const brandLabel = pt.brand ? pt.brand.trim().replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) : 'Competitor';
-                        const truncatedTitle = pt.title.length > 60 ? pt.title.substring(0, 60) + '...' : pt.title;
-                        const isOurs = (seriesIndex === 1);
-
-                        return `
-                            <div class="custom-tooltip" style="
-                                background: rgba(22, 25, 35, 0.95);
-                                backdrop-filter: blur(12px) saturate(180%);
-                                border: 1.5px solid ${isOurs ? 'var(--success)' : 'rgba(255, 255, 255, 0.08)'};
-                                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-                                border-radius: 8px;
-                                padding: 14px;
-                                min-width: 250px;
-                                color: var(--text);
-                                font-family: var(--font-main);
-                                line-height: 1.4;
-                            ">
-                                <div style="font-size: 11px; font-weight: 700; color: ${isOurs ? 'var(--success)' : 'var(--accent)'}; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;">
-                                    ${isOurs ? '★ Our Product' : brandLabel}
-                                </div>
-                                <div style="font-size: 12px; font-weight: 600; color: white; margin-bottom: 10px; line-height: 1.4;">
-                                    ${truncatedTitle}
-                                </div>
-                                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; margin-bottom: 8px; color: var(--text-dim);">
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>Price:</span> <b style="color: white; font-family: monospace;">AED ${pt.x.toFixed(2)}</b>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>Rating:</span> <b style="color: white;">${pt.isEstimatedRating ? `${pt.y.toFixed(1)} ★ (N/A)` : `${pt.y.toFixed(1)} ★`}</b>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>Reviews:</span> <b style="color: white;">${pt.actualReviews.toLocaleString()}</b>
-                                    </div>
-                                </div>
-                                <div style="font-size: 10px; font-weight: 700; color: ${segmentColor}; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
-                                    ${segment}
-                                </div>
-                            </div>
-                        `;
-                    }
+            // Function to render/re-render chart based on filter
+            function renderChart(filterTier) {
+                let filteredCompetitors = formattedCompetitors;
+                if (filterTier !== 'All') {
+                    filteredCompetitors = formattedCompetitors.filter(pt => pt.tier === filterTier);
                 }
-            };
 
-            if (currentBubbleChartInstance) {
-                currentBubbleChartInstance.destroy();
+                const tierSeriesData = [];
+                if (filteredCompetitors.length > 0) {
+                    tierSeriesData.push({
+                        name:   'Competitors',
+                        color:  '#6366f1',
+                        points: filteredCompetitors
+                    });
+                }
+
+                // Always include our product so it can be compared against any tier
+                let ourPoints = formattedOurProduct;
+
+                const allSeries = [
+                    ...tierSeriesData.map(s => ({
+                        name: s.name,
+                        data: s.points.map(pt => [pt.x, pt.y, pt.z])
+                    }))
+                ];
+
+                if (ourPoints.length > 0) {
+                    allSeries.push({
+                        name: '★ Our Product (S2C)',
+                        data: ourPoints.map(pt => [pt.x, pt.y, pt.z])
+                    });
+                }
+
+                const seriesColors = tierSeriesData.map(s => s.color);
+                if (ourPoints.length > 0) {
+                    seriesColors.push('#10b981');
+                }
+
+                const allFormattedPoints = [
+                    ...tierSeriesData.map(s => s.points)
+                ];
+                if (ourPoints.length > 0) {
+                    allFormattedPoints.push(ourPoints);
+                }
+
+                const options = {
+                    series: allSeries,
+                    chart: {
+                        height: 420,
+                        type: 'bubble',
+                        background: 'transparent',
+                        foreColor: '#949eb5',
+                        toolbar: {
+                            show: true,
+                            autoSelected: 'zoom',
+                            tools: { download: false, selection: true, zoom: true, zoomin: true, zoomout: true, pan: true, reset: true }
+                        },
+                        zoom: { enabled: true, type: 'xy' }
+                    },
+                    dataLabels: { enabled: false },
+                    fill: {
+                        opacity: [...Array(tierSeriesData.length).fill(0.65), (ourPoints.length > 0 ? 0.95 : undefined)].filter(x => x !== undefined)
+                    },
+                    colors: seriesColors,
+                    xaxis: {
+                        min: 0,
+                        max: 1.0,
+                        tickAmount: 5,
+                        labels: {
+                            formatter: (val) => parseFloat(val).toFixed(2),
+                            style: { colors: '#949eb5', fontSize: '11px', fontFamily: 'Inter' }
+                        },
+                        title: {
+                            text: 'Median Customer Competitiveness Score (CCS)',
+                            style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
+                        },
+                        axisBorder: { show: false },
+                        axisTicks: { show: false }
+                    },
+                    yaxis: {
+                        tickAmount: 8,
+                        labels: {
+                            formatter: (val) => `${currency} ${parseFloat(val).toFixed(0)}`,
+                            style: { colors: '#949eb5' }
+                        },
+                        title: {
+                            text: 'Median Selling Price (AED)',
+                            style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' }
+                        }
+                    },
+                    grid: {
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        strokeDashArray: 4
+                    },
+                    legend: {
+                        show: true, position: 'top', horizontalAlign: 'right',
+                        fontFamily: 'Inter', fontSize: '12px', labels: { colors: '#f0f2f5' },
+                        markers: { radius: 12 }
+                    },
+                    annotations: {
+                        xaxis: [{
+                            x: marketMedianCcs,
+                            borderColor: 'rgba(255, 255, 255, 0.25)',
+                            strokeDashArray: 4,
+                            label: {
+                                style: { color: '#fff', background: 'rgba(245, 158, 11, 0.4)', fontSize: '9px', fontWeight: 600 },
+                                text: `Market Median CCS: ${marketMedianCcs.toFixed(2)}`
+                            }
+                        }],
+                        yaxis: [
+                            {
+                                y: marketMedianPrice,
+                                borderColor: 'rgba(255, 255, 255, 0.25)',
+                                strokeDashArray: 4,
+                                label: {
+                                    style: { color: '#fff', background: 'rgba(91, 138, 240, 0.4)', fontSize: '9px', fontWeight: 600 },
+                                    text: `Median Price: ${currency} ${marketMedianPrice.toFixed(0)}`
+                                }
+                            },
+                            {
+                                y: q1Price,
+                                borderColor: 'rgba(96, 165, 250, 0.3)',
+                                strokeDashArray: 6,
+                                label: {
+                                    style: { color: '#60a5fa', background: 'rgba(96, 165, 250, 0.12)', fontSize: '8px', fontWeight: 500 },
+                                    text: `Entry→Mass: ${currency} ${q1Price.toFixed(0)}`
+                                }
+                            },
+                            {
+                                y: q3Price,
+                                borderColor: 'rgba(167, 139, 250, 0.3)',
+                                strokeDashArray: 6,
+                                label: {
+                                    style: { color: '#a78bfa', background: 'rgba(167, 139, 250, 0.12)', fontSize: '8px', fontWeight: 500 },
+                                    text: `Mid-Prem→Prem: ${currency} ${q3Price.toFixed(0)}`
+                                }
+                            }
+                        ]
+                    },
+                    tooltip: {
+                        shared: false,
+                        intersect: true,
+                        custom: function ({ seriesIndex, dataPointIndex }) {
+                            const seriesPoints = allFormattedPoints[seriesIndex];
+                            const pt = seriesPoints ? seriesPoints[dataPointIndex] : null;
+                            if (!pt) return '';
+
+                            const isOurs = (ourPoints.length > 0 && seriesIndex === allSeries.length - 1);
+                            const tierColor = isOurs ? '#10b981' : '#6366f1';
+
+                            let segment = '';
+                            let segmentColor = '';
+                            if (pt.x >= marketMedianCcs) {
+                                if (pt.y <= marketMedianPrice) {
+                                    segment = 'Value Leader Zone';
+                                    segmentColor = 'var(--success)';
+                                } else {
+                                    segment = 'Premium Segment';
+                                    segmentColor = 'var(--accent)';
+                                }
+                            } else {
+                                if (pt.y <= marketMedianPrice) {
+                                    segment = 'Budget Zone';
+                                    segmentColor = 'var(--warning)';
+                                } else {
+                                    segment = 'Overpriced / Vulnerable';
+                                    segmentColor = 'var(--danger)';
+                                }
+                            }
+
+                            const brandLabel = pt.brand ? pt.brand.trim().replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) : 'Unknown Brand';
+                            const truncatedTitle = pt.title.length > 60 ? pt.title.substring(0, 60) + '...' : pt.title;
+
+                            return `
+                                <div class="custom-tooltip" style="
+                                    background: rgba(22, 25, 35, 0.95);
+                                    backdrop-filter: blur(12px) saturate(180%);
+                                    border: 1.5px solid ${isOurs ? 'var(--success)' : tierColor};
+                                    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                                    border-radius: 8px;
+                                    padding: 14px;
+                                    min-width: 260px;
+                                    color: var(--text);
+                                    font-family: var(--font-main);
+                                    line-height: 1.4;
+                                ">
+                                    <div style="font-size: 11px; font-weight: 700; color: ${isOurs ? 'var(--success)' : tierColor}; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;">
+                                        ${isOurs ? '★ Our Product (S2C)' : brandLabel}
+                                    </div>
+                                    <div style="font-size: 12px; font-weight: 600; color: white; margin-bottom: 10px; line-height: 1.4;">
+                                        ${truncatedTitle}
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; margin-bottom: 8px; color: var(--text-dim);">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Median Price:</span> <b style="color: white; font-family: monospace;">AED ${pt.y.toFixed(2)}</b>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Median CCS:</span> <b style="color: white;">${pt.x.toFixed(2)}</b>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Avg Rating:</span> <b style="color: white;">${pt.avgRating.toFixed(1)} ★</b>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Total Reviews:</span> <b style="color: white;">${pt.totalReviews.toLocaleString()}</b>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Listings:</span> <b style="color: white;">${pt.nListings}</b>
+                                        </div>
+                                        ${!isOurs ? `
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>Tier:</span> <b style="color: ${tierColor};">${pt.tier}</b>
+                                        </div>` : ''}
+                                    </div>
+                                    <div style="font-size: 10px; font-weight: 700; color: ${segmentColor}; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+                                        ${segment}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                };
+
+                if (currentBubbleChartInstance) {
+                    currentBubbleChartInstance.destroy();
+                }
+
+                currentBubbleChartInstance = new ApexCharts(document.getElementById('overview-bubble-chart'), options);
+                currentBubbleChartInstance.render().then(() => {
+                    setupChartLock('bubble-wrapper', currentBubbleChartInstance);
+
+                    // ── Tier Breakdown Panel Update ─────────────────────────────────────────────
+                    const tierPanel = document.getElementById('bubble-tier-summary');
+                    const tierStats = document.getElementById('bubble-tier-stats');
+                    if (tierPanel && tierStats) {
+                        const tierCounts = {};
+                        const tierPrices = {};
+                        TIER_ORDER.forEach(t => { tierCounts[t] = 0; tierPrices[t] = []; });
+                        
+                        // We use the full formattedCompetitors for summary so it doesn't change when filtered
+                        formattedCompetitors.forEach(pt => {
+                            tierCounts[pt.tier] = (tierCounts[pt.tier] || 0) + 1;
+                            (tierPrices[pt.tier] = tierPrices[pt.tier] || []).push(pt.y);
+                        });
+
+                        tierStats.innerHTML = TIER_ORDER.map(t => {
+                            const count  = tierCounts[t] || 0;
+                            const prices = tierPrices[t] || [];
+                            const avg    = prices.length ? (prices.reduce((a, b) => a + b, 0) / prices.length) : null;
+                            return `
+                                <div style="flex:1;min-width:110px;padding:8px 10px;border-radius:8px;
+                                    border-left:3px solid #6366f1;
+                                    background:rgba(255,255,255,0.02);">
+                                    <div style="font-weight:700;color:var(--text);margin-bottom:3px;font-size:11px;">${t}</div>
+                                    <div style="color:var(--text);font-size:11px;">${count} brand${count !== 1 ? 's' : ''}</div>
+                                    ${avg !== null ? `<div style="color:var(--text-dim);font-size:10px;">Med: AED ${avg.toFixed(0)}</div>` : ''}
+                                </div>`;
+                        }).join('');
+
+                        tierPanel.style.display = 'block';
+                    }
+                });
             }
 
-            currentBubbleChartInstance = new ApexCharts(document.getElementById('overview-bubble-chart'), options);
-            currentBubbleChartInstance.render().then(() => {
-                setupChartLock('bubble-wrapper', currentBubbleChartInstance);
-            });
+            // Preserve the dropdown state if it already exists
+            const tierSelect = document.getElementById('bubble-tier-filter');
+            let currentFilter = 'All';
+            if (tierSelect && tierSelect.value) {
+                currentFilter = tierSelect.value;
+            }
+
+            // Initial render with preserved filter
+            renderChart(currentFilter);
+
+            // Set up dropdown listener
+            if (tierSelect) {
+                // Remove old listeners to prevent duplication on multiple loads
+                const newSelect = tierSelect.cloneNode(true);
+                tierSelect.parentNode.replaceChild(newSelect, tierSelect);
+                newSelect.value = currentFilter; // Preserve state visually
+                newSelect.addEventListener('change', (e) => {
+                    renderChart(e.target.value);
+                });
+            }
         }
 
         // ===== Chart Click-to-Activate Lock System =====
