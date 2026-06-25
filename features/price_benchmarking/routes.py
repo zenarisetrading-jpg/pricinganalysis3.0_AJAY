@@ -694,6 +694,7 @@ async def run_nightly(
 @router.get("/overview")
 async def get_overview(
     client_id: str = Query(...),
+    tier: str = Query("All"),
     _: str = Depends(verify_client_access),
     supabase=Depends(get_supabase_client),
 ):
@@ -951,6 +952,7 @@ def _latest_snapshots_by_parent(
 @router.get("/recommendations")
 async def get_recommendations(
     client_id: str = Query(...),
+    tier: str = Query("All"),
     _: str = Depends(verify_client_access),
     supabase=Depends(get_supabase_client),
 ):
@@ -1422,3 +1424,140 @@ async def update_reference_name(
         print(f"ERROR in update_reference_name: {e}")
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/recalculate-dashboard")
+async def recalculate_dashboard(
+    client_id: str = Query(...),
+    tier: str = Query("All"),
+    _: str = Depends(verify_client_access),
+    supabase=Depends(get_supabase_client),
+):
+    """
+    Recalculates the dashboard overview and recommendations using only competitors
+    from the selected tier. Does NOT persist to the database.
+    """
+    try:
+        from .tier_service import filter_competitors_by_tier
+        from .benchmarking import compute_benchmark, CompetitorPrice
+        from .recommendations import recommend, RepricingStrategy
+
+        # 1. Fetch current recommendations to get the full raw competitor lists
+        recs_resp = supabase.table("pb_recommendations").select("*").eq("client_id", client_id).execute()
+        recs = recs_resp.data or []
+
+        # 2. Recompute for each row
+        recalculated_recs = []
+        recalculated_snapshots = []
+        
+        for row in recs:
+            meta = row.get("metadata") or {}
+            raw_competitors = meta.get("competitors") or []
+            
+            # Apply universal tier filter using the reusable backend helper
+            filtered_competitors = filter_competitors_by_tier(raw_competitors, tier)
+            
+            # Convert to CompetitorPrice objects
+            comp_objs = [
+                CompetitorPrice(
+                    asin=c.get("asin"),
+                    title=c.get("title"),
+                    price=float(c.get("floor_price") or c.get("price") or 0),
+                    is_fba=c.get("is_buy_box_winner", False),
+                    brand=c.get("brand"),
+                    rating=c.get("rating"),
+                    reviews=c.get("reviews"),
+                ) for c in filtered_competitors if float(c.get("floor_price") or c.get("price") or 0) > 0
+            ]
+            
+            # Calculate new benchmark
+            benchmark = compute_benchmark(
+                sku_id=row["sku_id"],
+                asin=row["asin"],
+                your_price=float(row.get("current_price") or row.get("your_price") or 0),
+                competitors=comp_objs,
+                marketplace=row.get("marketplace") or "UAE",
+            )
+            
+            if not benchmark:
+                continue
+                
+            strategy_str = row.get("strategy")
+            try:
+                strategy = RepricingStrategy(strategy_str)
+            except:
+                strategy = RepricingStrategy.MID
+                
+            new_rec = recommend(
+                result=benchmark,
+                strategy=strategy,
+                min_price=None,
+                max_price=None,
+            )
+            
+            # Build modified recommendation row
+            mod_rec = dict(row)
+            mod_rec["recommended_price"] = new_rec.recommended_price
+            mod_rec["change_amount"] = new_rec.change_amount
+            mod_rec["change_pct"] = new_rec.change_pct
+            mod_rec["action"] = new_rec.action
+            mod_rec["reasoning"] = new_rec.reasoning
+            # Update metadata to include ONLY the filtered competitors so charts update
+            new_meta = dict(new_rec.metadata)
+            new_meta["competitors"] = filtered_competitors
+            mod_rec["metadata"] = new_meta
+            recalculated_recs.append(mod_rec)
+            
+            # Build modified snapshot row
+            mod_snap = {
+                "client_id": client_id,
+                "sku_id": row["sku_id"],
+                "asin": row["asin"],
+                "parent_asin": row.get("parent_asin"),
+                "snapshot_date": row.get("snapshot_date"),
+                "your_price": benchmark.your_price,
+                "n_competitors": benchmark.n_competitors,
+                "floor_price": benchmark.floor,
+                "ceiling_price": benchmark.ceiling,
+                "median_price": benchmark.median,
+                "p25_price": benchmark.p25,
+                "p75_price": benchmark.p75,
+                "percentile_rank": benchmark.percentile_rank,
+                "index_vs_median": benchmark.index_vs_median,
+                "zone": benchmark.zone.value,
+            }
+            recalculated_snapshots.append(mod_snap)
+
+        # Collect unique parent ASINs from the full unfiltered recs list so the
+        # frontend can verify the universe count hasn't changed between tier switches.
+        all_parent_asins = set()
+        for row in recs:
+            pa = row.get("parent_asin") or row.get("asin")
+            if pa:
+                all_parent_asins.add(pa)
+        total_parent_asin_count = len(all_parent_asins)
+
+        tier_parent_asins = set()
+        for snap in recalculated_snapshots:
+            pa = snap.get("parent_asin") or snap.get("asin")
+            if pa:
+                tier_parent_asins.add(pa)
+
+        print(f"[VALIDATION] recalculate-dashboard tier='{tier}': "
+              f"total_universe={total_parent_asin_count} parent ASINs | "
+              f"tier_filtered={len(tier_parent_asins)} parent ASINs with valid competitor data")
+
+        return {
+            "status": "success",
+            "snapshots": recalculated_snapshots,
+            "recommendations": recalculated_recs,
+            "tier": tier,
+            # IMPORTANT: The parent_asin_count always reflects the TOTAL tracked universe,
+            # NOT the count of ASINs in the selected tier. This ensures the frontend
+            # KPI "Tracked Parent ASINs" stays consistent across all tier selections.
+            "parent_asin_count": total_parent_asin_count,
+        }
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        raise HTTPException(status_code=500, detail=error_details)
+
