@@ -1083,53 +1083,6 @@
                                     <div id="overview-bubble-chart" style="height: 380px;"></div>
                                 </div>
 
-                                <!-- Custom Quadrant Legend -->
-                                <div id="bubble-custom-legend" style="
-                                    display: grid;
-                                    grid-template-columns: repeat(2, 1fr);
-                                    gap: 10px;
-                                    margin-top: 15px;
-                                    padding: 12px;
-                                    background: rgba(255, 255, 255, 0.015);
-                                    border: 1px solid var(--border);
-                                    border-radius: 12px;
-                                    font-size: 11px;
-                                    color: var(--text-dim);
-                                ">
-                                    <div style="border-left: 3px solid var(--success); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Value Leaders</strong>
-                                        Low Price / High Rating (Top-Left)
-                                    </div>
-                                    <div style="border-left: 3px solid var(--accent); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Premium Segment</strong>
-                                        High Price / High Rating (Top-Right)
-                                    </div>
-                                    <div style="border-left: 3px solid var(--warning); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Budget Brands</strong>
-                                        Low Price / Low Rating (Bottom-Left)
-                                    </div>
-                                    <div style="border-left: 3px solid var(--danger); padding-left: 8px;">
-                                        <strong style="color: var(--text); display: block; margin-bottom: 2px;">Overpriced / Vulnerable</strong>
-                                        High Price / Low Rating (Bottom-Right)
-                                    </div>
-                                    <!-- Brand colour key row -->
-                                    <div style="grid-column: span 2; border-top: 1px solid var(--border);
-                                        padding-top: 10px; margin-top: 2px;
-                                        display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                                        <span style="font-size:10px;color:var(--text-dim);font-weight:600;
-                                            text-transform:uppercase;letter-spacing:0.05em;">Brand Key:</span>
-                                        <span style="display:flex;align-items:center;gap:5px;">
-                                            <span
-                                                style="width:10px;height:10px;border-radius:50%;background:#6366f1;display:inline-block;"></span>
-                                            Competitors
-                                        </span>
-                                        <span style="display:flex;align-items:center;gap:5px;">
-                                            <span
-                                                style="width:10px;height:10px;border-radius:50%;background:#10b981;display:inline-block;"></span>
-                                            Our Product (S2C)
-                                        </span>
-                                    </div>
-                                </div>
 
                                 <!-- Tier Breakdown Panel (populated by JS after chart renders) -->
                                 <div id="bubble-tier-summary" style="
@@ -1154,23 +1107,22 @@
                                 <!-- CCS Explanation Panel -->
                                 <div id="bubble-ccs-explanation" style="
                                     margin-top: 12px;
-                                    padding: 14px 16px;
+                                    padding: 12px 16px;
                                     background: rgba(91, 138, 240, 0.03);
                                     border: 1px solid rgba(91, 138, 240, 0.15);
                                     border-radius: 10px;
                                     font-size: 11px;
                                     color: var(--text-dim);
-                                    line-height: 1.6;
+                                    line-height: 1.5;
                                 ">
-                                    <div style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <div style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;">
                                         Customer Competitiveness Score (CCS)
                                     </div>
-                                    <p style="margin-bottom: 8px;">
-                                        <strong>CCS</strong> measures how competitively a product is positioned relative to its competitors by combining key customer-facing factors such as price, rating, and market performance. A higher CCS indicates a stronger competitive position, while a lower CCS indicates reduced competitiveness within the selected market.
-                                    </p>
-                                    <p style="margin: 0; color: rgba(148, 158, 181, 0.85);">
-                                        <strong>Calculation:</strong> CCS is calculated using the project's existing scoring formula and normalized to provide a comparable score across products within the selected active_id, category, and pricing tier. The displayed score reflects each product's relative competitiveness rather than an absolute market value.
-                                    </p>
+                                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                                        <div><strong>CCS</strong> indicates how competitive a product is compared with similar products in the selected market.</div>
+                                        <div>Calculated using: <strong>Selling Price</strong>, <strong>Customer Rating</strong>, <strong>Review Volume (Popularity)</strong>, and <strong>Relative Market Position</strong>.</div>
+                                        <div>A higher CCS indicates a stronger competitive position within the selected category and pricing tier.</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
