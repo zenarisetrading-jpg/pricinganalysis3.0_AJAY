@@ -4,6 +4,5 @@ supabase
 requests
 requests-aws4auth
 python-dotenv
-apify-client
 psycopg2-binary
 pytest

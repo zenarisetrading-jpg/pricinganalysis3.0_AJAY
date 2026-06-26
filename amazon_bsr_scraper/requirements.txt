@@ -1,0 +1,7 @@
+requests
+psycopg2-binary
+scrapegraphai
+firecrawl-py
+crawl4ai==0.4.247
+openai
+pandas

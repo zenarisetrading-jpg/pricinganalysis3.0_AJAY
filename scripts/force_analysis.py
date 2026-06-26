@@ -26,13 +26,8 @@ def force_analysis(account_id="oneshot_uae"):
         print(f"Processing category {cat_id}...")
         
         # 2. Fetch competitor data we already have
-<<<<<<< HEAD
         from features.price_benchmarking.saddl_db import fetch_competitor_pricing_by_category
         raw_competitors = fetch_competitor_pricing_by_category(cat_id, "UAE")
-=======
-        comp_resp = sb.table("competitor_products").select("*").eq("category_id", cat_id).execute()
-        raw_competitors = comp_resp.data
->>>>>>> 5021546c74a8a9e0d82812ff2d0468e014ba5e35
         if not raw_competitors:
             print(f"No competitor data found for category {cat_id}. Skipping.")
             continue

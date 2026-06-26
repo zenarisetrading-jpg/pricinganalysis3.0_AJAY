@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
@@ -6,9 +7,16 @@ from fastapi.responses import HTMLResponse, JSONResponse, Response
 from pydantic import BaseModel
 
 from features.price_benchmarking import routes as pb_routes
+from features.price_benchmarking.saddl_db import get_pool
 
 
-app = FastAPI(title="Price Benchmarking")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    get_pool()  # warm SADDL connection pool before first request
+    yield
+
+
+app = FastAPI(title="Price Benchmarking", lifespan=lifespan)
 
 app.include_router(pb_routes.router, prefix="/api/v1/benchmarking", tags=["benchmarking"])
 
