@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication | Price Benchmarking</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090b10;
+            --surface: rgba(22, 25, 35, 0.7);
+            --surface-solid: #161923;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text: #f0f2f5;
+            --text-dim: #949eb5;
+            --accent: #5b8af0;
+            --accent-hover: #4a75d5;
+            --accent-glow: rgba(91, 138, 240, 0.3);
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius: 16px;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --glass: blur(12px) saturate(180%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract Background Glows */
+        .bg-glow-1 {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(91, 138, 240, 0.15) 0%, rgba(9, 11, 16, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-glow-2 {
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, rgba(9, 11, 16, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            -webkit-backdrop-filter: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .brand p {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font-main);
+            font-size: 14px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px var(--accent-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .toggle-links {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .toggle-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .toggle-links a:hover {
+            color: #8bb2ff;
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: block;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: block;
+        }
+
+        /* View toggling */
+        .auth-view {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .auth-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading .spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="auth-container">
+        <!-- Message Container -->
+        <div id="global-message" class="message"></div>
+
+        <!-- Login View -->
+        <div id="view-login" class="auth-view active">
+            <div class="brand">
+                <h1>Price Benchmarking</h1>
+                <p>Welcome back! Please enter your details.</p>
+            </div>
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <div style="text-align: right; margin-top: -10px; margin-bottom: 20px;">
+                    <a href="#" onclick="switchView('forgot')" style="font-size: 13px; color: var(--text-dim); text-decoration: none; transition: color 0.2s;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-primary" id="btn-login">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Sign In</span>
+                </button>
+            </form>
+            <div class="toggle-links">
+                Don't have an account? <a onclick="switchView('register')">Create an account</a>
+            </div>
+        </div>
+
+        <!-- Register View -->
+        <div id="view-register" class="auth-view">
+            <div class="brand">
+                <h1>Create an Account</h1>
+                <p>Start optimizing your pricing strategy.</p>
+            </div>
+            <form id="form-register" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Min 6 characters" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm">Confirm Password</label>
+                    <input type="password" id="reg-confirm" placeholder="Repeat password" required minlength="6">
+                </div>
+                <button type="submit" class="btn-primary" id="btn-register">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Register Account</span>
+                </button>
+            </form>
+            <div class="toggle-links">
+                Already have an account? <a onclick="switchView('login')">Log in</a>
+            </div>
+        </div>
+
+        <!-- Forgot Password View -->
+        <div id="view-forgot" class="auth-view">
+            <div class="brand">
+                <h1>Reset Password</h1>
+                <p>Enter your email and we'll send you a link.</p>
+            </div>
+            <form id="form-forgot" onsubmit="handleForgot(event)">
+                <div class="form-group">
+                    <label for="forgot-email">Email</label>
+                    <input type="email" id="forgot-email" placeholder="you@company.com" required>
+                </div>
+                <button type="submit" class="btn-primary" id="btn-forgot">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Send Reset Link</span>
+                </button>
+            </form>
+            <div class="toggle-links">
+                <a onclick="switchView('login')">← Back to log in</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1/auth';
+        const msgEl = document.getElementById('global-message');
+
+        function showMessage(msg, type = 'error') {
+            msgEl.textContent = msg;
+            msgEl.className = `message ${type}`;
+        }
+
+        function hideMessage() {
+            msgEl.className = 'message';
+        }
+
+        function switchView(viewName) {
+            hideMessage();
+            document.querySelectorAll('.auth-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            // Clear inputs
+            document.querySelectorAll('input').forEach(input => input.value = '');
+        }
+
+        function setLoading(btnId, isLoading) {
+            const btn = document.getElementById(btnId);
+            const textEl = btn.querySelector('.btn-text');
+            if (isLoading) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+                textEl.dataset.original = textEl.textContent;
+                textEl.textContent = 'Please wait...';
+            } else {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                textEl.textContent = textEl.dataset.original || 'Submit';
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideMessage();
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            setLoading('btn-login', true);
+            try {
+                const resp = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await resp.json();
+                
+                if (resp.ok) {
+                    window.location.href = '/';
+                } else {
+                    showMessage(data.detail || 'Login failed. Please check your credentials.');
+                }
+            } catch (err) {
+                showMessage('Network error occurred. Please try again.');
+            } finally {
+                setLoading('btn-login', false);
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideMessage();
+            
+            const full_name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+            
+            if (password !== confirm) {
+                showMessage("Passwords do not match.");
+                return;
+            }
+            
+            setLoading('btn-register', true);
+            try {
+                const resp = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name, email, password })
+                });
+                
+                const data = await resp.json();
+                
+                if (resp.ok) {
+                    showMessage("Registration successful! You can now log in.", "success");
+                    setTimeout(() => {
+                        switchView('login');
+                        document.getElementById('login-email').value = email;
+                    }, 2000);
+                } else {
+                    showMessage(data.detail || 'Registration failed.');
+                }
+            } catch (err) {
+                showMessage('Network error occurred. Please try again.');
+            } finally {
+                setLoading('btn-register', false);
+            }
+        }
+
+        async function handleForgot(e) {
+            e.preventDefault();
+            hideMessage();
+            
+            const email = document.getElementById('forgot-email').value.trim();
+            
+            setLoading('btn-forgot', true);
+            try {
+                const resp = await fetch(`${API_BASE}/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                if (resp.ok) {
+                    showMessage("If an account exists, a password reset link has been sent.", "success");
+                } else {
+                    const data = await resp.json();
+                    showMessage(data.detail || 'Failed to send reset link.');
+                }
+            } catch (err) {
+                showMessage('Network error occurred. Please try again.');
+            } finally {
+                setLoading('btn-forgot', false);
+            }
+        }
+    </script>
+</body>
+
+</html>

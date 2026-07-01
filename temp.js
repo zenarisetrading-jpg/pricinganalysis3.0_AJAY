@@ -1,1498 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SADDL | Price Benchmarking</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <style>
-        :root {
-            --bg: #090b10;
-            --surface: rgba(22, 25, 35, 0.7);
-            --surface-solid: #161923;
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #f0f2f5;
-            --text-dim: #949eb5;
-            --accent: #5b8af0;
-            --accent-glow: rgba(91, 138, 240, 0.3);
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --radius: 16px;
-            --font-main: 'Inter', sans-serif;
-            --font-heading: 'Outfit', sans-serif;
-            --glass: blur(12px) saturate(180%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: var(--bg);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(91, 138, 240, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
-            color: var(--text);
-            font-family: var(--font-main);
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        /* Sidebar & Navigation */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: var(--surface-solid);
-            border-right: 1px solid var(--border);
-            padding: 32px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-        }
-
-        .logo {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: 22px;
-            letter-spacing: -0.02em;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 12px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text);
-        }
-
-        .nav-item.active {
-            background: var(--accent-glow);
-            color: var(--accent);
-        }
-
-        /* Main Content */
-        .content {
-            flex: 1;
-            padding: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
-        }
-
-        .header-title h1 {
-            font-family: var(--font-heading);
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .header-title p {
-            color: var(--text-dim);
-            font-size: 15px;
-        }
-
-        .client-selector {
-            background: var(--surface-solid);
-            border: 1px solid var(--border);
-            padding: 0;
-            border-radius: 12px;
-            color: var(--text);
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            min-width: 200px;
-        }
-
-        .client-selector:hover {
-            border-color: var(--accent);
-            background: rgba(91, 138, 240, 0.05);
-            box-shadow: 0 0 20px rgba(91, 138, 240, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .client-selector:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        #account-selector {
-            background: transparent;
-            border: none;
-            color: var(--text);
-            padding: 12px 16px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            width: 100%;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23949eb5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 44px;
-        }
-
-        #account-selector option {
-            background-color: #1a1d29;
-            color: var(--text);
-            padding: 12px;
-            font-weight: 500;
-        }
-
-        /* Grid Layout */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .card {
-            background: var(--surface);
-            backdrop-filter: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .card-title {
-            font-family: var(--font-heading);
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        /* KPI Cards */
-        .kpi-row {
-            grid-column: span 2;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .kpi-card {
-            background: var(--surface-solid);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-        }
-
-        .kpi-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 12px;
-        }
-
-        .kpi-value {
-            font-family: var(--font-heading);
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .kpi-trend {
-            font-size: 13px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .trend-up {
-            color: var(--success);
-        }
-
-        .trend-down {
-            color: var(--danger);
-        }
-
-        /* Position Map */
-        .position-map {
-            height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .zone-bar {
-            height: 48px;
-            width: 100%;
-            background: linear-gradient(to right,
-                    #ef4444 0%, #f59e0b 20%, #10b981 40%, #10b981 60%, #3b82f6 80%, #6366f1 100%);
-            border-radius: 24px;
-            position: relative;
-            margin-bottom: 32px;
-        }
-
-        .zone-marker {
-            position: absolute;
-            top: -12px;
-            width: 4px;
-            height: 72px;
-            background: white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            border-radius: 2px;
-            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 5;
-        }
-
-        .zone-marker-original {
-            position: absolute;
-            top: -6px;
-            width: 2px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.4);
-            border-left: 2px dotted rgba(255, 255, 255, 0.6);
-            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: translateX(-50%);
-            z-index: 6;
-        }
-
-        .zone-marker-adjusted {
-            position: absolute;
-            top: -6px;
-            width: 4px;
-            height: 60px;
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent-glow);
-            border-radius: 2px;
-            border: 1px dashed white;
-            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 10;
-        }
-
-        .zone-marker-current {
-            position: absolute;
-            top: -6px;
-            width: 4px;
-            height: 60px;
-            background: white;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            border-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            transform: translateX(-50%);
-            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 15;
-        }
-
-        .zone-labels {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-dim);
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Miniature Market Position Bar */
-        .mini-zone-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 140px;
-        }
-
-        .mini-zone-bar {
-            height: 8px;
-            width: 100%;
-            background: linear-gradient(to right,
-                    #ef4444 0%,
-                    /* Red: Below */
-                    #f59e0b 20%,
-                    /* Orange: Budget */
-                    #10b981 40%,
-                    /* Green: Value */
-                    #10b981 60%,
-                    /* Green: Mid */
-                    #3b82f6 80%,
-                    /* Blue: Premium */
-                    #6366f1 100%
-                    /* Indigo: Above */
-                );
-            border-radius: 4px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-        }
-
-        .mini-zone-marker {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.5);
-            transform: translateX(-50%);
-            /* Centered exactly on the percentage line */
-            border: 1.5px solid var(--background);
-            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: pointer;
-        }
-
-        .mini-zone-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-dim);
-        }
-
-        .zone-text-below_market {
-            color: #ef4444 !important;
-        }
-
-        .zone-text-budget {
-            color: #f59e0b !important;
-        }
-
-        .zone-text-value {
-            color: #10b981 !important;
-        }
-
-        .zone-text-mid_market {
-            color: #10b981 !important;
-        }
-
-        .zone-text-premium {
-            color: #3b82f6 !important;
-        }
-
-        .zone-text-above_market {
-            color: #6366f1 !important;
-        }
-
-        /* Recommendations Table */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-dim);
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-
-        .price-badge {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-weight: 600;
-        }
-
-        .action-chip {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .action-increase {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .action-decrease {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        .action-hold {
-            background: rgba(148, 158, 181, 0.15);
-            color: var(--text-dim);
-        }
-
-        /* Tier Chips */
-        .tier-chip {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.15s ease;
-            opacity: 0.45;
-        }
-
-        .tier-chip:hover {
-            opacity: 0.8;
-        }
-
-        .tier-chip.active {
-            opacity: 1;
-            border-color: currentColor;
-        }
-
-        .tier-budget {
-            background: rgba(99, 179, 237, 0.15);
-            color: #63b3ed;
-        }
-
-        .tier-value {
-            background: rgba(72, 187, 120, 0.15);
-            color: #48bb78;
-        }
-
-        .tier-midmarket {
-            background: rgba(246, 173, 85, 0.15);
-            color: #f6ad55;
-        }
-
-        .tier-premium {
-            background: rgba(183, 148, 246, 0.15);
-            color: #b794f6;
-        }
-
-        .tier-auto {
-            background: rgba(148, 158, 181, 0.12);
-            color: var(--text-dim);
-        }
-
-        /* Alerts Feed */
-        .alert-item {
-            display: flex;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .alert-item:last-child {
-            border-bottom: none;
-        }
-
-        .alert-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .alert-high {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .alert-medium {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .alert-content h4 {
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .alert-content p {
-            font-size: 13px;
-            color: var(--text-dim);
-            line-height: 1.4;
-        }
-
-        .alert-time {
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-top: 4px;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .btn-upload {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .btn-upload:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--surface-solid);
-            padding: 8px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 36px;
-            height: 20px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #333;
-            transition: .4s;
-            border-radius: 20px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: var(--accent);
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(16px);
-        }
-
-        .product-details-container {
-            display: none;
-            margin-top: 12px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-
-        .product-details-container.visible {
-            display: block;
-        }
-
-        .btn-toggle-details {
-            background: rgba(91, 138, 240, 0.1);
-            color: var(--accent);
-            border: 1px solid var(--accent-glow);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            width: fit-content;
-        }
-
-        .btn-toggle-details:hover {
-            background: var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        .btn-toggle-details svg {
-            transition: transform 0.3s;
-        }
-
-        .btn-toggle-details.active svg {
-            transform: rotate(180deg);
-        }
-
-        /* Responsive */
-        @media (max-width: 1100px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .kpi-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Styling overrides for ApexCharts Tooltips */
-        .apexcharts-tooltip {
-            background: var(--surface-solid) !important;
-            border: 1px solid var(--border) !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-            border-radius: 8px !important;
-            color: var(--text) !important;
-            font-family: var(--font-main) !important;
-        }
-
-        .apexcharts-tooltip-title {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border-bottom: 1px solid var(--border) !important;
-            font-weight: 700 !important;
-            color: var(--text) !important;
-        }
-
-        .apexcharts-xcrosshairs,
-        .apexcharts-ycrosshairs {
-            stroke: var(--border) !important;
-        }
-
-        /* ── Chart Interaction Overlay ──────────────────────────────
-           Blocks scroll-wheel zoom by default. Click the chart to
-           activate; click anywhere outside to return to page-scroll. */
-        .chart-interactive-wrapper {
-            position: relative;
-        }
-
-        .chart-interact-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 20;
-            cursor: pointer;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* invisible by default — only shows hint on hover */
-            background: transparent;
-            transition: background 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .chart-interact-overlay:hover {
-            background: rgba(91, 138, 240, 0.04);
-        }
-
-        .chart-interact-overlay .overlay-hint {
-            opacity: 0;
-            background: rgba(22, 25, 35, 0.92);
-            color: var(--text-dim);
-            font-size: 12px;
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .chart-interact-overlay:hover .overlay-hint {
-            opacity: 1;
-        }
-
-        .chart-interactive-wrapper.is-active .chart-interact-overlay {
-            display: none;
-            /* overlay removed when active */
-        }
-
-        .chart-interactive-wrapper.is-active {
-            box-shadow: 0 0 0 2px var(--accent), 0 0 16px rgba(91, 138, 240, 0.25);
-            border-radius: 12px;
-        }
-
-        /* Custom Premium scrollbar for alerts feed */
-        #alerts-feed::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #alerts-feed::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        #alerts-feed::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
-
-        #alerts-feed::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Repricing Table Interactivity styles */
-        #recs-body tr {
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-
-        #recs-body tr:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        #recs-body tr.selected-row {
-            background: rgba(91, 138, 240, 0.15) !important;
-            border-left: 3px solid var(--accent) !important;
-            box-shadow: inset 0 0 12px rgba(91, 138, 240, 0.1);
-        }
-    </style>
-</head>
-
-<body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 3v18h18" />
-                    <path d="m19 9-5 5-4-4-3 3" />
-                </svg>
-                SADDL<span>.</span>
-            </div>
-
-            <nav class="nav-list">
-                <a href="#" class="nav-item active" data-tab="benchmarking">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="7" height="9" x="3" y="3" rx="1" />
-                        <rect width="7" height="5" x="14" y="3" rx="1" />
-                        <rect width="7" height="9" x="14" y="12" rx="1" />
-                        <rect width="7" height="5" x="3" y="16" rx="1" />
-                    </svg>
-                    Dashboard
-                </a>
-
-                <a href="#" class="nav-item" data-tab="categories">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-                        <path d="M8 7h6" />
-                        <path d="M8 11h8" />
-                    </svg>
-                    Categories
-                </a>
-            </nav>
-
-            <div class="user-profile"
-                style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 20px; display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <span id="user-name-display"
-                        style="font-weight: 600; font-size: 14px; color: var(--text);">User</span>
-                    <span id="user-role-display" style="font-size: 12px; color: var(--accent);">Role</span>
-                </div>
-                <button id="logout-btn"
-                    style="background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;"
-                    title="Logout" onmouseover="this.style.color='var(--danger)'"
-                    onmouseout="this.style.color='var(--text-dim)'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" x2="9" y1="12" y2="12" />
-                    </svg>
-                </button>
-            </div>
-        </aside>
-
-        <main class="content">
-            <header>
-                <div class="header-title">
-                    <h1>Price Benchmarking</h1>
-                    <p id="sub-title">Real-time market positioning & repricing intelligence</p>
-                </div>
-                <div style="display: flex; gap: 20px; align-items: center;">
-
-                    <div class="client-selector">
-                        <select id="account-selector">
-                            <option value="" disabled selected>Select Account</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-
-            <!-- View: BENCHMARKING (Consolidated Dashboard) -->
-            <div id="view-benchmarking">
-                <div class="dashboard-grid">
-                    <div style="display: flex; justify-content: flex-end; margin-bottom: -10px;">
-                        <div class="client-selector tier-selector"
-                            style="display: flex; align-items: center; padding-left: 12px; gap: 4px; min-width: 150px; background: rgba(30,34,45,0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
-                            <span style="font-size: 13px; color: var(--text-dim); font-weight: 500;">Market Tier:</span>
-                            <select id="dashboard-tier-filter"
-                                style="flex: 1; background: transparent; border: none; color: var(--text); padding: 10px 12px 10px 4px; font-family: inherit; font-weight: 600; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23949eb5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;">
-                                <option value="All" style="background-color: #1a1d29;" selected>All Tiers</option>
-                                <option value="Entry" style="background-color: #1a1d29;">Entry</option>
-                                <option value="Mass" style="background-color: #1a1d29;">Mass</option>
-                                <option value="Mid-Premium" style="background-color: #1a1d29;">Mid-Premium</option>
-                                <option value="Premium" style="background-color: #1a1d29;">Premium</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="kpi-row">
-                        <div class="kpi-card">
-                            <div class="kpi-label">Avg. Market Index</div>
-                            <div class="kpi-value" id="kpi-index">--</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Tracked Parent ASINs</div>
-                            <div class="kpi-value" id="kpi-skus">--</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Health Score</div>
-                            <div class="kpi-value" id="kpi-health" style="color: var(--success)">--</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Pending Recs</div>
-                            <div class="kpi-value" id="kpi-recs" style="color: var(--warning)">--</div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-left"
-                        style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
-
-                        <!-- Competitor Price Distribution & Positioning Card -->
-                        <div class="card">
-                            <div class="card-header"
-                                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                                <div>
-                                    <h3 class="card-title">Market Price Landscape & Our Position</h3>
-                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">See where
-                                        competitors are pricing their items. The taller the blue bars, the more
-                                        competitors are pricing at that amount.</p>
-                                </div>
-                                <div class="client-selector" style="min-width: min(560px, 100%); flex: 1 1 420px;">
-                                    <select id="overview-product-selector" style="
-                                        width: 100%;
-                                        background: var(--surface-solid);
-                                        border: 1px solid var(--border);
-                                        color: var(--text);
-                                        padding: 10px 16px;
-                                        border-radius: 10px;
-                                        font-family: inherit;
-                                        font-size: 13px;
-                                        outline: none;
-                                        cursor: pointer;
-                                    ">
-                                        <option value="" disabled selected>Select Product to Analyze...</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="tier-filter-banner"
-                                style="display:none; margin: 0 20px; padding: 8px 14px; background: rgba(91,138,240,0.08); border: 1px solid rgba(91,138,240,0.2); border-radius: 8px; font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 10px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-                                </svg>
-                                <span id="tier-filter-label">Filtered to — tier</span>
-                                <button onclick="clearActiveTierFilter()"
-                                    style="margin-left:auto; background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:11px; padding:2px 6px;">✕
-                                    Clear</button>
-                            </div>
-                            <div class="card-body" style="padding: 20px; position: relative;">
-                                <!-- Product-specific Metrics Panel (Break-even Price - COGS Refactoring) -->
-                                <div id="product-metrics-panel"
-                                    style="display: none; margin-bottom: 20px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; gap: 24px; display: flex; flex-wrap: wrap; backdrop-filter: var(--glass); align-items: center;">
-                                    <div style="flex: 1.2; min-width: 180px;">
-                                        <div
-                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
-                                            COGS Input (AED)</div>
-                                        <input type="number" id="product-cogs-input" step="0.01" min="0"
-                                            placeholder="Enter product COGS" style="
-                                            background: rgba(255, 255, 255, 0.05);
-                                            border: 1px solid var(--border);
-                                            color: var(--text);
-                                            padding: 8px 12px;
-                                            border-radius: 8px;
-                                            font-family: inherit;
-                                            font-size: 14px;
-                                            width: 100%;
-                                            outline: none;
-                                            transition: border-color 0.2s;
-                                        " oninput="this.style.borderColor = 'var(--accent)'"
-                                            onblur="this.style.borderColor = 'var(--border)'">
-                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Enter
-                                            operational cost basis</div>
-                                    </div>
-                                    <div
-                                        style="flex: 1; min-width: 180px; border-left: 1px solid var(--border); padding-left: 20px; position: relative;">
-                                        <div
-                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                                            Break-even Price
-                                            <span id="product-profitability-badge"
-                                                style="padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; display: inline-block;"></span>
-                                        </div>
-                                        <div id="product-breakeven-price"
-                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px;">
-                                            --</div>
-                                        <div style="font-size: 9px; color: var(--text-dim); margin-top: 4px;">Calculated
-                                            automatically as COGS ÷ 0.3</div>
-                                    </div>
-                                    <div
-                                        style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
-                                        <div
-                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
-                                            Current Selling Price</div>
-                                        <div id="product-current-price"
-                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text); margin-top: 4px;">
-                                            --</div>
-                                    </div>
-                                    <div
-                                        style="flex: 1; min-width: 120px; border-left: 1px solid var(--border); padding-left: 20px;">
-                                        <div
-                                            style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
-                                            MEDIAN</div>
-                                        <div id="product-target-price"
-                                            style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--warning); margin-top: 4px;">
-                                            --</div>
-                                    </div>
-                                </div>
-
-                                <!-- Loading overlay -->
-                                <div id="overview-chart-loading" style="
-                                    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                                    background: var(--surface-solid); opacity: 0.9;
-                                    display: flex; align-items: center; justify-content: center;
-                                    border-radius: var(--radius); z-index: 10;
-                                ">
-                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating
-                                        Price Distribution Graph...</span>
-                                </div>
-
-                                <!-- Empty State overlay -->
-                                <div id="overview-chart-empty" style="
-                                    display: none; height: 350px; align-items: center; justify-content: center;
-                                    flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
-                                ">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <line x1="9" y1="17" x2="9" y2="12" />
-                                        <line x1="15" y1="17" x2="15" y2="10" />
-                                        <line x1="12" y1="17" x2="12" y2="7" />
-                                    </svg>
-                                    <span style="font-weight: 600;">No Competitor Data Available</span>
-                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active
-                                        competitor offers to construct a pricing distribution for this parent
-                                        ASIN.</span>
-                                </div>
-
-                                <!-- Chart Container -->
-                                <div id="histogram-wrapper" class="chart-interactive-wrapper">
-                                    <div class="chart-interact-overlay" id="histogram-overlay"
-                                        title="Click to enable zoom & pan">
-                                        <span class="overlay-hint">🖱 Click to interact with chart</span>
-                                    </div>
-                                    <div id="overview-histogram-chart" style="height: 350px;"></div>
-                                </div>
-
-                                <!-- Beginner-Friendly Visual Legend & Guide -->
-                                <div style="
-                                    display: flex;
-                                    justify-content: space-around;
-                                    align-items: flex-start;
-                                    margin-top: 20px;
-                                    padding: 16px;
-                                    background: rgba(255, 255, 255, 0.015);
-                                    border: 1px solid var(--border);
-                                    border-radius: 12px;
-                                    flex-wrap: wrap;
-                                    gap: 16px;
-                                ">
-                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div
-                                            style="width: 14px; height: 14px; background: #10b981; border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
-                                        </div>
-                                        <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Our
-                                                Price (Green Line)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Your
-                                                current selling price. See if you are sitting inside the crowded peaks
-                                                or open valleys.</div>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div
-                                            style="width: 14px; height: 14px; border: 2px dashed #f59e0b; border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
-                                        </div>
-                                        <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Adjusted
-                                                Median (Gold Line)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">The
-                                                competitor median price adjusted using the Average Market Index.</div>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: flex-start; gap: 10px; max-width: 250px;">
-                                        <div
-                                            style="width: 14px; height: 14px; background: rgba(91, 138, 240, 0.3); border-radius: 4px; margin-top: 3px; flex-shrink: 0;">
-                                        </div>
-                                        <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Blue
-                                                Columns (Competitors)</div>
-                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">
-                                                Taller bars represent popular price points with high competition. Flat
-                                                areas represent open, low-competition ranges.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Rating vs Competitor Price Analytics Card -->
-                        <div class="card" style="margin-top: 24px;">
-                            <div class="card-header">
-                                <div>
-                                    <h3 class="card-title">Rating vs. Competitor Price Position Map</h3>
-                                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Analyze quality
-                                        vs. pricing. Bubbles show competitors; size indicates review volume
-                                        (popularity). Quadrants separate value from vulnerability.</p>
-                                </div>
-                            </div>
-                            <div class="card-body" style="padding: 20px; position: relative;">
-                                <!-- Loading overlay -->
-                                <div id="overview-bubble-loading" style="
-                                    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                                    background: var(--surface-solid); opacity: 0.9;
-                                    display: flex; align-items: center; justify-content: center;
-                                    border-radius: var(--radius); z-index: 10;
-                                ">
-                                    <span style="color: var(--text-dim); font-weight: 500; font-size: 14px;">Generating
-                                        Rating vs. Price Position Map...</span>
-                                </div>
-
-                                <!-- Empty State overlay -->
-                                <div id="overview-bubble-empty" style="
-                                    display: none; height: 380px; align-items: center; justify-content: center;
-                                    flex-direction: column; gap: 12px; text-align: center; color: var(--text-dim);
-                                ">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    <span style="font-weight: 600;">No Rating vs Price Data Available</span>
-                                    <span style="font-size: 12px; max-width: 300px;">We couldn't find enough active
-                                        competitor rating data to construct this visual map.</span>
-                                </div>
-
-                                <!-- Bubble Chart Container -->
-                                <div id="bubble-wrapper" class="chart-interactive-wrapper">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 10px;">
-                                        <div style="font-size: 14px; font-weight: 600; color: var(--text);">Brand
-                                            Positioning Map</div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <span style="font-size: 12px; color: var(--text-dim);">Tier:</span>
-                                            <select id="bubble-tier-filter" style="
-                                                background: transparent;
-                                                color: var(--text);
-                                                border: 1px solid var(--border);
-                                                border-radius: 6px;
-                                                padding: 4px 8px;
-                                                font-size: 12px;
-                                                outline: none;
-                                                cursor: pointer;
-                                                appearance: none;
-                                                -webkit-appearance: none;
-                                                background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23949eb5\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E');
-                                                background-repeat: no-repeat;
-                                                background-position: right 8px center;
-                                                padding-right: 28px;
-                                            ">
-                                                <option value="All" style="background-color: #1a1d29;">All Tiers
-                                                </option>
-                                                <option value="Entry" style="background-color: #1a1d29;">Entry</option>
-                                                <option value="Mass" style="background-color: #1a1d29;">Mass</option>
-                                                <option value="Mid-Premium" style="background-color: #1a1d29;">
-                                                    Mid-Premium</option>
-                                                <option value="Premium" style="background-color: #1a1d29;">Premium
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="overview-bubble-chart" style="height: 380px;"></div>
-                                </div>
-
-
-                                <!-- Tier Breakdown Panel (populated by JS after chart renders) -->
-                                <div id="bubble-tier-summary" style="
-                                    display: none;
-                                    margin-top: 12px;
-                                    padding: 12px 16px;
-                                    background: rgba(255,255,255,0.02);
-                                    border: 1px solid var(--border);
-                                    border-radius: 10px;
-                                ">
-                                    <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;
-                                        letter-spacing:0.05em;margin-bottom:10px;font-weight:600;">
-                                        Market Tier Breakdown
-                                    </div>
-                                    <div id="bubble-tier-stats" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
-                                    <div style="margin-top:10px;font-size:10px;color:var(--text-dim);line-height:1.5;">
-                                        Tier boundaries computed from competitor price quartiles (Q1 / Q3) for this
-                                        product.
-                                    </div>
-                                </div>
-
-                                <!-- CCS Explanation Panel -->
-                                <div id="bubble-ccs-explanation" style="
-                                    margin-top: 12px;
-                                    padding: 12px 16px;
-                                    background: rgba(91, 138, 240, 0.03);
-                                    border: 1px solid rgba(91, 138, 240, 0.15);
-                                    border-radius: 10px;
-                                    font-size: 11px;
-                                    color: var(--text-dim);
-                                    line-height: 1.5;
-                                ">
-                                    <div
-                                        style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;">
-                                        Customer Competitiveness Score (CCS)
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                                        <div><strong>CCS</strong> indicates how competitive a product is compared with
-                                            similar products in the selected market.</div>
-                                        <div>Calculated using: <strong>Selling Price</strong>, <strong>Customer
-                                                Rating</strong>, <strong>Review Volume (Popularity)</strong>, and
-                                            <strong>Relative Market Position</strong>.</div>
-                                        <div>A higher CCS indicates a stronger competitive position within the selected
-                                            category and pricing tier.</div>
-                                    </div>
-                                    <!-- Brand colour key row -->
-                                    <div style="grid-column: span 2; border-top: 1px solid var(--border);
-                                        padding-top: 10px; margin-top: 2px;
-                                        display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                                        <span style="font-size:10px;color:var(--text-dim);font-weight:600;
-                                            text-transform:uppercase;letter-spacing:0.05em;">Brand Key:</span>
-                                        <span style="display:flex;align-items:center;gap:5px;">
-                                            <span
-                                                style="width:10px;height:10px;border-radius:50%;background:#6366f1;display:inline-block;"></span>
-                                            Competitors
-                                        </span>
-                                        <span style="display:flex;align-items:center;gap:5px;">
-                                            <span
-                                                style="width:10px;height:10px;border-radius:50%;background:#10b981;display:inline-block;"></span>
-                                            Our Product (S2C)
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Tier Breakdown Panel (populated by JS after chart renders) -->
-                                <div id="bubble-tier-summary" style="
-                                    display: none;
-                                    margin-top: 12px;
-                                    padding: 12px 16px;
-                                    background: rgba(255,255,255,0.02);
-                                    border: 1px solid var(--border);
-                                    border-radius: 10px;
-                                ">
-                                    <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;
-                                        letter-spacing:0.05em;margin-bottom:10px;font-weight:600;">
-                                        Market Tier Breakdown
-                                    </div>
-                                    <div id="bubble-tier-stats" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
-                                    <div style="margin-top:10px;font-size:10px;color:var(--text-dim);line-height:1.5;">
-                                        Tier boundaries computed from competitor price quartiles (Q1 / Q3) for this
-                                        product.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="dashboard-right"
-                        style="grid-column: span 1; display: flex; flex-direction: column; gap: 24px;">
-
-                        <!-- Portfolio Position Map -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Portfolio Position Map</h3>
-                            </div>
-                            <div class="position-map" style="height: auto; padding: 20px 0; position: relative;">
-                                <div class="zone-bar" style="margin-bottom: 24px;">
-                                    <div class="zone-marker-original" id="portfolio-marker-original"
-                                        style="display: none;" title="Original Median"></div>
-                                    <div class="zone-marker-adjusted" id="portfolio-marker-adjusted"
-                                        style="display: none;" title="Median"></div>
-                                    <div class="zone-marker-current" id="portfolio-marker-current"
-                                        style="display: none;" title="Current Product Position"></div>
-                                </div>
-                                <div id="portfolio-map-legend"
-                                    style="display: none; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);">
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <div
-                                            style="width: 8px; height: 8px; background: var(--accent); border: 1px dashed white; border-radius: 2px;">
-                                        </div> Median
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <div style="width: 8px; height: 8px; background: white; border-radius: 2px;">
-                                        </div> Current Position
-                                    </div>
-                                </div>
-                                <div class="zone-labels" style="margin-top: 8px;">
-                                    <span>Below</span><span>Budget</span><span>Value</span><span>Mid</span><span>Premium</span><span>Above</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recent Portfolio Alerts Card -->
-                        <div class="card" style="display: flex; flex-direction: column; max-height: 380px;">
-                            <div class="card-header" style="flex-shrink: 0; margin-bottom: 12px;">
-                                <h3 class="card-title">Recent Portfolio Alerts</h3>
-                            </div>
-                            <div id="alerts-feed" style="overflow-y: auto; flex-grow: 1; padding-right: 4px;"></div>
-                        </div>
-
-                    </div>
-
-                    <div class="card" style="grid-column: span 2;">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
-                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <h3 class="card-title">Repricing Recommendations</h3>
-                                <div id="recs-product-filter-badge"
-                                    style="display: none; align-items: center; gap: 6px; padding: 3px 10px; background: rgba(91,138,240,0.1); border: 1px solid rgba(91,138,240,0.2); border-radius: 20px; font-size: 11px; color: var(--accent);">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-                                    </svg>
-                                    <span>Product Filter Active</span>
-                                    <button onclick="clearProductFilter()"
-                                        style="background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 13px; padding: 0; line-height: 1;">✕</button>
-                                </div>
-                            </div>
-                            <div class="table-controls"
-                                style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                                <input type="text" id="recs-search" placeholder="Search ASIN, Title, Reasoning..."
-                                    style="
-                                    background: rgba(255,255,255,0.05);
-                                    border: 1px solid var(--border);
-                                    padding: 8px 16px;
-                                    border-radius: 10px;
-                                    color: var(--text);
-                                    font-size: 13px;
-                                    width: 220px;
-                                    outline: none;
-                                    font-family: inherit;
-                                ">
-                                <select id="recs-action-filter" style="
-                                    background: var(--surface-solid);
-                                    border: 1px solid var(--border);
-                                    color: var(--text);
-                                    padding: 8px 16px;
-                                    border-radius: 10px;
-                                    font-family: inherit;
-                                    font-size: 13px;
-                                    outline: none;
-                                    cursor: pointer;
-                                ">
-                                    <option value="all">All Actions</option>
-                                    <option value="increase">Action: Increase</option>
-                                    <option value="decrease">Action: Decrease</option>
-                                    <option value="hold">Action: Hold</option>
-                                </select>
-                                <select id="recs-sort-by" style="
-                                    background: var(--surface-solid);
-                                    border: 1px solid var(--border);
-                                    color: var(--text);
-                                    padding: 8px 16px;
-                                    border-radius: 10px;
-                                    font-family: inherit;
-                                    font-size: 13px;
-                                    outline: none;
-                                    cursor: pointer;
-                                ">
-                                    <option value="default">Default Sort (Action & ASIN)</option>
-                                    <option value="asin-asc">ASIN (A-Z)</option>
-                                    <option value="asin-desc">ASIN (Z-A)</option>
-                                    <option value="title-asc">Title (A-Z)</option>
-                                    <option value="title-desc">Title (Z-A)</option>
-                                    <option value="current-desc">Current Price (High to Low)</option>
-                                    <option value="current-asc">Current Price (Low to High)</option>
-                                    <option value="target-desc">Adj. Median Price (High to Low)</option>
-                                    <option value="target-asc">Adj. Median Price (Low to High)</option>
-                                    <option value="competitors-desc">Competitors (High to Low)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>SKU / ASIN</th>
-                                        <th>Competitors</th>
-                                        <th>Current</th>
-                                        <th>Median</th>
-                                        <th title="Median price adjusted using Avg. Market Index.">Adj. Median <span
-                                                style="cursor:help; font-size:10px;">ⓘ</span></th>
-                                        <th>Action</th>
-                                        <th>Reasoning</th>
-                                        <th>Market Position</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recs-body"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Competitor Details Section -->
-                    <div id="competitors-section" class="card" style="grid-column: span 2; display: none;">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <div>
-                                <h3 class="card-title">Competitor Breakdown</h3>
-                                <p id="competitors-subtitle"
-                                    style="font-size: 12px; color: var(--text-dim); margin-top: 4px;"></p>
-                            </div>
-                            <button onclick="clearProductFilter()"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; font-size: 12px; padding: 6px 14px; border-radius: 8px; font-family: inherit;">✕
-                                Clear Filter</button>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>ASIN</th>
-                                        <th>Brand / Title</th>
-                                        <th>Price (AED)</th>
-                                        <th>Rating</th>
-                                        <th>Reviews</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="competitors-body"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- View: CATEGORIES (My Product Rankings) -->
-            <div id="view-categories" style="display: none;">
-                <div class="card">
-                    <div class="card-header"
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <div>
-                            <h2 style="font-size: 20px; font-weight: 700; color: var(--text);">My Product Rankings</h2>
-                            <p style="font-size: 13px; color: var(--text-dim);">Live BSR monitoring for your product
-                                portfolio.</p>
-                        </div>
-                        <div style="display: flex; gap: 12px;">
-                            <input type="text" id="category-search" placeholder="Search products or categories..."
-                                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; color: var(--text); font-size: 13px; width: 250px;">
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>CATEGORY</th>
-                                    <th>PRODUCT DETAILS</th>
-                                    <th>ASIN</th>
-                                    <th>BSR RANK</th>
-                                    <th>COMPETITOR FILTERING (KEYWORDS)</th>
-                                    <th>STATUS</th>
-                                </tr>
-                            </thead>
-                            <tbody id="categories-body">
-                                <!-- Populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        const API_BASE = '/api/v1/benchmarking';
+const API_BASE = '/api/v1/benchmarking';
         let currentClientId = 's2c-uae';
         let activeTab = 'benchmarking';
         let testCatalog = [];
@@ -1731,51 +238,51 @@
                 const promises = [];
 
                 if (activeTab === 'benchmarking') {
-                    const fetchBenchmarking = async () => {
-                        const selectedTier = document.getElementById('dashboard-tier-filter')?.value || 'All';
-                        let recsResp, overviewResp, alertsResp;
+                      const fetchBenchmarking = async () => {
+                          const selectedTier = document.getElementById('dashboard-tier-filter')?.value || 'All';
+                          let recsResp, overviewResp, alertsResp;
+                          
+                          if (selectedTier === 'All') {
+                              [recsResp, overviewResp, alertsResp] = await Promise.all([
+                                  fetch(`${API_BASE}/recommendations?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch recommendations:', e); return null; }),
+                                  fetch(`${API_BASE}/overview?client_id=${currentClientId}`, { headers }),
+                                  fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch alerts:', e); return null; })
+                              ]);
+                              
+                              if (recsResp && recsResp.ok) {
+                                  const recsData = await recsResp.json();
+                                  globalRecommendations = recsData.recommendations || [];
+                              }
 
-                        if (selectedTier === 'All') {
-                            [recsResp, overviewResp, alertsResp] = await Promise.all([
-                                fetch(`${API_BASE}/recommendations?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch recommendations:', e); return null; }),
-                                fetch(`${API_BASE}/overview?client_id=${currentClientId}`, { headers }),
-                                fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch alerts:', e); return null; })
-                            ]);
+                              if (!overviewResp.ok) throw new Error(`HTTP ${overviewResp.status}`);
+                              const overviewData = await overviewResp.json();
 
-                            if (recsResp && recsResp.ok) {
-                                const recsData = await recsResp.json();
-                                globalRecommendations = recsData.recommendations || [];
-                            }
+                              renderOverview(overviewData.rows, overviewData);
+                              renderRecommendations(globalRecommendations);
+                          } else {
+                              // Use the recalculate endpoint when a specific tier is filtered
+                              const recalcResp = await fetch(`${API_BASE}/recalculate-dashboard?client_id=${currentClientId}&tier=${encodeURIComponent(selectedTier)}`, { method: 'POST', headers });
+                              if (!recalcResp.ok) throw new Error(`HTTP ${recalcResp.status}`);
+                              const recalcData = await recalcResp.json();
+                              
+                              globalRecommendations = recalcData.recommendations || [];
+                              // Pass parent_asin_count so renderOverview can update the global cache.
+                              // This is the TOTAL universe count (not the tier-filtered count) so the
+                              // "Tracked Parent ASINs" KPI stays consistent across tier selections.
+                              renderOverview(recalcData.snapshots, {
+                                  rows: recalcData.snapshots,
+                                  parent_asin_count: recalcData.parent_asin_count,
+                              });
+                              renderRecommendations(globalRecommendations);
+                              
+                              // Still fetch alerts normally
+                              alertsResp = await fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => null);
+                          }
 
-                            if (!overviewResp.ok) throw new Error(`HTTP ${overviewResp.status}`);
-                            const overviewData = await overviewResp.json();
-
-                            renderOverview(overviewData.rows, overviewData);
-                            renderRecommendations(globalRecommendations);
-                        } else {
-                            // Use the recalculate endpoint when a specific tier is filtered
-                            const recalcResp = await fetch(`${API_BASE}/recalculate-dashboard?client_id=${currentClientId}&tier=${encodeURIComponent(selectedTier)}`, { method: 'POST', headers });
-                            if (!recalcResp.ok) throw new Error(`HTTP ${recalcResp.status}`);
-                            const recalcData = await recalcResp.json();
-
-                            globalRecommendations = recalcData.recommendations || [];
-                            // Pass parent_asin_count so renderOverview can update the global cache.
-                            // This is the TOTAL universe count (not the tier-filtered count) so the
-                            // "Tracked Parent ASINs" KPI stays consistent across tier selections.
-                            renderOverview(recalcData.snapshots, {
-                                rows: recalcData.snapshots,
-                                parent_asin_count: recalcData.parent_asin_count,
-                            });
-                            renderRecommendations(globalRecommendations);
-
-                            // Still fetch alerts normally
-                            alertsResp = await fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => null);
-                        }
-
-                        if (alertsResp && alertsResp.ok) {
-                            const alertsData = await alertsResp.json();
-                            renderAlerts(alertsData.alerts);
-                        }
+                          if (alertsResp && alertsResp.ok) {
+                              const alertsData = await alertsResp.json();
+                              renderAlerts(alertsData.alerts);
+                          }
                     };
                     promises.push(fetchBenchmarking());
                 }
@@ -2277,7 +784,7 @@
                 chart: {
                     height: 350,
                     type: 'line',
-                    toolbar: {
+                    toolbar: { 
                         show: true,
                         autoSelected: 'zoom',
                         tools: { download: false, selection: true, zoom: true, zoomin: true, zoomout: true, pan: true, reset: true }
@@ -2462,14 +969,14 @@
 
             // ── Step 2: Read user-defined include/exclude filters ──────────────────────
             const parentAsin = row.parent_asin || row.asin;
-            const domInclude = document.getElementById(`ref-name-${parentAsin}`);
+            const domInclude    = document.getElementById(`ref-name-${parentAsin}`);
             const domExcludeKws = document.getElementById(`exclude-keywords-${parentAsin}`);
             const domExcludeBrands = document.getElementById(`exclude-brands-${parentAsin}`);
 
             let referenceName = domInclude ? domInclude.value : (row.reference_name || '');
             let excludeKeywordsStr = '';
             if (domExcludeKws || domExcludeBrands) {
-                const kwsVal = domExcludeKws ? domExcludeKws.value.trim() : '';
+                const kwsVal    = domExcludeKws    ? domExcludeKws.value.trim()    : '';
                 const brandsVal = domExcludeBrands ? domExcludeBrands.value.trim() : '';
                 excludeKeywordsStr = kwsVal;
                 if (brandsVal) excludeKeywordsStr = `${kwsVal}|brand_exclude: ${brandsVal}`;
@@ -2478,13 +985,13 @@
             }
 
             let excludeKeywords = [];
-            let excludeBrands = [];
+            let excludeBrands   = [];
             if (excludeKeywordsStr && excludeKeywordsStr.trim()) {
-                const parts = excludeKeywordsStr.split('|brand_exclude:');
-                const kwsPart = parts[0] || '';
+                const parts      = excludeKeywordsStr.split('|brand_exclude:');
+                const kwsPart    = parts[0] || '';
                 const brandsPart = parts[1] || '';
                 excludeKeywords = kwsPart.split(',').map(kw => kw.trim().toLowerCase()).filter(Boolean);
-                excludeBrands = brandsPart.split(',').map(b => b.trim().toLowerCase()).filter(Boolean);
+                excludeBrands   = brandsPart.split(',').map(b => b.trim().toLowerCase()).filter(Boolean);
             }
 
             if (rawCompetitors.length === 0) {
@@ -2496,11 +1003,11 @@
             if (container) container.style.display = 'block';
             if (emptyState) emptyState.style.display = 'none';
 
-            const ourPrice = parseFloat(row.your_price) || 0;
-            let ourRatingRaw = parseFloat(row.rating) || 0;
+            const ourPrice     = parseFloat(row.your_price) || 0;
+            let ourRatingRaw   = parseFloat(row.rating) || 0;
             let ourRatingEstimated = false;
             if (!ourRatingRaw || ourRatingRaw <= 0) { ourRatingRaw = 4.5; ourRatingEstimated = true; }
-            const ourRating = ourRatingRaw;
+            const ourRating  = ourRatingRaw;
             const ourReviews = parseInt(row.reviews) || 0;
 
             // ── Step 3: Clean + filter individual competitor records ───────────────────
@@ -2509,13 +1016,13 @@
             // dropping brands whose sample title didn't match even though other products
             // of that brand did match.
             const cleanCompetitors = rawCompetitors.map(c => {
-                let p = parseFloat(c.floor_price) || parseFloat(c.price) || parseFloat(c.competitor_price) || 0;
-                let r = parseFloat(c.rating) || 0;
+                let p  = parseFloat(c.floor_price) || parseFloat(c.price) || parseFloat(c.competitor_price) || 0;
+                let r  = parseFloat(c.rating) || 0;
                 let isEstimatedRating = false;
                 if (!r || r <= 0) { r = 4.0; isEstimatedRating = true; }
                 let rev = parseInt(c.reviews) || 0;
                 return {
-                    asin: c.asin,
+                    asin:  c.asin,
                     title: c.title || c.asin || 'Competitor Offer',
                     brand: (c.brand && c.brand !== 'null' && c.brand !== 'None') ? c.brand : '',
                     price: p,
@@ -2551,7 +1058,7 @@
                 // C. Include keywords (reference name) — evaluated per individual product
                 if (referenceName && referenceName.trim()) {
                     const refLower = referenceName.trim().toLowerCase();
-                    const phrases = refLower.split(',').map(p => p.trim()).filter(Boolean);
+                    const phrases  = refLower.split(',').map(p => p.trim()).filter(Boolean);
                     if (phrases.length > 0) {
                         const matchesAnyPhrase = phrases.some(phrase => {
                             const kws = phrase.split(/\s+/).map(kw => kw.trim()).filter(Boolean);
@@ -2570,20 +1077,14 @@
                 return;
             }
 
-            if (cleanCompetitors.length === 0) {
-                if (container) container.style.display = 'none';
-                if (emptyState) emptyState.style.display = 'flex';
-                return;
-            }
-
-            // Normalization boundaries for CCS calculation
+            // ── Step 4: Compute CCS normalization bounds from full cleaned set ─────────
             const allReviews = [...cleanCompetitors.map(c => c.reviews), ourReviews];
             const maxReviews = Math.max(...allReviews, 1);
             const minReviews = Math.min(...allReviews, 0);
 
             const allRatings = [...cleanCompetitors.map(c => c.rating), ourRating];
-            const maxRating = Math.max(...allRatings, 5);
-            const minRating = Math.min(...allRatings, 1);
+            const maxRating  = Math.max(...allRatings, 5);
+            const minRating  = Math.min(...allRatings, 1);
 
             function normalizeMetric(val, min, max) {
                 if (max === min) return 1;
@@ -2591,7 +1092,7 @@
             }
             function calcCCS(rating, reviews) {
                 return (0.4615 * normalizeMetric(rating, minRating, maxRating))
-                    + (0.5385 * normalizeMetric(reviews, minReviews, maxReviews));
+                     + (0.5385 * normalizeMetric(reviews, minReviews, maxReviews));
             }
 
             // ── Step 5: Aggregate individual products into per-brand summary points ─────
@@ -2616,17 +1117,17 @@
 
             const brandMetrics = Object.values(brandGroups).map(g => {
                 const sortedPrices = [...g.prices].sort((a, b) => a - b);
-                const sortedCcs = [...g.ccsArr].sort((a, b) => a - b);
+                const sortedCcs    = [...g.ccsArr].sort((a, b) => a - b);
                 return {
-                    brand: g.brand,
-                    medianPrice: sortedPrices[Math.floor(sortedPrices.length / 2)],
-                    medianCcs: sortedCcs[Math.floor(sortedCcs.length / 2)],
-                    avgRating: g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length,
+                    brand:        g.brand,
+                    medianPrice:  sortedPrices[Math.floor(sortedPrices.length / 2)],
+                    medianCcs:    sortedCcs[Math.floor(sortedCcs.length / 2)],
+                    avgRating:    g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length,
                     totalReviews: g.reviewsArr.reduce((a, b) => a + b, 0),
-                    nListings: g.prices.length,
-                    sampleTitle: g.titles[0],
-                    asins: g.asins,
-                    backendTier: g.backendTier,
+                    nListings:    g.prices.length,
+                    sampleTitle:  g.titles[0],
+                    asins:        g.asins,
+                    backendTier:  g.backendTier,
                 };
             });
 
@@ -2663,7 +1164,7 @@
 
             // ALL brands that survived steps 3–5 are plotted. No second filter.
             const formattedCompetitors = brandMetrics.map(b => {
-                const tier = b.backendTier || assignTierLocal(b.medianPrice);
+                const tier = assignTierLocal(b.medianPrice);
                 return {
                     x: b.medianCcs, y: b.medianPrice, z: 8,
                     title: b.nListings > 1 ? `${b.sampleTitle} (+${b.nListings - 1} more)` : b.sampleTitle,
@@ -2760,7 +1261,7 @@
                             style: { color: '#949eb5', fontWeight: 500, fontSize: '11px', fontFamily: 'Inter' },
                         },
                         axisBorder: { show: false },
-                        axisTicks: { show: false },
+                        axisTicks:  { show: false },
                     },
                     yaxis: {
                         tickAmount: 8,
@@ -2881,7 +1382,7 @@
                                             <span>Avg Rating:</span> <b style="color:white;">${pt.avgRating.toFixed(1)} ★</b>
                                         </div>
                                         <div style="display:flex;justify-content:space-between;">
-                                            <span>Total Reviews:</span> <b style="color:white;">${(pt.totalReviews ?? 0).toLocaleString()}</b>
+                                            <span>Total Reviews:</span> <b style="color:white;">${pt.totalReviews.toLocaleString()}</b>
                                         </div>
                                         <div style="display:flex;justify-content:space-between;">
                                             <span>Listings:</span> <b style="color:white;">${pt.nListings}</b>
@@ -2921,10 +1422,10 @@
                         });
 
                         tierStats.innerHTML = TIER_ORDER.map(t => {
-                            const count = tierCounts[t] || 0;
+                            const count  = tierCounts[t] || 0;
                             const prices = tierPrices[t] || [];
-                            const avg = prices.length ? (prices.reduce((a, b) => a + b, 0) / prices.length) : null;
-                            const color = TIER_COLORS[t] || TIER_DEFAULT;
+                            const avg    = prices.length ? (prices.reduce((a, b) => a + b, 0) / prices.length) : null;
+                            const color  = TIER_COLORS[t] || TIER_DEFAULT;
                             return `
                                 <div style="flex:1;min-width:110px;padding:8px 10px;border-radius:8px;
                                     border-left:3px solid ${color};
@@ -3238,8 +1739,6 @@
 
             let processedRecs = Array.from(parentMap.values());
 
-
-
             // Precompute properties for consistency in filters, sorting, and rendering
             processedRecs.forEach(r => {
                 const rawMedian = (r.metadata && r.metadata.median_price) ? Number(r.metadata.median_price) : (r.recommended_price || 0);
@@ -3262,6 +1761,7 @@
                 } else {
                     action = 'decrease';
                 }
+
                 r.calculatedAction = action;
 
                 // Precompute competitor count
@@ -3361,6 +1861,13 @@
                 processedRecs.sort((a, b) => b._competitorCount - a._competitorCount);
             }
 
+            if (kpiRecs) kpiRecs.textContent = processedRecs.length;
+
+            if (processedRecs.length === 0) {
+                body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 40px;">No matching recommendations</td></tr>';
+                return;
+            }
+
             body.innerHTML = processedRecs.map(r => {
                 const adjMedian = r.calculatedAdjMedian;
                 const currentPrice = r.calculatedCurrentPrice;
@@ -3368,7 +1875,8 @@
                 const zone = r.calculatedZone;
                 const action = r.calculatedAction;
                 const reasoning = r.calculatedReasoning;
-                const readableZone = (zone || 'Unknown').split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+                const readableZone = zone.replace(/_/g, ' ');
 
                 return `
                                 <tr data-asin="${r.parent_asin || r.asin}" style="border-left: 3px solid var(--accent);">
@@ -3376,7 +1884,7 @@
                                         <div style="font-weight: 700; color: var(--text); margin-bottom: 6px;">${r.parent_asin || r.asin}</div>
                                         <div style="font-weight: 600; color: var(--text); font-size: 13px; line-height: 1.4; max-width: 300px; word-break: break-word;" title="${r.title || 'Parent ASIN Group'}">${r.title || 'Parent ASIN Group'}</div>
                                     </td>
-                                    <td><span class="price-badge" style="color: ${(r._competitorCount ?? 0) > 0 ? 'var(--success)' : 'var(--danger)'}">${(r._competitorCount ?? 0).toLocaleString()}</span></td>
+                                    <td><span class="price-badge" style="color: ${r._competitorCount > 0 ? 'var(--success)' : 'var(--danger)'}">${r._competitorCount.toLocaleString()}</span></td>
                                     <td><span class="price-badge">${(currentPrice || 0).toFixed(2)}</span></td>
                                     <td>
                                         <span class="price-badge" style="color: var(--text);">${(r.metadata?.median_price || r.recommended_price || 0).toFixed(2)}</span>
@@ -3611,22 +2119,6 @@
                                             outline: none;
                                             flex-grow: 1;
                                         ">
-                                    </div>
-                                    <div style="display: flex; align-items: flex-start; gap: 8px; margin-top: 4px;">
-                                        <span style="font-size: 11px; color: var(--text-dim); width: 110px; text-align: right; padding-top: 4px;">Competitor Tier:</span>
-                                        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
-                                            ${(p.child_variants || [{ asin: p.asin, title: p.title, competitive_tier: null }]).map(child => `
-                                                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                                                    ${(p.child_variants || []).length > 1 ? `<span style="font-size: 10px; color: var(--text-dim); font-family: monospace; min-width: 90px;">${child.asin}</span>` : ''}
-                                                    ${['Budget', 'Value', 'Mid-Market', 'Premium'].map(tier => {
-                        const cls = { 'Budget': 'tier-budget', 'Value': 'tier-value', 'Mid-Market': 'tier-midmarket', 'Premium': 'tier-premium' }[tier];
-                        const isActive = child.competitive_tier === tier;
-                        return `<button class="tier-chip ${cls}${isActive ? ' active' : ''}" onclick="setChildTier('${child.asin}', '${tier}', this)" title="Benchmark vs ${tier} competitors only">${tier}</button>`;
-                    }).join('')}
-                                                    <button class="tier-chip tier-auto${!child.competitive_tier ? ' active' : ''}" onclick="setChildTier('${child.asin}', null, this)" title="Auto-detect tier from natural price splits (default)">Auto ✦</button>
-                                                </div>
-                                            `).join('')}
-                                        </div>
                                     </div>
                                     <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
                                         <button onclick="saveReferenceName('${p.asin}')" class="btn-toggle-details" id="btn-save-${p.asin}" style="margin: 0; padding: 6px 12px; font-size: 11px;">
@@ -4119,7 +2611,7 @@
                     const user = await res.json();
                     document.getElementById('user-name-display').textContent = user.full_name;
                     document.getElementById('user-role-display').textContent = user.role;
-
+                    
                     if (user.role === 'Viewer') {
                         // Enforce RBAC: Hide all upload/trigger/edit buttons
                         document.querySelectorAll('.btn-upload').forEach(el => el.style.display = 'none');
@@ -4139,7 +2631,7 @@
                 console.warn("Auth check error. Bypassing login redirect.", err);
             }
         }
-
+        
         document.getElementById('logout-btn')?.addEventListener('click', async () => {
             try {
                 await fetch('/api/v1/auth/logout', { method: 'POST' });
@@ -4152,7 +2644,3 @@
 
         // Initialize Auth after DOM load
         authInit();
-    </script>
-</body>
-
-</html>
