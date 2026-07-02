@@ -34,10 +34,10 @@ app.include_router(auth_routes.router, prefix="/api/v1/auth", tags=["auth"])
 @app.get("/", response_class=HTMLResponse)
 async def price_benchmarking_dashboard(request: Request) -> Response:
     # Check for access token cookie, redirect to login if missing
-    token = request.cookies.get("access_token")
-    if not token:
-        from fastapi.responses import RedirectResponse
-        return RedirectResponse(url="/login")
+    # token = request.cookies.get("access_token")
+    # if not token:
+    #     from fastapi.responses import RedirectResponse
+    #     return RedirectResponse(url="/login")
 
     dashboard_path = Path(__file__).resolve().parent / "dashboard" / "price_benchmarking.html"
     content = dashboard_path.read_text(encoding="utf-8")
