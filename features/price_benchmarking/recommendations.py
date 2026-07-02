@@ -135,9 +135,13 @@ def recommend(
     change_amount = round(target - result.your_price, 2)
     change_pct = round((change_amount / result.your_price) * 100, 2) if result.your_price else 0
 
-    if abs(change_pct) < 1.0:
+    # Calculate action against median for all tiers
+    median_change = result.median - result.your_price
+    median_change_pct = (median_change / result.your_price) * 100 if result.your_price else 0
+
+    if abs(median_change_pct) < 1.0:
         action = "hold"
-    elif change_amount > 0:
+    elif median_change > 0:
         action = "increase"
     else:
         action = "decrease"

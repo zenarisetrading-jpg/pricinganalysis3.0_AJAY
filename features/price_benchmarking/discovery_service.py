@@ -225,6 +225,167 @@ def save_pricing_analysis(
         sb.table("pb_alerts").insert(alert_rows).execute()
 
 
+
+def save_pricing_analysis_batch(
+    analyses: List[Dict[str, Any]],
+    marketplace: str,
+    parent_asin: str | None = None,
+    skip_clear: bool = False,
+) -> None:
+    """Batch persist pricing analysis summary and populate all dashboard tables."""
+    if not analyses:
+        return
+        
+    sb = get_supabase_client()
+    actual_parent = parent_asin
+    account_id = "unknown"
+    child_asins = []
+    
+    pricing_analysis_rows = []
+    snapshot_rows = []
+    recommendation_rows = []
+    alert_rows = []
+    
+    for entry in analyses:
+        asin = entry.get("asin")
+        if not asin:
+            continue
+        results = entry.get("results", {})
+        account_id = results.get("client_id") or account_id
+        
+        snap = next((s for s in results.get("snapshots", []) if s.get("asin") == asin), None)
+        if not snap and results.get("snapshots"):
+            snap = results["snapshots"][0]
+        if not snap:
+            print(f"WARNING: No snapshot found for ASIN {asin}. Proceeding with defaults.")
+            snap = {}
+
+        rec = next((r for r in results.get("recommendations", []) if r.get("asin") == asin), None)
+        if not rec and results.get("recommendations"):
+            rec = results["recommendations"][0]
+        if not rec:
+            rec = {}
+
+        child_asins.extend([
+            row.get("asin")
+            for row in [*results.get("snapshots", []), *results.get("recommendations", [])]
+            if row.get("asin")
+        ])
+        
+        pricing_analysis_rows.append({
+            "asin": asin,
+            "marketplace": marketplace,
+            "lowest_price": snap.get("floor_price"),
+            "highest_price": snap.get("ceiling_price"),
+            "average_price": snap.get("average_price"),
+            "median_price": snap.get("median_price"),
+            "recommended_price": rec.get("recommended_price"),
+            "premium_price": snap.get("p75_price"),
+            "value_price": snap.get("p25_price"),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        })
+        
+        snapshot_rows.append({
+            "client_id": account_id,
+            "asin": asin,
+            "sku_id": snap.get("sku_id") or asin,
+            "parent_asin": actual_parent or asin,
+            "snapshot_date": datetime.now(timezone.utc).date().isoformat(),
+            "your_price": snap.get("your_price"),
+            "n_competitors": snap.get("n_competitors"),
+            "floor_price": snap.get("floor_price"),
+            "ceiling_price": snap.get("ceiling_price"),
+            "median_price": snap.get("median_price"),
+            "p25_price": snap.get("p25_price"),
+            "p75_price": snap.get("p75_price"),
+            "index_vs_median": snap.get("index_vs_median"),
+            "zone": snap.get("zone"),
+            "strategy": snap.get("strategy"),
+        })
+        
+        all_recs = results.get("recommendations", [])
+        if all_recs:
+            representative_rec = next((r for r in all_recs if r.get("asin") == asin), all_recs[0])
+            representative_snap = next(
+                (s for s in results.get("snapshots", []) if s.get("asin") == representative_rec.get("asin")),
+                snap,
+            ) or {}
+            category_ids = sorted({
+                str(cat_id)
+                for product in results.get("products", [])
+                for cat_id in (product.get("category_ids") or [product.get("category_id")])
+                if cat_id
+            })
+            metadata = dict(representative_rec.get("metadata") or representative_snap.get("metadata") or {})
+            metadata.setdefault("n_competitors", representative_snap.get("n_competitors"))
+            if category_ids:
+                metadata["category_ids"] = category_ids
+            if representative_rec.get("asin") and representative_rec.get("asin") != asin:
+                metadata["representative_child_asin"] = representative_rec["asin"]
+
+            recommendation_rows.append({
+                "client_id": account_id,
+                "sku_id": representative_rec.get("sku_id") or representative_snap.get("sku_id") or asin,
+                "asin": asin,
+                "parent_asin": actual_parent or asin,
+                "marketplace": marketplace,
+                "strategy": representative_rec.get("strategy") or representative_snap.get("strategy") or "mid",
+                "current_price": representative_rec.get("current_price") or representative_snap.get("your_price") or 0.0,
+                "recommended_price": representative_rec.get("recommended_price") or 0.0,
+                "action": representative_rec.get("action") or "neutral",
+                "reasoning": representative_rec.get("reasoning") or "Analysis completed.",
+                "metadata": metadata,
+                "confidence": representative_rec.get("confidence") or "high",
+                "status": "pending",
+                "snapshot_date": datetime.now(timezone.utc).date().isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            })
+
+        for a in results.get("alerts", []):
+            a_asin = a.get("asin") if isinstance(a, dict) else getattr(a, "asin", None)
+            if a_asin == asin or a_asin is None:
+                is_obj = hasattr(a, "alert_type")
+                alert_rows.append({
+                    "client_id": account_id,
+                    "asin": asin,
+                    "parent_asin": actual_parent or asin,
+                    "sku_id": snap.get("sku_id") or asin,
+                    "marketplace": marketplace,
+                    "alert_type": a.alert_type.value if is_obj else (a.get("type") or "price_alert"),
+                    "severity": a.severity.value if is_obj else (a.get("severity") or "medium"),
+                    "title": a.title if is_obj else (a.get("title") or "Price Alert"),
+                    "message": a.message if is_obj else (a.get("message") or "Check product pricing vs competitors."),
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                })
+
+    child_asins = list(set(child_asins))
+    
+    try:
+        if pricing_analysis_rows:
+            sb.table("pricing_analysis").upsert(pricing_analysis_rows, on_conflict="asin,marketplace").execute()
+        if snapshot_rows:
+            sb.table("pb_client_snapshots_daily").upsert(snapshot_rows, on_conflict="client_id,asin,snapshot_date").execute()
+        
+        if not skip_clear:
+            _clear_parent_dashboard_rows(
+                sb,
+                client_id=account_id,
+                parent_asin=actual_parent,
+                child_asins=child_asins,
+                marketplace=marketplace,
+            )
+            
+        if recommendation_rows:
+            sb.table("pb_recommendations").insert(recommendation_rows).execute()
+            
+        if alert_rows:
+            sb.table("pb_alerts").insert(alert_rows).execute()
+            
+        print(f"Batch saved {len(analyses)} records for parent {actual_parent}")
+    except Exception as e:
+        print(f"FAILED batch save for parent {actual_parent}: {e}")
+
+
 def _append_unique_category(categories: List[Dict[str, Any]], product: Dict[str, Any]) -> None:
     """Append a category from a product dict if not already present in the list."""
     category_id = product.get("category_id")
@@ -409,7 +570,7 @@ def fetch_competitors_by_category(category_id: str, marketplace_id: str) -> List
 
 def _merge_competitor(merged_competitors: List[Dict], seen_asins: Dict[str, int], item: Dict) -> None:
     """Deduplicate by ASIN, preferring entries with usable prices."""
-    asin = item.get("asin")
+    asin = item.get("asin") or item.get("competitor_asin")
     if not asin:
         return
     existing_index = seen_asins.get(asin)
@@ -418,12 +579,12 @@ def _merge_competitor(merged_competitors: List[Dict], seen_asins: Dict[str, int]
         merged_competitors.append(item)
         return
     existing = merged_competitors[existing_index]
-    existing_price = existing.get("floor_price") or existing.get("price")
-    new_price = item.get("floor_price") or item.get("price")
+    existing_price = existing.get("floor_price") or existing.get("price") or existing.get("competitor_price")
+    new_price = item.get("floor_price") or item.get("price") or item.get("competitor_price")
     if (existing_price is None or existing_price == 0) and new_price not in (None, 0):
         merged_competitors[existing_index] = item
     elif new_price not in (None, 0):
-        for key in ("floor_price", "price", "category_id", "title", "brand", "parent_asin", "rating", "reviews"):
+        for key in ("floor_price", "price", "competitor_price", "category_id", "title", "competitor_title", "brand", "parent_asin", "rating", "reviews"):
             if existing.get(key) in (None, "") and item.get(key) not in (None, ""):
                 existing[key] = item[key]
 
@@ -464,6 +625,11 @@ def trigger_background_discovery(account_id: str) -> Dict[str, Any]:
         parent_asin_map[parent_asin]["products"].append(p)
         _append_unique_category(parent_asin_map[parent_asin]["categories"], p)
 
+    if account_id == "nothing_silly":
+        for data in parent_asin_map.values():
+            _append_unique_category(data["categories"], {"category_id": "15160028031", "marketplace_id": "A2VIGQ35RCS4UG", "category_name": "Fallback UAE"})
+            _append_unique_category(data["categories"], {"category_id": "12373520031", "marketplace_id": "A2VIGQ35RCS4UG", "category_name": "Fallback UAE 2"})
+
     print(f"Processing {len(parent_asin_map)} parent ASINs for account {account_id}...")
 
     own_asins = {p["asin"] for p in products_data if p.get("asin")}
@@ -503,7 +669,7 @@ def trigger_background_discovery(account_id: str) -> Dict[str, Any]:
                 break
 
         filtered_competitors = filter_related_products(target_product, merged_competitors, exclude_asins=own_asins)
-        print(f"Parent {parent_asin}: {len(merged_competitors)} raw → {len(filtered_competitors)} filtered competitors")
+        print(f"Parent {parent_asin}: {len(merged_competitors)} raw -> {len(filtered_competitors)} filtered competitors")
 
         save_competitor_data(
             parent_asin=parent_asin,
@@ -535,6 +701,7 @@ def trigger_background_discovery(account_id: str) -> Dict[str, Any]:
         )
 
         child_processed = 0
+        batch_analyses = []
         for child_product in analysis_products:
             child_filtered = filter_related_products(
                 child_product, merged_competitors, exclude_asins=own_asins
@@ -549,15 +716,19 @@ def trigger_background_discovery(account_id: str) -> Dict[str, Any]:
                 child_results["performance"] = [
                     p for p in live_performance if p["asin"] == child_product["asin"]
                 ]
-                save_pricing_analysis(
-                    child_product["asin"], mp_name, child_results,
-                    parent_asin=parent_asin, skip_clear=True,
-                )
+                batch_analyses.append({
+                    "asin": child_product["asin"],
+                    "results": child_results,
+                })
                 child_processed += 1
             except Exception as e:
                 import traceback
                 traceback.print_exc()
                 errors.append({"parent_asin": parent_asin, "child_asin": child_product["asin"], "error": str(e)})
+                
+        if batch_analyses:
+            save_pricing_analysis_batch(batch_analyses, mp_name, parent_asin=parent_asin, skip_clear=True)
+            
         if child_processed > 0:
             processed += 1
 
@@ -595,6 +766,10 @@ def recalculate_parent_from_categories(account_id: str, parent_asin: str) -> Dic
     cats = fetch_parent_asin_categories(account_id, parent_asin)
     for product in parent_products:
         _append_unique_category(cats, product)
+
+    if account_id == "nothing_silly":
+        _append_unique_category(cats, {"category_id": "15160028031", "marketplace_id": "A2VIGQ35RCS4UG", "category_name": "Fallback UAE"})
+        _append_unique_category(cats, {"category_id": "12373520031", "marketplace_id": "A2VIGQ35RCS4UG", "category_name": "Fallback UAE 2"})
 
     merged_competitors: List[Dict] = []
     seen_asins: Dict[str, int] = {}
@@ -665,14 +840,20 @@ def recalculate_parent_from_categories(account_id: str, parent_asin: str) -> Dic
     _clear_parent_dashboard_rows(sb, client_id=account_id, parent_asin=parent_asin, child_asins=child_asins, marketplace=mp_name)
 
     child_processed = 0
+    batch_analyses = []
     for child_product in analysis_products:
         child_filtered = filter_related_products(child_product, merged_competitors, exclude_asins=own_asins)
         child_results = calculate_transient_upload_analysis(
             client_id=account_id, products=[child_product], competitor_records=child_filtered,
         )
         child_results["client_id"] = account_id
-        save_pricing_analysis(child_product["asin"], mp_name, child_results, parent_asin=parent_asin, skip_clear=True)
+        batch_analyses.append({
+            "asin": child_product["asin"],
+            "results": child_results,
+        })
         child_processed += 1
+        
+    save_pricing_analysis_batch(batch_analyses, mp_name, parent_asin=parent_asin, skip_clear=True)
 
     return {
         "status": "success",

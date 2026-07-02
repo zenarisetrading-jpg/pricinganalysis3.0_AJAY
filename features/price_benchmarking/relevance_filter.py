@@ -107,7 +107,7 @@ def is_related(
     if target_parent and candidate_parent and target_parent == candidate_parent:
         return True
         
-    candidate_title = candidate_product.get("title", "")
+    candidate_title = candidate_product.get("title") or candidate_product.get("competitor_title") or ""
     candidate_brand = candidate_product.get("brand", "")
     
     exclude_keywords_str = target_product.get("exclude_keywords")
@@ -145,10 +145,11 @@ def filter_related_products(
     if not reference or str(reference).strip() == "":
         results = []
         for p in candidate_products:
-            if p.get("asin") in exclude_set:
+            p_asin = p.get("asin") or p.get("competitor_asin")
+            if p_asin in exclude_set:
                 continue
                 
-            title_lower = p.get("title", "").lower()
+            title_lower = (p.get("title") or p.get("competitor_title") or "").lower()
             if any(kw in title_lower for kw in exclude_keywords):
                 continue
                 
@@ -165,10 +166,11 @@ def filter_related_products(
     target_parent = target_product.get("parent_asin")
     
     for p in candidate_products:
-        if p.get("asin") in exclude_set:
+        p_asin = p.get("asin") or p.get("competitor_asin")
+        if p_asin in exclude_set:
             continue
             
-        title_lower = p.get("title", "").lower()
+        title_lower = (p.get("title") or p.get("competitor_title") or "").lower()
         if any(kw in title_lower for kw in exclude_keywords):
             continue
             
@@ -176,7 +178,7 @@ def filter_related_products(
         if match_brand(brand_val, exclude_brands):
             continue
             
-        score = calculate_relevance_score(reference, p.get("title", ""))
+        score = calculate_relevance_score(reference, p.get("title") or p.get("competitor_title") or "")
         
         # Variations/Parent match always get 1.0 relevance
         candidate_parent = p.get("parent_asin")

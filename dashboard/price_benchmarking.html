@@ -921,10 +921,7 @@
                             <div class="kpi-label">Tracked Parent ASINs</div>
                             <div class="kpi-value" id="kpi-skus">--</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Health Score</div>
-                            <div class="kpi-value" id="kpi-health" style="color: var(--success)">--</div>
-                        </div>
+
                         <div class="kpi-card">
                             <div class="kpi-label">Pending Recs</div>
                             <div class="kpi-value" id="kpi-recs" style="color: var(--warning)">--</div>
@@ -1161,38 +1158,15 @@
 
                                 <!-- Bubble Chart Container -->
                                 <div id="bubble-wrapper" class="chart-interactive-wrapper">
+                                    <div class="chart-interact-overlay" id="bubble-overlay"
+                                        title="Click to enable zoom & pan">
+                                        <span class="overlay-hint">🖱 Click to interact with chart</span>
+                                    </div>
                                     <div
                                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 10px;">
                                         <div style="font-size: 14px; font-weight: 600; color: var(--text);">Brand
                                             Positioning Map</div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <span style="font-size: 12px; color: var(--text-dim);">Tier:</span>
-                                            <select id="bubble-tier-filter" style="
-                                                background: transparent;
-                                                color: var(--text);
-                                                border: 1px solid var(--border);
-                                                border-radius: 6px;
-                                                padding: 4px 8px;
-                                                font-size: 12px;
-                                                outline: none;
-                                                cursor: pointer;
-                                                appearance: none;
-                                                -webkit-appearance: none;
-                                                background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23949eb5\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E');
-                                                background-repeat: no-repeat;
-                                                background-position: right 8px center;
-                                                padding-right: 28px;
-                                            ">
-                                                <option value="All" style="background-color: #1a1d29;">All Tiers
-                                                </option>
-                                                <option value="Entry" style="background-color: #1a1d29;">Entry</option>
-                                                <option value="Mass" style="background-color: #1a1d29;">Mass</option>
-                                                <option value="Mid-Premium" style="background-color: #1a1d29;">
-                                                    Mid-Premium</option>
-                                                <option value="Premium" style="background-color: #1a1d29;">Premium
-                                                </option>
-                                            </select>
-                                        </div>
+
                                     </div>
                                     <div id="overview-bubble-chart" style="height: 380px;"></div>
                                 </div>
@@ -1405,7 +1379,7 @@
                                 <thead>
                                     <tr>
                                         <th>SKU / ASIN</th>
-                                        <th>Competitors</th>
+                                        <th title="Number of competitors (Competitor Breakdown Count)">Competitors</th>
                                         <th>Current</th>
                                         <th>Median</th>
                                         <th title="Median price adjusted using Avg. Market Index.">Adj. Median <span
@@ -1711,7 +1685,7 @@
         }
 
         function resetKPIs() {
-            const kpis = ['kpi-health', 'kpi-index', 'kpi-skus', 'kpi-recs'];
+            const kpis = ['kpi-index', 'kpi-skus', 'kpi-recs'];
             kpis.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = '--';
@@ -1737,9 +1711,9 @@
 
                         if (selectedTier === 'All') {
                             [recsResp, overviewResp, alertsResp] = await Promise.all([
-                                fetch(`${API_BASE}/recommendations?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch recommendations:', e); return null; }),
-                                fetch(`${API_BASE}/overview?client_id=${currentClientId}`, { headers }),
-                                fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => { console.error('Failed to fetch alerts:', e); return null; })
+                                fetch(`${API_BASE}/recommendations?client_id=${currentClientId}&_t=${Date.now()}`, { headers, cache: 'no-store' }).catch(e => { console.error('Failed to fetch recommendations:', e); return null; }),
+                                fetch(`${API_BASE}/overview?client_id=${currentClientId}&_t=${Date.now()}`, { headers, cache: 'no-store' }),
+                                fetch(`${API_BASE}/alerts?client_id=${currentClientId}&_t=${Date.now()}`, { headers, cache: 'no-store' }).catch(e => { console.error('Failed to fetch alerts:', e); return null; })
                             ]);
 
                             if (recsResp && recsResp.ok) {
@@ -1769,7 +1743,7 @@
                             renderRecommendations(globalRecommendations);
 
                             // Still fetch alerts normally
-                            alertsResp = await fetch(`${API_BASE}/alerts?client_id=${currentClientId}`, { headers }).catch(e => null);
+                            alertsResp = await fetch(`${API_BASE}/alerts?client_id=${currentClientId}&_t=${Date.now()}`, { headers, cache: 'no-store' }).catch(e => null);
                         }
 
                         if (alertsResp && alertsResp.ok) {
@@ -1782,7 +1756,7 @@
 
                 if (activeTab === 'categories') {
                     const fetchCategories = async () => {
-                        const catsResp = await fetch(`${API_BASE}/account-bsr-categories?account_id=${currentClientId}`, { headers });
+                        const catsResp = await fetch(`${API_BASE}/account-bsr-categories?account_id=${currentClientId}&_t=${Date.now()}`, { headers, cache: 'no-store' });
                         if (catsResp.ok) {
                             const catsData = await catsResp.json();
                             window.allCategories = catsData.categories; // Store for searching
@@ -2460,32 +2434,7 @@
                 ? matchedRec.metadata.competitors
                 : [];
 
-            // ── Step 2: Read user-defined include/exclude filters ──────────────────────
-            const parentAsin = row.parent_asin || row.asin;
-            const domInclude = document.getElementById(`ref-name-${parentAsin}`);
-            const domExcludeKws = document.getElementById(`exclude-keywords-${parentAsin}`);
-            const domExcludeBrands = document.getElementById(`exclude-brands-${parentAsin}`);
-
-            let referenceName = domInclude ? domInclude.value : (row.reference_name || '');
-            let excludeKeywordsStr = '';
-            if (domExcludeKws || domExcludeBrands) {
-                const kwsVal = domExcludeKws ? domExcludeKws.value.trim() : '';
-                const brandsVal = domExcludeBrands ? domExcludeBrands.value.trim() : '';
-                excludeKeywordsStr = kwsVal;
-                if (brandsVal) excludeKeywordsStr = `${kwsVal}|brand_exclude: ${brandsVal}`;
-            } else {
-                excludeKeywordsStr = row.exclude_keywords || (matchedRec && matchedRec.exclude_keywords) || '';
-            }
-
-            let excludeKeywords = [];
-            let excludeBrands = [];
-            if (excludeKeywordsStr && excludeKeywordsStr.trim()) {
-                const parts = excludeKeywordsStr.split('|brand_exclude:');
-                const kwsPart = parts[0] || '';
-                const brandsPart = parts[1] || '';
-                excludeKeywords = kwsPart.split(',').map(kw => kw.trim().toLowerCase()).filter(Boolean);
-                excludeBrands = brandsPart.split(',').map(b => b.trim().toLowerCase()).filter(Boolean);
-            }
+            // ── Step 2: Skip redundant frontend filtering (handled by backend) ─────────
 
             if (rawCompetitors.length === 0) {
                 if (container) container.style.display = 'none';
@@ -2496,7 +2445,12 @@
             if (container) container.style.display = 'block';
             if (emptyState) emptyState.style.display = 'none';
 
-            const ourPrice = parseFloat(row.your_price) || 0;
+            let ourPrice = parseFloat(row.current_price);
+            if (isNaN(ourPrice) || ourPrice <= 0) ourPrice = parseFloat(row.your_price);
+            if (matchedRec && (isNaN(ourPrice) || ourPrice <= 0)) {
+                ourPrice = parseFloat(matchedRec.calculatedCurrentPrice) || parseFloat(matchedRec.current_price) || parseFloat(matchedRec.your_price) || 0;
+            }
+            if (isNaN(ourPrice)) ourPrice = 0;
             let ourRatingRaw = parseFloat(row.rating) || 0;
             let ourRatingEstimated = false;
             if (!ourRatingRaw || ourRatingRaw <= 0) { ourRatingRaw = 4.5; ourRatingEstimated = true; }
@@ -2525,44 +2479,7 @@
                     // carry through tier tag from backend (already assigned correctly)
                     tier: c.tier || null,
                 };
-            }).filter(c => {
-                if (c.price <= 0) return false;
-
-                const titleLower = c.title.toLowerCase();
-                const brandLower = c.brand.toLowerCase();
-
-                // A. Exclude title keywords
-                if (excludeKeywords.some(kw => titleLower.includes(kw))) return false;
-
-                // B. Exclude brands
-                if (excludeBrands.length > 0) {
-                    const compBrandClean = brandLower.replace(/\s+/g, ' ').trim();
-                    let matchesExcludedBrand = false;
-                    for (const brand of excludeBrands) {
-                        const brandClean = brand.replace(/\s+/g, ' ').trim();
-                        if (!brandClean) continue;
-                        if (compBrandClean === brandClean) { matchesExcludedBrand = true; break; }
-                        const escaped = brandClean.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                        if (new RegExp('\\b' + escaped + '\\b').test(compBrandClean)) { matchesExcludedBrand = true; break; }
-                    }
-                    if (matchesExcludedBrand) return false;
-                }
-
-                // C. Include keywords (reference name) — evaluated per individual product
-                if (referenceName && referenceName.trim()) {
-                    const refLower = referenceName.trim().toLowerCase();
-                    const phrases = refLower.split(',').map(p => p.trim()).filter(Boolean);
-                    if (phrases.length > 0) {
-                        const matchesAnyPhrase = phrases.some(phrase => {
-                            const kws = phrase.split(/\s+/).map(kw => kw.trim()).filter(Boolean);
-                            return kws.length > 0 && kws.every(kw => titleLower.includes(kw));
-                        });
-                        if (!matchesAnyPhrase) return false;
-                    }
-                }
-
-                return true;
-            });
+            }).filter(c => c.price > 0);
 
             if (cleanCompetitors.length === 0) {
                 if (container) container.style.display = 'none';
@@ -2966,14 +2883,30 @@
             rows.forEach(r => {
                 const key = r.parent_asin || r.asin;
                 const existing = latestRowsMap.get(key);
-                if (!existing || new Date(r.snapshot_date) > new Date(existing.snapshot_date)) {
+                if (!existing) {
                     latestRowsMap.set(key, r);
+                } else {
+                    const rDate = new Date(r.snapshot_date || 0).getTime();
+                    const eDate = new Date(existing.snapshot_date || 0).getTime();
+                    if (rDate > eDate) {
+                        latestRowsMap.set(key, r);
+                    } else if (rDate === eDate) {
+                        // Fallback: pick the lowest price to ensure consistency
+                        const currPrice = parseFloat(r.your_price) || 999999;
+                        const existPrice = parseFloat(existing.your_price) || 999999;
+                        if (currPrice < existPrice) {
+                            latestRowsMap.set(key, r);
+                        } else if (currPrice === existPrice && (r.asin || '') < (existing.asin || '')) {
+                            latestRowsMap.set(key, r);
+                        }
+                    }
                 }
             });
             const uniqueRows = Array.from(latestRowsMap.values());
 
             // Store global reference for product switching
-            overviewSnapshots = uniqueRows;
+            // Store ALL rows in overviewSnapshots so chart interactions have access to every child ASIN.
+            overviewSnapshots = rows;
 
             // Clear error if any
             const subTitle = document.getElementById('sub-title');
@@ -3019,6 +2952,7 @@
                 window.globalParentAsinCount = parentCount;
                 console.log(`[VALIDATION] Parent ASIN universe count set from /overview: ${parentCount}`);
             }
+
             // Always display the cached universe count so tier switching never changes it.
             // Falls back to uniqueRows.length only if the cache hasn't been populated yet.
             const skusCount = window.globalParentAsinCount || uniqueRows.length;
@@ -3026,21 +2960,7 @@
             if (skusElem) skusElem.textContent = skusCount;
             console.log(`[VALIDATION] Parent ASIN Count: displayed=${skusCount} | activeTier='${activeTierFilter}' | tierRows=${uniqueRows.length}`);
 
-            // ── Health Score ───────────────────────────────────────────────
-            // VALIDATION: Only rows with active competitor data participate in the denominator.
-            // Products with zone='no_competitors' have no market context and must NOT
-            // drag down the score by inflating the denominator.
-            const healthyZones = ['budget', 'value', 'mid_market', 'premium'];
-            const rowsWithCompetitors = uniqueRows.filter(r => r.zone && r.zone !== 'no_competitors');
-            const healthyCount = rowsWithCompetitors.filter(r => healthyZones.includes(r.zone)).length;
-            const healthDenominator = rowsWithCompetitors.length || 1;
-            const healthScore = Math.round((healthyCount / healthDenominator) * 100);
-            console.log(`[VALIDATION] Health Score: healthy=${healthyCount} / withCompetitors=${healthDenominator} = ${healthScore}%`);
-            const healthElem = document.getElementById('kpi-health');
-            if (healthElem) {
-                healthElem.textContent = healthScore + '%';
-                healthElem.style.color = healthScore > 80 ? 'var(--success)' : (healthScore > 50 ? 'var(--warning)' : 'var(--danger)');
-            }
+            // Health score removed per user request
 
             const portfolioMarker = document.getElementById('portfolio-marker');
             if (portfolioMarker) {
@@ -3048,7 +2968,11 @@
             }
 
             // Populate Overview Product Selector — child ASINs only (SKU + variation title)
-            childProductsMap = overviewData.child_products || {};
+            if (overviewData.child_products) {
+                childProductsMap = overviewData.child_products;
+            } else {
+                childProductsMap = childProductsMap || {};
+            }
             childToParentAsin = {};
             Object.entries(childProductsMap).forEach(([par, children]) => {
                 children.forEach(ch => { childToParentAsin[ch.asin] = par; });
@@ -3230,15 +3154,40 @@
                     // Prefer the row where the asin IS the parent_asin (canonical representative)
                     const isCurrent = r.asin === r.parent_asin;
                     const existingIsCanonical = existing.asin === existing.parent_asin;
+                    
+                    const isRep = r.metadata && r.metadata.representative_child_asin === r.asin;
+                    const existingIsRep = existing.metadata && existing.metadata.representative_child_asin === existing.asin;
+
                     if (isCurrent && !existingIsCanonical) {
                         parentMap.set(key, r);
+                    } else if (!existingIsCanonical && isRep && !existingIsRep) {
+                        parentMap.set(key, r);
+                    } else if (!existingIsCanonical && !existingIsRep && !isRep) {
+                        // Fallback: pick the lowest price to ensure consistency across tiers
+                        const currPrice = parseFloat(r.current_price) || parseFloat(r.your_price) || 999999;
+                        const existPrice = parseFloat(existing.current_price) || parseFloat(existing.your_price) || 999999;
+                        if (currPrice < existPrice) {
+                            parentMap.set(key, r);
+                        } else if (currPrice === existPrice && (r.asin || '') < (existing.asin || '')) {
+                            parentMap.set(key, r);
+                        }
                     }
                 }
             });
 
             let processedRecs = Array.from(parentMap.values());
+            if (kpiRecs) kpiRecs.textContent = processedRecs.length;
 
-
+            if (activeFilterParentAsin) {
+                const validRecs = processedRecs.filter(r => (r.parent_asin || r.asin) === activeFilterParentAsin);
+                if (validRecs.length > 0) {
+                    processedRecs = validRecs;
+                } else {
+                    // Reset invalid active filter
+                    activeFilterParentAsin = null;
+                    document.querySelectorAll('#recs-body tr').forEach(tr => tr.classList.remove('selected-row'));
+                }
+            }
 
             // Precompute properties for consistency in filters, sorting, and rendering
             processedRecs.forEach(r => {
@@ -3251,9 +3200,9 @@
                 if (isNaN(currentPrice)) currentPrice = 0;
                 r.calculatedCurrentPrice = currentPrice;
 
-                // Dynamic Action Comparison against Adjusted Median
+                // Dynamic Action Comparison against Median
                 let action = 'hold';
-                const changeAmt = r.calculatedAdjMedian - r.calculatedCurrentPrice;
+                const changeAmt = rawMedian - r.calculatedCurrentPrice;
                 const changePct = r.calculatedCurrentPrice > 0 ? (changeAmt / r.calculatedCurrentPrice) * 100 : 0;
                 if (Math.abs(changePct) < 1.0) {
                     action = 'hold';
@@ -3264,17 +3213,26 @@
                 }
                 r.calculatedAction = action;
 
-                // Precompute competitor count
+                // Calculate Competitor Breakdown Count using the same logic as the breakdown section
+                const matchedRec = globalRecommendations.find(rec => (rec.parent_asin || rec.asin) === (r.parent_asin || r.asin)) || r;
+                let activeCompetitors = (matchedRec.metadata && Array.isArray(matchedRec.metadata.competitors)) ? matchedRec.metadata.competitors : [];
+                
+                let breakdownCount = activeCompetitors.length;
                 const metaCount = r.metadata && Number(r.metadata.n_competitors);
                 const reasonMatch = String(r.reasoning || '').match(/^(\d+)\s+competitors/i);
-                r._competitorCount = Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0);
+                
+                if (matchedRec.metadata && Array.isArray(matchedRec.metadata.competitors)) {
+                    r._competitorCount = breakdownCount;
+                } else {
+                    r._competitorCount = breakdownCount > 0 ? breakdownCount : (Number.isFinite(metaCount) ? metaCount : (reasonMatch ? Number(reasonMatch[1]) : 0));
+                }
 
-                // Precompute competitor range dynamically (with robust fallback to competitors array)
+                // Precompute competitor range dynamically (with robust fallback to activeCompetitors array)
                 let pMin = parseFloat(r.metadata && r.metadata.floor_price) || 0;
                 let pMax = parseFloat(r.metadata && r.metadata.ceiling_price) || 0;
                 if (pMin === 0 || pMax === 0) {
-                    if (r.metadata && r.metadata.competitors && r.metadata.competitors.length > 0) {
-                        const prices = r.metadata.competitors.map(c => parseFloat(c.price)).filter(p => !isNaN(p) && p > 0);
+                    if (activeCompetitors.length > 0) {
+                        const prices = activeCompetitors.map(c => parseFloat(c.price || c.floor_price)).filter(p => !isNaN(p) && p > 0);
                         if (prices.length > 0) {
                             pMin = Math.min(...prices);
                             pMax = Math.max(...prices);
@@ -3285,7 +3243,7 @@
                 r.calculatedCeilingPrice = pMax;
 
                 // Calculate Market Position dynamically using direct Adj. Median comparison
-                let competitors = (r.metadata && r.metadata.competitors) || [];
+                let competitors = activeCompetitors.length > 0 ? activeCompetitors : ((r.metadata && r.metadata.competitors) || []);
                 if (competitors.length === 0 && r._competitorCount > 0) {
                     competitors = new Array(r._competitorCount).fill({});
                 }
@@ -3612,22 +3570,7 @@
                                             flex-grow: 1;
                                         ">
                                     </div>
-                                    <div style="display: flex; align-items: flex-start; gap: 8px; margin-top: 4px;">
-                                        <span style="font-size: 11px; color: var(--text-dim); width: 110px; text-align: right; padding-top: 4px;">Competitor Tier:</span>
-                                        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
-                                            ${(p.child_variants || [{ asin: p.asin, title: p.title, competitive_tier: null }]).map(child => `
-                                                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                                                    ${(p.child_variants || []).length > 1 ? `<span style="font-size: 10px; color: var(--text-dim); font-family: monospace; min-width: 90px;">${child.asin}</span>` : ''}
-                                                    ${['Budget', 'Value', 'Mid-Market', 'Premium'].map(tier => {
-                        const cls = { 'Budget': 'tier-budget', 'Value': 'tier-value', 'Mid-Market': 'tier-midmarket', 'Premium': 'tier-premium' }[tier];
-                        const isActive = child.competitive_tier === tier;
-                        return `<button class="tier-chip ${cls}${isActive ? ' active' : ''}" onclick="setChildTier('${child.asin}', '${tier}', this)" title="Benchmark vs ${tier} competitors only">${tier}</button>`;
-                    }).join('')}
-                                                    <button class="tier-chip tier-auto${!child.competitive_tier ? ' active' : ''}" onclick="setChildTier('${child.asin}', null, this)" title="Auto-detect tier from natural price splits (default)">Auto ✦</button>
-                                                </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
+                                    <div style="display: none;"></div>
                                     <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
                                         <button onclick="saveReferenceName('${p.asin}')" class="btn-toggle-details" id="btn-save-${p.asin}" style="margin: 0; padding: 6px 12px; font-size: 11px;">
                                             Save Settings

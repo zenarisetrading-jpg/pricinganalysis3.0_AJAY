@@ -438,13 +438,13 @@ def fetch_all_competitor_pricing_for_account(account_id: str, marketplace: str) 
         FROM sc_raw.competitor_pricing cp
         WHERE cp.price_numeric IS NOT NULL
           AND cp.price_numeric > 0
-          AND cp.category_id IN (
+          AND (cp.category_id IN (
               SELECT DISTINCT b.category_id
               FROM sc_raw.bsr_history b
               WHERE b.account_id = %s
                 AND b.report_date >= (CURRENT_DATE - INTERVAL '90 days')
                 AND b.category_id IS NOT NULL
-          )
+          ) OR cp.category_id IN ('15160028031', '12373520031'))
         ORDER BY cp.category_id, cp.asin, cp.pulled_at DESC
     """
     rows = execute_saddl_query(query, (account_id,))

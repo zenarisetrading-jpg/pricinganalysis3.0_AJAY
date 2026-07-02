@@ -41,8 +41,13 @@ def calculate_transient_upload_analysis(
     normalized_products = [_normalize_uploaded_product(p) for p in products]
     normalized_products = [p for p in normalized_products if p is not None]
     normalized_products = _resolve_majority_categories(normalized_products)
-    normalized_competitors = [_normalize_uploaded_competitor(c) for c in competitor_records]
-    normalized_competitors = [c for c in normalized_competitors if c is not None]
+    normalized_competitors_raw = [_normalize_uploaded_competitor(c) for c in competitor_records]
+    _seen_comp_asins = set()
+    normalized_competitors = []
+    for c in normalized_competitors_raw:
+        if c is not None and c["asin"] not in _seen_comp_asins:
+            _seen_comp_asins.add(c["asin"])
+            normalized_competitors.append(c)
 
     snapshot_rows = []
     alert_rows = []

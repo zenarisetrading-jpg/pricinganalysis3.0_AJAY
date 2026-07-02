@@ -204,40 +204,45 @@ def extract_asin(url):
                 return asin
     return None
 
-def infer_missing_brands(products, openai_key):
-    """Batch infers missing brand names from product titles using OpenAI if available."""
-    if not openai_key:
+def infer_missing_brands(products, anthropic_key):
+    """Batch infers missing brand names from product titles using Anthropic if available."""
+    if not anthropic_key:
         return products
         
     try:
-        from openai import OpenAI
+        from anthropic import Anthropic
     except ImportError:
-        print("[-] Warning: 'openai' package not installed. Skipping LLM brand inference.")
+        print("[-] Warning: 'anthropic' package not installed. Skipping LLM brand inference.")
         return products
 
     missing_products = [p for p in products if not p.get("brand") and p.get("title")]
     if not missing_products:
         return products
 
-    print(f"[*] Inferring missing brands for {len(missing_products)} products via OpenAI...")
+    print(f"[*] Inferring missing brands for {len(missing_products)} products via Anthropic...")
     try:
-        client = OpenAI(api_key=openai_key)
+        client = Anthropic(api_key=anthropic_key)
         batch_size = 50
         for i in range(0, len(missing_products), batch_size):
             batch = missing_products[i:i+batch_size]
-            prompt = "Extract the brand name from each of the following product titles. Return a JSON object mapping the ID to the brand string. If there is no clear brand, return 'Generic'.\n\n"
+            prompt = "Extract the brand name from each of the following product titles. Return a JSON object mapping the ID to the brand string. If there is no clear brand, return 'Generic'. Output ONLY valid JSON without markdown wrapping.\n\n"
             for idx, p in enumerate(batch):
                 prompt += f"ID: {idx} | Title: {p['title']}\n"
             
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                response_format={ "type": "json_object" },
+            response = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=1024,
                 messages=[
-                    {"role": "system", "content": "You are a data extraction assistant. Always respond with a valid JSON object mapping integer IDs to string brand names."},
                     {"role": "user", "content": prompt}
                 ]
             )
-            result_dict = json.loads(response.choices[0].message.content)
+            content = response.content[0].text
+            import re
+            match = re.search(r'\{.*\}', content, re.DOTALL)
+            if match:
+                content = match.group(0)
+                
+            result_dict = json.loads(content)
             for idx, p in enumerate(batch):
                 brand = result_dict.get(str(idx)) or result_dict.get(idx)
                 if brand:
@@ -688,7 +693,7 @@ def main():
     # Determine API key and DB url
     sgai_key = args.key or os.environ.get("SGAI_API_KEY")
     fc_key = args.firecrawl_key or os.environ.get("FIRECRAWL_API_KEY")
-    openai_key = os.environ.get("OPENAI_API_KEY")
+    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
     
     if not sgai_key and not fc_key:
         print("[!] Error: No API keys found. Please provide at least SGAI_API_KEY or FIRECRAWL_API_KEY in env or command line.")
@@ -696,12 +701,13 @@ def main():
 
     db_url_direct = os.environ.get("DATABASE_URL_DIRECT")
     db_url_pooler = os.environ.get("DATABASE_URL")
+    db_url_pricing = os.environ.get("PRICING_DATABASE_URL")
     
-    db_url = db_url_direct or db_url_pooler
+    db_url = db_url_direct or db_url_pooler or db_url_pricing
     fallback_db_url = db_url_pooler if db_url_direct else None
     
     if not db_url:
-        print("[!] Error: Database URL (DATABASE_URL_DIRECT or DATABASE_URL) not found in env or .env file.")
+        print("[!] Error: Database URL not found in env or .env file.")
         sys.exit(1)
 
     # 1. Run migrations if table doesn't exist
@@ -762,16 +768,27 @@ def main():
             for p in products[:3]:
                 print(f"    - Rank {p['rank']}: {p['title'][:50]}... (Price: {p.get('price')}, Rating: {p.get('rating')})")
 
-            # Run post-processing to infer missing brands using OpenAI
-            products = infer_missing_brands(products, openai_key)
+            # Run post-processing to infer missing brands using Anthropic
+            products = infer_missing_brands(products, anthropic_key)
 
-            # Write to database if requested
-            if args.write_db or not args.node:
-                written = upsert_competitors(db_url, today, m_id, cat_id, products, acc_id, cat_name)
-                print(f"[+] Upserted {written} competitor pricing records to Supabase.")
-            else:
-                print("[*] Dry-run complete. Run with --write-db to save results in database.")
+            # Write to CSV instead of database for testing
+            import csv
+            products_to_save = products[:30]
+            if products_to_save:
+                csv_filename = f"competitors_{cat_id}_{today}.csv"
+                # Collect all unique keys from the products
+                keys = set()
+                for p in products_to_save:
+                    keys.update(p.keys())
+                keys = list(keys)
                 
+                with open(csv_filename, 'w', newline='', encoding='utf-8') as output_file:
+                    dict_writer = csv.DictWriter(output_file, fieldnames=keys)
+                    dict_writer.writeheader()
+                    dict_writer.writerows(products_to_save)
+                print(f"[+] Saved {len(products_to_save)} products to {csv_filename}")
+            else:
+                print("[-] No products to save.")
         except Exception as e:
             print(f"[!] Error processing category {cat_id} ({domain}): {e}")
 

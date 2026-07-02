@@ -222,10 +222,10 @@ async def get_account_bsr_categories(
     parent_exclude_map: Dict[str, str] = {}
     for l in listings:
         p_asin = child_to_parent.get(l["asin"], l["asin"])
-        if l.get("reference_name"):
+        if l.get("reference_name") is not None:
             parent_ref_map[p_asin] = l["reference_name"]
             parent_ref_map[l["asin"]] = l["reference_name"]
-        if l.get("exclude_keywords"):
+        if l.get("exclude_keywords") is not None:
             parent_exclude_map[p_asin] = l["exclude_keywords"]
             parent_exclude_map[l["asin"]] = l["exclude_keywords"]
 
@@ -325,11 +325,14 @@ async def get_overview(
     parent_asin_count = 0
     parent_children_map: Dict[str, list] = {}
     try:
-        from .saddl_db import fetch_account_products_with_categories, fetch_saddl_categories
-        saddl_products, categories = await asyncio.gather(
+        from .saddl_db import fetch_account_products_with_categories, fetch_saddl_categories, fetch_account_prices
+        from .price_utils import compute_parent_avg_prices
+        saddl_products, categories, live_prices = await asyncio.gather(
             asyncio.to_thread(fetch_account_products_with_categories, client_id),
             asyncio.to_thread(fetch_saddl_categories, client_id),
+            asyncio.to_thread(fetch_account_prices, client_id),
         )
+        parent_avg_prices = compute_parent_avg_prices(saddl_products, live_prices)
         child_to_parent = {
             p["asin"]: p["parent_asin"]
             for p in saddl_products
@@ -390,7 +393,7 @@ async def get_overview(
     except Exception as e:
         print(f"Warning: Failed to fetch parent ASIN mapping for overview: {e}")
 
-    snapshot_rows = _latest_snapshots_by_parent(rows, child_to_parent)
+    snapshot_rows = rows
 
     asin_list = [r["asin"] for r in snapshot_rows if r.get("asin")]
     rating_map: Dict[str, float] = {}
@@ -417,6 +420,10 @@ async def get_overview(
         r["exclude_keywords"] = parent_exclude_map.get(parent_asin) or ""
         r["rating"] = rating_map.get(r.get("asin")) or rating_map.get(parent_asin)
         r["reviews"] = reviews_map.get(r.get("asin")) or reviews_map.get(parent_asin)
+        if parent_asin in parent_avg_prices:
+            avg_price = parent_avg_prices[parent_asin]
+            r["your_price"] = avg_price
+            r["current_price"] = avg_price
 
     return {
         "rows": snapshot_rows,
@@ -507,7 +514,7 @@ async def get_recommendations(
     except Exception as e:
         print(f"Warning: Failed to fetch SADDL data for recommendations: {e}")
 
-    recs = _latest_recommendations_by_parent(resp.data or [], child_to_parent, parent_asins)
+    recs = resp.data or []
 
     parent_titles_map: Dict[str, str] = {}
     parent_ref_map: Dict[str, str] = {}
@@ -529,23 +536,13 @@ async def get_recommendations(
             if asin and l.get("exclude_keywords"):
                 parent_exclude_map[p_asin] = l["exclude_keywords"]
 
-        parent_prices_map: Dict[str, list] = {}
-        for child_asin, price in live_prices.items():
-            if price is not None and price > 0:
-                p_asin = child_to_parent.get(child_asin, child_asin)
-                parent_prices_map.setdefault(p_asin, []).append(float(price))
+        from .price_utils import compute_parent_avg_prices
+        parent_avg_prices = compute_parent_avg_prices(saddl_products, live_prices)
 
         for r in recs:
             parent_asin = r.get("parent_asin") or r.get("asin")
-            variation_prices = parent_prices_map.get(parent_asin)
-            if variation_prices:
-                r["current_price"] = round(sum(variation_prices) / len(variation_prices), 2)
-            else:
-                metadata = r.get("metadata") if isinstance(r.get("metadata"), dict) else {}
-                for asin_key in [r.get("asin"), r.get("parent_asin"), metadata.get("representative_child_asin")]:
-                    if asin_key in live_prices:
-                        r["current_price"] = live_prices[asin_key]
-                        break
+            if parent_asin in parent_avg_prices:
+                r["current_price"] = parent_avg_prices[parent_asin]
     except Exception as e:
         print(f"Warning: Failed to fetch live prices/titles for recommendations: {e}")
 
@@ -554,44 +551,6 @@ async def get_recommendations(
         r["title"] = parent_titles_map.get(parent_asin) or ""
         r["reference_name"] = parent_ref_map.get(parent_asin) or ""
         r["exclude_keywords"] = parent_exclude_map.get(parent_asin) or ""
-
-    try:
-        comp_asins: set[str] = set()
-        for r in recs:
-            meta = r.get("metadata")
-            if isinstance(meta, dict):
-                for c in meta.get("competitors", []):
-                    if isinstance(c, dict) and c.get("asin"):
-                        comp_asins.add(c["asin"])
-
-        if comp_asins:
-            comp_data_resp = (
-                supabase.table("competitor_products")
-                .select("competitor_asin, rating, reviews, brand")
-                .in_("competitor_asin", list(comp_asins))
-                .execute()
-            )
-            comp_map: Dict[str, dict] = {}
-            for row in comp_data_resp.data or []:
-                casin = row["competitor_asin"]
-                if casin not in comp_map:
-                    comp_map[casin] = row
-
-            for r in recs:
-                meta = r.get("metadata")
-                if isinstance(meta, dict):
-                    for c in meta.get("competitors", []):
-                        if isinstance(c, dict) and c.get("asin"):
-                            info = comp_map.get(c["asin"])
-                            if info:
-                                if info.get("rating") is not None:
-                                    c["rating"] = float(info["rating"])
-                                if info.get("reviews") is not None:
-                                    c["reviews"] = int(info["reviews"])
-                                if info.get("brand") is not None:
-                                    c["brand"] = info["brand"]
-    except Exception as enrich_err:
-        print(f"Warning: Failed to enrich competitor metadata: {enrich_err}")
 
     return {"recommendations": recs}
 
@@ -790,10 +749,13 @@ async def update_reference_name(
             .execute()
         )
 
-        if not resp.data:
+        updated_asins = {row["asin"] for row in (resp.data or [])}
+        missing_asins = [asin for asin in child_asins if asin not in updated_asins]
+
+        if missing_asins:
             product_by_asin = {p["asin"]: p for p in saddl_products}
             upsert_rows = []
-            for asin in child_asins:
+            for asin in missing_asins:
                 product = product_by_asin.get(asin, {})
                 mp_info = MARKETPLACE_MAP.get(product.get("marketplace_id"), {"name": "UAE"})
                 row: dict = {
@@ -806,9 +768,11 @@ async def update_reference_name(
                 if body.exclude_keywords is not None:
                     row["exclude_keywords"] = body.exclude_keywords.strip()
                 upsert_rows.append(row)
-            supabase.table("pb_client_listings").upsert(
-                upsert_rows, on_conflict="client_id,asin,marketplace"
-            ).execute()
+            
+            if upsert_rows:
+                supabase.table("pb_client_listings").upsert(
+                    upsert_rows, on_conflict="client_id,asin,marketplace"
+                ).execute()
 
         marketplaces = {
             MARKETPLACE_MAP.get(p.get("marketplace_id"), {"name": "UAE"})["name"]
@@ -853,16 +817,33 @@ async def recalculate_dashboard(
         from .tier_service import filter_competitors_by_tier
         from .benchmarking import compute_benchmark, CompetitorPrice
         from .recommendations import recommend, RepricingStrategy
+        from .saddl_db import fetch_account_products_with_categories, fetch_account_prices
+        from .price_utils import compute_parent_avg_prices
 
         # 1. Fetch current recommendations to get the full raw competitor lists
         recs_resp = supabase.table("pb_recommendations").select("*").eq("client_id", client_id).execute()
         recs = recs_resp.data or []
+        
+        saddl_products, live_prices = await asyncio.gather(
+            asyncio.to_thread(fetch_account_products_with_categories, client_id),
+            asyncio.to_thread(fetch_account_prices, client_id),
+        )
+        parent_avg_prices = compute_parent_avg_prices(saddl_products, live_prices)
+        
+        # SORT deterministically to avoid random representative product switching on the frontend
+        recs.sort(key=lambda x: str(x.get("asin") or ""))
 
         # 2. Recompute for each row
         recalculated_recs = []
         recalculated_snapshots = []
         
         for row in recs:
+            parent_asin = row.get("parent_asin") or row.get("asin")
+            if parent_asin in parent_avg_prices:
+                avg_price = parent_avg_prices[parent_asin]
+                row["current_price"] = avg_price
+                row["your_price"] = avg_price
+
             meta = row.get("metadata") or {}
             raw_competitors = meta.get("competitors") or []
             
@@ -919,6 +900,12 @@ async def recalculate_dashboard(
             new_meta["competitors"] = filtered_competitors
             mod_rec["metadata"] = new_meta
             recalculated_recs.append(mod_rec)
+            
+            # Temporary Debug Logging as requested by user
+            print(f"[DEBUG TIER: {tier}] Client: {client_id} | Parent ASIN: {row.get('parent_asin')} | ASIN: {row['asin']} | "
+                  f"Current Price: {benchmark.your_price} | Competitors: {benchmark.n_competitors} | "
+                  f"Avg Price: {(sum(c.price for c in comp_objs)/len(comp_objs)) if comp_objs else 0:.2f} | "
+                  f"Zone: {benchmark.zone.value} | PctRank: {benchmark.percentile_rank:.2f}")
             
             # Build modified snapshot row
             mod_snap = {
