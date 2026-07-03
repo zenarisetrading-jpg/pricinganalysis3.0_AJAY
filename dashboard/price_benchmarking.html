@@ -4087,7 +4087,8 @@
             try {
                 await fetch('/api/v1/auth/logout', { method: 'POST' });
                 localStorage.removeItem('user');
-                window.location.href = '/login';
+                // TEMP: Development Only - skip login redirect
+                // window.location.href = '/login';
             } catch (err) {
                 console.error("Logout failed", err);
             }

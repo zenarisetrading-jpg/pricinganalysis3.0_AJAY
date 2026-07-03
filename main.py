@@ -51,16 +51,8 @@ async def price_benchmarking_dashboard(request: Request) -> Response:
         },
     )
 
+# TEMP: Development Only - redirect /login to dashboard
 @app.get("/login", response_class=HTMLResponse)
 async def login_page() -> Response:
-    login_path = Path(__file__).resolve().parent / "dashboard" / "login.html"
-    content = login_path.read_text(encoding="utf-8")
-    return Response(
-        content=content,
-        media_type="text/html",
-        headers={
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0",
-        },
-    )
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/")
